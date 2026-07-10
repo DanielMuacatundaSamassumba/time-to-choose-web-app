@@ -1,6 +1,6 @@
 <x-admin.layout title="Editar Imóvel" breadcrumb="Imóveis → Editar">
 
-    <div class="max-w-4xl">
+    <div class="">
         <form id="update-property-form" action="{{ route('admin.properties.update', $property) }}" method="POST" enctype="multipart/form-data"
               x-data="propertyForm()" class="space-y-6">
             @csrf

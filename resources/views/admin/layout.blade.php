@@ -59,10 +59,7 @@
     <!-- Logo -->
     <div class="flex items-center gap-3 px-6 py-6 border-b border-white/10">
         <img src="{{ asset('assets/Logo_Time.png') }}" alt="Logo" class="h-8 brightness-0 invert">
-        <div>
-            <p class="text-white text-xs font-bold leading-tight">TIME TO CHOOSE</p>
-            <p class="text-gray-500 text-[10px]">Painel Admin</p>
-        </div>
+      
     </div>
 
     <!-- Nav -->

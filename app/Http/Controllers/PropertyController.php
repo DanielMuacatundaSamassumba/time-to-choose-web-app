@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Property;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class PropertyController extends Controller
 {
@@ -11,53 +12,58 @@ class PropertyController extends Controller
     {
         $query = Property::where('is_active', true);
 
-        // Full-text search
+        // ── Full-text search ──────────────────────────────────────
         if ($request->filled('search')) {
-            $query->where(function ($q) use ($request) {
-                $q->where('title', 'like', '%' . $request->search . '%')
-                  ->orWhere('description', 'like', '%' . $request->search . '%')
-                  ->orWhere('location', 'like', '%' . $request->search . '%')
-                  ->orWhere('city', 'like', '%' . $request->search . '%');
+
+            $search = $request->input('search');
+
+            $cleanSearch = preg_replace('/[^[:alpha:]\s]/u', '', $search);
+
+            if ($search !== $cleanSearch) {
+                return back()->with('error', 'A pesquisa contém caracteres inválidos.');
+            }
+
+            $query->where(function ($q) use ($cleanSearch) {
+                $q->where('title', 'like', "%{$cleanSearch}%")
+                    ->orWhere('description', 'like', "%{$cleanSearch}%")
+                    ->orWhere('location', 'like', "%{$cleanSearch}%")
+                    ->orWhere('city', 'like', "%{$cleanSearch}%");
             });
         }
 
         if ($request->filled('type')) {
-            $query->where('type', $request->type);
+            $query->where('type', $request->input('type'));
         }
 
         if ($request->filled('property_type')) {
-            $query->where('property_type', $request->property_type);
+            $query->where('property_type', $request->input('property_type'));
         }
 
         if ($request->filled('country')) {
-            $query->where('country', $request->country);
+            $query->where('country', $request->input('country'));
         }
 
         if ($request->filled('city')) {
-            $query->where('city', 'like', '%' . $request->city . '%');
+            $query->where('city', 'like', '%' . $request->input('city') . '%');
         }
 
-        // Typology filter — context-aware by property_type
+        // ── Typology filter — context-aware ───────────────────────
         if ($request->filled('typology')) {
-            $typology = $request->typology;
+            $typology = $request->input('typology');
             $propType = strtolower($request->input('property_type', ''));
-
             $isAreaBased = in_array($propType, ['terreno', 'escritório', 'escritorio', 'loja']);
 
             if ($isAreaBased) {
-                // Area-based filter for land and commercial (filter stores numeric m² ceiling)
                 $areaVal = preg_replace('/\D/', '', $typology);
                 if (is_numeric($areaVal)) {
-                    // area column is like "800 m²" — extract numeric part via CAST
-                    $query->whereRaw("CAST(area AS INTEGER) <= ?", [$areaVal]);
+                    $query->whereRaw("CAST(area AS INTEGER) <= ?", [(int) $areaVal]);
                 }
             } else {
-                // Bedroom-based filter — strip T/V prefix, handle 6+
                 if (str_ends_with($typology, '+')) {
                     $num = (int) rtrim($typology, '+');
                     $query->where('bedrooms', '>=', $num);
                 } else {
-                    $num = preg_replace('/\D/', '', $typology); // 'T3' → '3', 'V4' → '4', '2' → '2'
+                    $num = preg_replace('/\D/', '', $typology);
                     if (is_numeric($num)) {
                         $query->where('bedrooms', (int) $num);
                     }
@@ -65,33 +71,93 @@ class PropertyController extends Controller
             }
         }
 
-        // Sorting
+        // ── Sorting ───────────────────────────────────────────────
         $sort = $request->input('sort', 'recentes');
         match ($sort) {
             'preco_baixo' => $query->orderBy('price', 'asc'),
-            'preco_alto'  => $query->orderBy('price', 'desc'),
-            default       => $query->latest(),
+            'preco_alto' => $query->orderBy('price', 'desc'),
+            default => $query->latest(),
         };
 
-        // For dynamic filter options
-        $countries = Property::where('is_active', true)->distinct()->pluck('country')->sort()->values();
-        $cities    = Property::where('is_active', true)
-            ->when($request->filled('country'), fn($q) => $q->where('country', $request->country))
-            ->distinct()->pluck('city')->sort()->values();
+        // ── Dynamic filter options — cached for performance ────────
+        // Countries list: changes very rarely → cache 24h
+        $countries = Cache::remember('filter.countries', 86400, function () {
+            return Property::where('is_active', true)
+                ->distinct()
+                ->orderBy('country')
+                ->pluck('country')
+                ->filter()          // remove nulls
+                ->map(fn($v) => (string) $v)  // always strings
+                ->values()
+                ->toArray();        // plain array — safe to cache & iterate
+        });
 
+        // Cities list: varies by selected country → cache key includes country
+        // e.g. "filter.cities.angola", "filter.cities.all"
+        $countrySuffix = $request->filled('country')
+            ? strtolower(preg_replace('/\s+/', '_', $request->input('country')))
+            : 'all';
+
+        $cities = Cache::remember("filter.cities.{$countrySuffix}", 3600, function () use ($request) {
+            return Property::where('is_active', true)
+                ->when($request->filled('country'), fn($q) => $q->where('country', $request->input('country')))
+                ->distinct()
+                ->orderBy('city')
+                ->pluck('city')
+                ->filter()          // remove nulls
+                ->map(fn($v) => (string) $v)  // always strings
+                ->values()
+                ->toArray();        // plain array — safe to cache & iterate
+        });
+
+        // ── Paginate (index scan — fast even on 100k rows) ────────
         $properties = $query->paginate(9)->withQueryString();
+
+        // ── JSON response for infinite-scroll AJAX requests ───────
+        if ($request->wantsJson() || $request->ajax() || $request->has('ajax')) {
+            $nextPageUrl = $properties->nextPageUrl();
+            $relativeNextPageUrl = $nextPageUrl ? parse_url($nextPageUrl, PHP_URL_PATH) . '?' . parse_url($nextPageUrl, PHP_URL_QUERY) : null;
+
+            return response()->json([
+                'properties' => $properties->getCollection()->map(fn($p) => [
+                    'id' => $p->id,
+                    'title' => $p->title,
+                    'type' => $p->type,
+                    'property_type' => $p->property_type,
+                    'property_type_label' => ucfirst($p->property_type),
+                    'price' => $p->price,
+                    'price_period' => $p->price_period,
+                    'city' => $p->city,
+                    'country' => $p->country,
+                    'bedrooms' => (int) $p->bedrooms,
+                    'bathrooms' => (int) $p->bathrooms,
+                    'garages' => (int) $p->garages,
+                    'area' => $p->area,
+                    'image_url' => $p->image_url,
+                    'url' => route('properties.show', $p),
+                ]),
+                'hasMore' => $properties->hasMorePages(),
+                'currentPage' => $properties->currentPage(),
+                'nextPageUrl' => $relativeNextPageUrl,
+                'lastPage' => $properties->lastPage(),
+                'total' => $properties->total(),
+            ]);
+        }
 
         return view('pages.imoveis', compact('properties', 'countries', 'cities'));
     }
 
+
     public function show(Property $property)
     {
         abort_if(!$property->is_active, 404);
+
         $related = Property::where('is_active', true)
             ->where('id', '!=', $property->id)
             ->where('property_type', $property->property_type)
             ->take(3)
             ->get();
+
         return view('pages.personal-imovel', compact('property', 'related'));
     }
 }

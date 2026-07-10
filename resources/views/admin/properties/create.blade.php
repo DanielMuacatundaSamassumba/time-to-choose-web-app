@@ -1,6 +1,6 @@
 <x-admin.layout title="Novo Imóvel" breadcrumb="Imóveis → Criar">
 
-    <div class="max-w-4xl">
+    <div class="">
         <form action="{{ route('admin.properties.store') }}" method="POST" enctype="multipart/form-data"
               x-data="propertyForm()" class="space-y-6">
             @csrf

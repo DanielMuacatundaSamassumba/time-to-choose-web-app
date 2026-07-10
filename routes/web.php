@@ -11,6 +11,7 @@ use App\Http\Controllers\ContactController;
 Route::get('/', function () {
     $featured = \App\Models\Property::where('is_active', true)
         ->where('is_featured', true)
+        ->where('country', '!=', 'Angola')
         ->take(6)->get();
     return view('index', compact('featured'));
 });
@@ -31,7 +32,8 @@ Route::post('/contacto', [ContactController::class, 'store'])->name('contact.sto
 // ─── Admin Auth ───────────────────────────────────────────────────────────────
 
 Route::get('/admin/login', [AdminAuthController::class, 'showLogin'])->name('admin.login');
-Route::post('/admin/login', [AdminAuthController::class, 'login'])->name('admin.login.post');
+Route::post('/admin/login', [AdminAuthController::class, 'login'])
+->name('admin.login.post')->middleware('throttle:5,5');
 Route::post('/admin/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
 
 // ─── Admin Panel (protected) ──────────────────────────────────────────────────
@@ -51,4 +53,21 @@ Route::middleware(\App\Http\Middleware\AdminMiddleware::class)->prefix('admin')-
     // Messages
     Route::get('/mensagens',                 [AdminDashboardController::class, 'messagesIndex'])->name('messages.index');
     Route::delete('/mensagens/{message}',    [AdminDashboardController::class, 'messagesDestroy'])->name('messages.destroy');
+});
+
+
+
+use Illuminate\Support\Facades\Cache;
+
+
+Route::get('/serialize-test', function () {
+
+    $collection = collect([1, 2, 3]);
+
+    $serialized = serialize($collection);
+
+    $unserialized = unserialize($serialized);
+
+    dd($unserialized);
+
 });
