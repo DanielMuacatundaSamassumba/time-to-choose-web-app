@@ -48,17 +48,33 @@
         Classificação e Preço
     </h3>
     <div class="grid grid-cols-2 md:grid-cols-4 gap-5">
-        <div>
+        {{-- TIPO DE NEGÓCIO UNIFICADO (igual ao menu e à página de imóveis) --}}
+        <div class="col-span-2 md:col-span-1">
             <label class="{{ $labelClass }}">Tipo de Negócio <span class="text-red-400">*</span></label>
-            <select name="type" class="{{ $inputClass }}" required>
-                <option value="arrendamento" {{ old('type', $property?->type) === 'arrendamento' ? 'selected' : '' }}>Arrendamento</option>
-                <option value="venda"        {{ old('type', $property?->type) === 'venda' ? 'selected' : '' }}>Venda</option>
+            <select name="business_category" class="{{ $inputClass }}" required>
+                @php
+                    $bc = old('business_category',
+                        $property?->category
+                            ? $property->category          // arrendamento-longa/curta
+                            : ($property?->type === 'venda' ? 'venda' : '')
+                    );
+                @endphp
+                <option value="" disabled {{ $bc === '' ? 'selected' : '' }}>— Selecionar —</option>
+                <option value="venda"                      {{ $bc === 'venda'                      ? 'selected' : '' }}>
+                    Venda
+                </option>
+                <option value="arrendamento-longa-duracao" {{ $bc === 'arrendamento-longa-duracao' ? 'selected' : '' }}>
+                     Arrendamento de Longa Duração
+                </option>
+                <option value="arrendamento-curta-duracao" {{ $bc === 'arrendamento-curta-duracao' ? 'selected' : '' }}>
+                 Arrendamento de Curta Duração
+                </option>
             </select>
         </div>
         <div>
             <label class="{{ $labelClass }}">Tipo de Imóvel <span class="text-red-400">*</span></label>
             <select name="property_type" class="{{ $inputClass }}" required>
-                @foreach(['apartamento','vivenda','moradia','escritório','loja','terreno','outro'] as $pt)
+                @foreach(['apartamento','vivenda','Espaços Comercias'] as $pt)
                 <option value="{{ $pt }}" {{ old('property_type', $property?->property_type) === $pt ? 'selected' : '' }}>
                     {{ ucfirst($pt) }}
                 </option>
@@ -87,8 +103,7 @@
         {{-- País e Cidade --}}
         <div>
             <label class="{{ $labelClass }}">País <span class="text-red-400">*</span></label>
-            <select name="country" class="{{ $inputClass }}" required
-                    x-data x-model="$store.propForm.country">
+            <select name="country" class="{{ $inputClass }}" required>
                 @foreach(['Angola','Portugal','África do Sul','Estados Unidos','Brasil','França','Espanha','Outro'] as $c)
                 <option value="{{ $c }}" {{ old('country', $property?->country ?? 'Angola') === $c ? 'selected' : '' }}>
                     {{ $c }}
@@ -227,21 +242,37 @@
             @endif
         </div>
         @endif
-        <div x-data="{ preview: null }"
+        <div x-data="{ preview: null, sizeError: '' }"
              class="border-2 border-dashed border-gray-200 rounded-xl p-6 text-center hover:border-brand transition cursor-pointer"
              @click="$refs.imgInput.click()">
-            <template x-if="!preview">
+            <template x-if="!preview && !sizeError">
                 <div>
                     <i class="fa-solid fa-cloud-arrow-up text-3xl text-gray-300 mb-2"></i>
                     <p class="text-sm text-admin-muted">Clique para selecionar ou arraste uma imagem</p>
-                    <p class="text-xs text-gray-300 mt-1">PNG, JPG, WEBP até 5MB</p>
+                    <p class="text-xs text-gray-300 mt-1">PNG, JPG, WEBP — máx. 50 MB por ficheiro</p>
                 </div>
             </template>
-            <template x-if="preview">
+            <template x-if="sizeError">
+                <div>
+                    <i class="fa-solid fa-triangle-exclamation text-3xl text-red-400 mb-2"></i>
+                    <p class="text-sm text-red-500 font-semibold" x-text="sizeError"></p>
+                </div>
+            </template>
+            <template x-if="preview && !sizeError">
                 <img :src="preview" class="w-full max-h-48 object-cover rounded-xl">
             </template>
             <input type="file" name="image" accept="image/*" x-ref="imgInput" class="hidden"
-                   @change="preview = URL.createObjectURL($event.target.files[0])">
+                   @change="
+                       const f = $event.target.files[0];
+                       if (f && f.size > 50 * 1024 * 1024) {
+                           sizeError = 'Ficheiro demasiado grande: ' + (f.size/1024/1024).toFixed(1) + ' MB. Máximo: 50 MB.';
+                           preview = null;
+                           $event.target.value = '';
+                       } else {
+                           sizeError = '';
+                           preview = f ? URL.createObjectURL(f) : null;
+                       }
+                   ">
         </div>
     </div>
     <!-- Gallery -->
@@ -260,8 +291,27 @@
             @endforeach
         </div>
         @endif
-        <input type="file" name="gallery[]" accept="image/*" multiple
-               class="block w-full text-sm text-admin-muted file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-brand/10 file:text-brand file:text-sm file:font-medium hover:file:bg-brand/20 transition">
+        <div x-data="{ galleryError: '' }">
+            <input type="file" name="gallery[]" accept="image/*" multiple
+                   class="block w-full text-sm text-admin-muted file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-brand/10 file:text-brand file:text-sm file:font-medium hover:file:bg-brand/20 transition"
+                   @change="
+                       galleryError = '';
+                       let totalMB = 0;
+                       for (const f of $event.target.files) {
+                           if (f.size > 50 * 1024 * 1024) {
+                               galleryError = f.name + ' excede 50 MB. Por favor reduz o tamanho.';
+                               $event.target.value = ''; break;
+                           }
+                           totalMB += f.size / 1024 / 1024;
+                       }
+                       if (!galleryError && totalMB > 80) {
+                           galleryError = 'Total da galeria (' + totalMB.toFixed(1) + ' MB) excede 80 MB. Seleciona menos imagens.';
+                           $event.target.value = '';
+                       }
+                   ">
+            <p class="text-xs text-gray-400 mt-1">Máx. 50 MB por imagem — total até 80 MB</p>
+            <p x-show="galleryError" x-text="galleryError" class="text-xs text-red-500 mt-1 font-semibold"></p>
+        </div>
     </div>
 </div>
 

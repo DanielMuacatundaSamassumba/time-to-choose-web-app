@@ -1,4 +1,7 @@
-<x-layouts.app title="Investidores" description="Soluções de investimento imobiliário com retorno estruturado em Angola. Atuamos como seu parceiro local.">
+﻿<x-layouts.app
+    :title="$sections['seo']['title'] ?? 'Investidores'"
+    :description="$sections['seo']['description'] ?? 'Invista no mercado imobiliário angolano com a Time To Choose.'"
+    description="Soluções de investimento imobiliário com retorno estruturado em Angola. Atuamos como seu parceiro local.">
 
     <x-slot name="styles">
         <style>
@@ -8,40 +11,55 @@
                 border: 1px solid rgba(226, 226, 226, 0.5);
                 box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.04);
             }
+
             .bento-grid {
                 display: grid;
                 grid-template-columns: repeat(12, 1fr);
                 gap: 24px;
             }
+
             /* Hero Animations */
             .hero-bg {
                 transform: scale(1.12);
                 transition: transform 2.2s cubic-bezier(.16, 1, .3, 1);
             }
+
             .hero-section.hero-visible .hero-bg {
                 transform: scale(1);
             }
-            .hero-title, .hero-text, .hero-buttons {
+
+            .hero-title,
+            .hero-text,
+            .hero-buttons {
                 opacity: 0;
                 transform: translateY(30px);
                 transition: opacity .9s ease, transform .9s cubic-bezier(.16, 1, .3, 1);
             }
+
             .hero-section.hero-visible .hero-title,
             .hero-section.hero-visible .hero-text,
             .hero-section.hero-visible .hero-buttons {
                 opacity: 1;
                 transform: translateY(0);
             }
-            .hero-text { transition-delay: .25s; }
-            .hero-buttons { transition-delay: .45s; }
+
+            .hero-text {
+                transition-delay: .25s;
+            }
+
+            .hero-buttons {
+                transition-delay: .45s;
+            }
 
             .image-hover {
                 overflow: hidden;
                 border-radius: 1rem;
             }
+
             .image-hover img {
                 transition: transform 1s cubic-bezier(.16, 1, .3, 1), filter .6s ease;
             }
+
             .image-hover:hover img {
                 transform: scale(1.06);
                 filter: brightness(1.05);
@@ -50,25 +68,31 @@
     </x-slot>
 
     <!-- Hero Section -->
-    <section class="hero-section relative w-full min-h-[600px] flex items-center justify-center pt-20 pb-20 overflow-hidden">
+    <section
+        class="hero-section relative w-full min-h-[600px] flex items-center justify-center pt-20 pb-20 overflow-hidden">
         <div class="absolute inset-0 z-0">
-            <img class="hero-bg w-full h-full object-cover" src="{{ asset('assets/Real_estate_consultant_presentin…_202607021733.jpeg') }}" alt="Consultoria Imobiliária">
+            @php
+                $heroImg = $sections['hero']['image'] ?? null;
+                $heroSrc = $heroImg
+                    ? (str_starts_with($heroImg, 'page-images/') ? \Illuminate\Support\Facades\Storage::url($heroImg) : asset('assets/' . $heroImg))
+                    : asset('assets/Real_estate_consultant_presentin…_202607021733.jpeg');
+            @endphp
+            <img class="hero-bg w-full h-full object-cover" src="{{ $heroSrc }}" alt="Consultoria Imobiliária">
             <div class="absolute inset-0 bg-black/50"></div>
         </div>
 
         <div class="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 text-white">
             <div class="max-w-3xl">
-                <h1 class="hero-title text-4xl md:text-6xl mb-6 font-bold leading-tight">
-                    Soluções de investimento imobiliário com retorno estruturado em Angola
+                <h1 class="hero-title text-4xl md:text-3xl mb-6 font-bold leading-tight">
+                    {{ $sections['hero']['title'] ?? 'Soluções de investimento imobiliário com retorno estruturado em Angola' }}
                 </h1>
                 <p class="hero-text text-lg mb-10 text-white/90 leading-relaxed">
-                    Criamos soluções completas para investidores que pretendem entrar ou expandir no mercado
-                    imobiliário angolano com segurança, rentabilidade e gestão profissional.
-                    Atuamos como seu parceiro local.
+                    {{ $sections['hero']['subtitle'] ?? 'Criamos soluções completas para investidores que pretendem entrar ou expandir no mercado imobiliário angolano com segurança, rentabilidade e gestão profissional. Atuamos como seu parceiro local.' }}
                 </p>
                 <div class="hero-buttons flex flex-wrap gap-4">
-                    <button class="bg-[#ff6b00] hover:bg-orange-600 text-white px-8 py-4 font-semibold rounded-lg transition-all duration-300 hover:scale-105 flex items-center gap-2">
-                        Falar com um Consultor
+                    <button onclick="window.location.href='mailto:info@timetochoose.com'"
+                        class="bg-[#F97316] hover:bg-[#F97316]/90 text-white px-8 py-4 font-semibold rounded-lg transition-all duration-300 hover:scale-105 flex items-center gap-2">
+                        {{ $sections['hero']['button_text'] ?? 'Falar com um Consultor' }}
                         <span class="material-symbols-outlined">arrow_forward</span>
                     </button>
                 </div>
@@ -76,78 +100,89 @@
         </div>
     </section>
 
-    <!-- Market Opportunity ("Oportunidade de Mercado") -->
+    <!-- Market Opportunity -->
     <section class="py-24 bg-gray-50">
         <div class="max-w-7xl mx-auto px-6 md:px-12">
             <div class="flex flex-col lg:flex-row gap-16">
-                <!-- Conteúdo -->
                 <div class="lg:w-1/2 reveal">
-                    <h2 class="text-4xl font-bold mb-6 text-gray-900">Porquê Luanda Agora?</h2>
+                    <h2 class="text-4xl font-bold mb-6 text-gray-900">
+                        {{ $sections['opportunity']['title'] ?? 'Porquê Luanda Agora?' }}
+                    </h2>
                     <div class="space-y-6 text-gray-600 leading-relaxed">
-                        <p>
-                            O crescimento acelerado de Luanda, impulsionado por novos polos de desenvolvimento
-                            económico, gera uma demanda constante por habitação de alto padrão.
+                        <p>{{ $sections['opportunity']['text_1'] ?? 'O crescimento acelerado de Luanda, impulsionado por novos polos de desenvolvimento económico, gera uma demanda constante por habitação de alto padrão.' }}
                         </p>
-                        <p>
-                            Existe atualmente um défice significativo de oferta qualificada, especialmente para o
-                            segmento expatriado e corporate housing, onde a rentabilidade é dolarizada e as yields são
-                            superiores à média regional.
+                        <p>{{ $sections['opportunity']['text_2'] ?? 'Existe atualmente um défice significativo de oferta qualificada, especialmente para o segmento expatriado e corporate housing, onde a rentabilidade é dolarizada e as yields são superiores à média regional.' }}
                         </p>
                     </div>
-
-                    <!-- Estatísticas -->
                     <div class="mt-10 grid grid-cols-2 gap-8">
                         <div class="reveal">
-                            <div class="text-[#ff6b00] text-5xl font-bold mb-1">12%+</div>
-                            <div class="text-sm text-gray-500 uppercase font-semibold tracking-wider">Yield Anual Média</div>
+                            <div class="text-[#F97316] text-5xl font-bold mb-1">
+                                {{ $sections['opportunity']['stat_1_num'] ?? '12%+' }}</div>
+                            <div class="text-sm text-gray-500 uppercase font-semibold tracking-wider">
+                                {{ $sections['opportunity']['stat_1_label'] ?? 'Yield Anual Média' }}</div>
                         </div>
                         <div class="reveal">
-                            <div class="text-[#ff6b00] text-5xl font-bold mb-1">Alto</div>
-                            <div class="text-sm text-gray-500 uppercase font-semibold tracking-wider">Capital Appreciation</div>
+                            <div class="text-[#F97316] text-5xl font-bold mb-1">
+                                {{ $sections['opportunity']['stat_2_num'] ?? 'Alto' }}</div>
+                            <div class="text-sm text-gray-500 uppercase font-semibold tracking-wider">
+                                {{ $sections['opportunity']['stat_2_label'] ?? 'Capital Appreciation' }}</div>
                         </div>
                     </div>
                 </div>
-
-                <!-- Imagem -->
                 <div class="lg:w-1/2 reveal">
                     <div class="relative h-[500px] w-full rounded-2xl overflow-hidden shadow-xl image-hover">
-                        <img class="w-full h-full object-cover"
-                            src="{{ asset('assets/An_ultra-realistic_luxury_real_estate_202607021617.jpeg') }}"
-                            alt="Interior Premium">
+                        @php
+                            $opImg = $sections['opportunity']['image'] ?? null;
+                            $opSrc = $opImg
+                                ? (str_starts_with($opImg, 'page-images/') ? \Illuminate\Support\Facades\Storage::url($opImg) : asset('assets/' . $opImg))
+                                : asset('assets/An_ultra-realistic_luxury_real_estate_202607021617.jpeg');
+                        @endphp
+                        <img class="w-full h-full object-cover" src="{{ $opSrc }}" alt="Interior Premium">
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Services Section ("O que oferecemos") -->
+    <!-- Services Section -->
     <section class="py-24 bg-white">
         <div class="max-w-7xl mx-auto px-6 md:px-12">
-            <!-- Cabeçalho -->
             <div class="text-center mb-16 reveal">
-                <h2 class="text-4xl font-bold mb-4 text-gray-900">Serviços 360º para Investidores</h2>
+                <h2 class="text-4xl font-bold mb-4 text-gray-900">
+                    {{ $sections['services']['title'] ?? 'Serviços 360º para Investidores' }}</h2>
                 <p class="text-gray-500 max-w-2xl mx-auto">
-                    Um ecossistema completo para gerir o seu património sem preocupações operacionais.
+                    {{ $sections['services']['subtitle'] ?? 'Um ecossistema completo para gerir o seu património sem preocupações operacionais.' }}
                 </p>
             </div>
 
             <!-- Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                @foreach([
-                    ['icon' => 'search_insights', 'title' => 'Identificação de Oportunidades', 'desc' => 'Acesso a deals off-market e ativos em zonas de alta valorização futura.'],
-                    ['icon' => 'analytics', 'title' => 'Análise de Viabilidade', 'desc' => 'Estudos técnicos detalhados com projeções financeiras realistas do mercado local.'],
-                    ['icon' => 'monitoring', 'title' => 'Simulação de Rendimento', 'desc' => 'Modelagem de yields líquidas considerando impostos, manutenção e gestão.'],
-                    ['icon' => 'account_tree', 'title' => 'Estruturação de Modelos', 'desc' => 'Apoio jurídico e fiscal para otimizar o fluxo de capital e o retorno do investimento.'],
-                    ['icon' => 'real_estate_agent', 'title' => 'Gestão Completa', 'desc' => 'Serviço chave na mão: desde a decoração até à cobrança e manutenção técnica.'],
-                    ['icon' => 'corporate_fare', 'title' => 'Acesso Corporate', 'desc' => 'Colocação prioritária em empresas multinacionais e embaixadas em Luanda.']
-                ] as $srv)
-                <div class="glass-card p-8 rounded-2xl group hover:translate-x-2 transition duration-300">
-                    <span class="material-symbols-outlined text-[#ff6b00] text-4xl mb-6 block group-hover:scale-110 transition duration-300">{{ $srv['icon'] }}</span>
-                    <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-[#ff6b00] transition">{{ $srv['title'] }}</h3>
-                    <p class="text-gray-500 text-sm leading-relaxed">{{ $srv['desc'] }}</p>
-                </div>
-                @endforeach
-            </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    @foreach([
+        ['icon' => 'Oportunidades.png', 'title' => 'Identificação de Oportunidades', 'desc' => 'Acesso a deals off-market e ativos em zonas de alta valorização futura.'],
+        ['icon' => 'Viabilidade.png', 'title' => 'Análise de Viabilidade', 'desc' => 'Estudos técnicos detalhados com projeções financeiras realistas do mercado local.'],
+        ['icon' => 'Rendimento.png', 'title' => 'Simulação de Rendimento', 'desc' => 'Modelagem de yields líquidas considerando impostos, manutenção e gestão.'],
+    ] as $srv)
+
+        <div class="glass-card p-8 cursor-pointer rounded-2xl group hover:translate-x-2 transition duration-300">
+
+            <img
+                src="{{ asset('assets/' . $srv['icon']) }}"
+                alt="{{ $srv['title'] }}"
+                class="w-10 h-10 object-contain mb-6 group-hover:scale-110 transition duration-300"
+            >
+
+            <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-[#F97316] transition">
+                {{ $srv['title'] }}
+            </h3>
+
+            <p class="text-gray-500 text-sm leading-relaxed">
+                {{ $srv['desc'] }}
+            </p>
+
+        </div>
+
+    @endforeach
+</div>
         </div>
     </section>
 
@@ -163,57 +198,68 @@
                 <!-- Modelo 1 -->
                 <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-200/50 flex flex-col justify-between">
                     <div>
-                        <span class="text-[#ff6b00] text-xs font-bold uppercase tracking-wider mb-4 block">Capitalização</span>
+                        <span
+                            class="text-[#F97316] text-xs font-bold uppercase tracking-wider mb-4 block">Capitalização</span>
                         <h3 class="text-2xl font-bold text-gray-900 mb-4">Compra + Rentabilização</h3>
-                        <p class="text-gray-500 mb-8 leading-relaxed text-sm">Aquisição direta de ativos para arrendamento de longa duração. Ideal para quem procura estabilidade e valorização do património.</p>
+                        <p class="text-gray-500 mb-8 leading-relaxed text-sm">Aquisição direta de ativos para
+                            arrendamento de longa duração. Ideal para quem procura estabilidade e valorização do
+                            património.</p>
                         <ul class="space-y-3 mb-8">
                             <li class="flex items-center gap-2 text-sm text-gray-700">
-                                <span class="material-symbols-outlined text-[#ff6b00] text-sm">check_circle</span>
+                                <span class="material-symbols-outlined text-[#F97316] text-sm">check_circle</span>
                                 Propriedade plena
                             </li>
                             <li class="flex items-center gap-2 text-sm text-gray-700">
-                                <span class="material-symbols-outlined text-[#ff6b00] text-sm">check_circle</span>
+                                <span class="material-symbols-outlined text-[#F97316] text-sm">check_circle</span>
                                 Yield de 8-12%
                             </li>
                             <li class="flex items-center gap-2 text-sm text-gray-700">
-                                <span class="material-symbols-outlined text-[#ff6b00] text-sm">check_circle</span>
+                                <span class="material-symbols-outlined text-[#F97316] text-sm">check_circle</span>
                                 Gestão LP incluída
                             </li>
                         </ul>
                     </div>
-                    <button class="w-full border-2 border-gray-200 text-gray-800 py-3 rounded-lg font-semibold hover:bg-[#ff6b00] hover:text-white hover:border-[#ff6b00] transition duration-300">Saber mais</button>
+                    <button
+                        class="w-full border-2 border-gray-200 text-gray-800 py-3 rounded-lg font-semibold hover:bg-[#F97316] hover:text-white hover:border-[#F97316] transition duration-300">Saber
+                        mais</button>
                 </div>
 
                 <!-- Modelo 2 -->
                 <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-200/50 flex flex-col justify-between">
                     <div>
-                        <span class="text-[#ff6b00] text-xs font-bold uppercase tracking-wider mb-4 block">Cash-Flow</span>
+                        <span
+                            class="text-[#F97316] text-xs font-bold uppercase tracking-wider mb-4 block">Cash-Flow</span>
                         <h3 class="text-2xl font-bold text-gray-900 mb-4">Subarrendamento</h3>
-                        <p class="text-gray-500 mb-8 leading-relaxed text-sm">Gestão de carteiras de terceiros com otimização de ocupação. Foco em contratos corporativos de curta e média duração.</p>
+                        <p class="text-gray-500 mb-8 leading-relaxed text-sm">Gestão de carteiras de terceiros com
+                            otimização de ocupação. Foco em contratos corporativos de curta e média duração.</p>
                         <ul class="space-y-3 mb-8">
                             <li class="flex items-center gap-2 text-sm text-gray-700">
-                                <span class="material-symbols-outlined text-[#ff6b00] text-sm">check_circle</span>
+                                <span class="material-symbols-outlined text-[#F97316] text-sm">check_circle</span>
                                 Investimento reduzido
                             </li>
                             <li class="flex items-center gap-2 text-sm text-gray-700">
-                                <span class="material-symbols-outlined text-[#ff6b00] text-sm">check_circle</span>
+                                <span class="material-symbols-outlined text-[#F97316] text-sm">check_circle</span>
                                 Retorno rápido
                             </li>
                             <li class="flex items-center gap-2 text-sm text-gray-700">
-                                <span class="material-symbols-outlined text-[#ff6b00] text-sm">check_circle</span>
+                                <span class="material-symbols-outlined text-[#F97316] text-sm">check_circle</span>
                                 Escalabilidade alta
                             </li>
                         </ul>
                     </div>
-                    <button class="w-full border-2 border-gray-200 text-gray-800 py-3 rounded-lg font-semibold hover:bg-[#ff6b00] hover:text-white hover:border-[#ff6b00] transition duration-300">Saber mais</button>
+                    <button
+                        class="w-full border-2 border-gray-200 text-gray-800 py-3 rounded-lg font-semibold hover:bg-[#F97316] hover:text-white hover:border-[#F97316] transition duration-300">Saber
+                        mais</button>
                 </div>
 
                 <!-- Modelo 3 -->
-                <div class="bg-[#ff6b00] p-8 rounded-2xl shadow-xl flex flex-col justify-between text-white">
+                <div class="bg-[#F97316] p-8 rounded-2xl shadow-xl flex flex-col justify-between text-white">
                     <div>
-                        <span class="text-white/80 text-xs font-bold uppercase tracking-wider mb-4 block">Full Service</span>
+                        <span class="text-white/80 text-xs font-bold uppercase tracking-wider mb-4 block">Full
+                            Service</span>
                         <h3 class="text-2xl font-bold mb-4">Gestão Turnkey</h3>
-                        <p class="text-white/95 mb-8 leading-relaxed text-sm">Desde a compra em planta até ao check-in do inquilino corporativo. Nós cuidamos de tudo, você apenas recebe o rendimento.</p>
+                        <p class="text-white/95 mb-8 leading-relaxed text-sm">Desde a compra em planta até ao check-in
+                            do inquilino corporativo. Nós cuidamos de tudo, você apenas recebe o rendimento.</p>
                         <ul class="space-y-3 mb-8">
                             <li class="flex items-center gap-2 text-sm text-white/90">
                                 <span class="material-symbols-outlined text-white text-sm">check_circle</span>
@@ -229,7 +275,9 @@
                             </li>
                         </ul>
                     </div>
-                    <button class="w-full bg-white text-[#ff6b00] py-3 rounded-lg font-semibold hover:bg-orange-50 transition duration-300">Solicitar Proposta</button>
+                    <button
+                        class="w-full bg-white text-[#F97316] py-3 rounded-lg font-semibold hover:bg-[#F97316]/10 transition duration-300">Solicitar
+                        Proposta</button>
                 </div>
             </div>
         </div>
@@ -240,39 +288,47 @@
         <div class="max-w-7xl mx-auto px-6 md:px-12">
             <div class="bento-grid">
                 <div class="col-span-12 lg:col-span-4 flex flex-col justify-center">
-                    <h2 class="text-4xl font-bold mb-6 text-gray-900">Performance Financeira</h2>
-                    <p class="text-gray-500 mb-8 leading-relaxed">Utilize o nosso simulador para projetar os retornos baseados em dados reais do mercado de Luanda (Talatona, Marginal e Kilamba).</p>
+                    <h2 class="text-4xl font-bold mb-6 text-gray-900">
+                        {{ $sections['performance']['title'] ?? 'Performance Financeira' }}</h2>
+                    <p class="text-gray-500 mb-8 leading-relaxed">
+                        {{ $sections['performance']['subtitle'] ?? 'Utilize o nosso simulador para projetar os retornos baseados em dados reais do mercado de Luanda (Talatona, Marginal e Kilamba).' }}
+                    </p>
                     <div class="space-y-4">
                         <div class="flex items-center gap-4 p-4 rounded-xl bg-gray-50 border border-gray-200">
-                            <div class="bg-[#ff6b00]/10 p-2.5 rounded-lg text-[#ff6b00]">
+                            <div class="bg-[#F97316]/10 p-2.5 rounded-lg text-[#F97316]">
                                 <span class="material-symbols-outlined text-2xl">trending_up</span>
                             </div>
                             <div>
                                 <div class="text-xs text-gray-500 uppercase font-semibold">ROI Estimado</div>
-                                <div class="text-xl font-bold text-gray-900">15% - 22% p.a.</div>
+                                <div class="text-xl font-bold text-gray-900">
+                                    {{ $sections['performance']['roi'] ?? '15% - 22% p.a.' }}</div>
                             </div>
                         </div>
                         <div class="flex items-center gap-4 p-4 rounded-xl bg-gray-50 border border-gray-200">
-                            <div class="bg-[#ff6b00]/10 p-2.5 rounded-lg text-[#ff6b00]">
+                            <div class="bg-[#F97316]/10 p-2.5 rounded-lg text-[#F97316]">
                                 <span class="material-symbols-outlined text-2xl">payments</span>
                             </div>
                             <div>
                                 <div class="text-xs text-gray-500 uppercase font-semibold">Payback Period</div>
-                                <div class="text-xl font-bold text-gray-900">6.5 Anos</div>
+                                <div class="text-xl font-bold text-gray-900">
+                                    {{ $sections['performance']['payback'] ?? '6.5 Anos' }}</div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-span-12 lg:col-span-8 bg-gray-50 p-8 md:p-10 rounded-2xl shadow-sm border border-gray-200/50">
+                <div
+                    class="col-span-12 lg:col-span-8 bg-gray-50 p-8 md:p-10 rounded-2xl shadow-sm border border-gray-200/50">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
                         <div class="space-y-6">
                             <div>
-                                <label class="block text-sm font-semibold text-gray-700 mb-2">Montante de Investimento (USD)</label>
-                                <input class="w-full accent-[#ff6b00]" max="2000000" min="100000" step="50000" type="range" />
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Montante de Investimento
+                                    (USD)</label>
+                                <input class="w-full accent-[#F97316]" max="2000000" min="100000" step="50000"
+                                    type="range" />
                                 <div class="flex justify-between text-xs text-gray-400 mt-1">
                                     <span>$100k</span>
-                                    <span class="font-bold text-[#ff6b00]">$250k</span>
+                                    <span class="font-bold text-[#F97316]">$250k</span>
                                     <span>$2M</span>
                                 </div>
                             </div>
@@ -292,17 +348,22 @@
                                     <option>Mutamba / Baixa</option>
                                 </select>
                             </div>
-                            <button class="w-full bg-[#ff6b00] hover:bg-orange-600 text-white py-4 rounded-lg font-bold transition duration-300">Simular Agora</button>
+                            <button
+                                class="w-full bg-[#F97316] hover:bg-[#F97316]/90 text-white py-4 rounded-lg font-bold transition duration-300">Simular
+                                Agora</button>
                         </div>
 
-                        <div class="bg-white p-6 rounded-xl border border-dashed border-gray-200 flex flex-col justify-between">
+                        <div
+                            class="bg-white p-6 rounded-xl border border-dashed border-gray-200 flex flex-col justify-between">
                             <div>
-                                <h4 class="text-xs text-gray-400 font-semibold uppercase mb-4">Projeção de Rendimento Mensal</h4>
+                                <h4 class="text-xs text-gray-400 font-semibold uppercase mb-4">Projeção de Rendimento
+                                    Mensal</h4>
                                 <div class="text-4xl font-bold text-gray-900">$2,450.00</div>
                                 <div class="text-xs text-green-600 font-bold mt-1">+11.2% Yield Bruta</div>
                             </div>
                             <div class="mt-6 pt-6 border-t border-gray-100">
-                                <h4 class="text-xs text-gray-400 font-semibold uppercase mb-4">Valorização Patrimonial (5 anos)</h4>
+                                <h4 class="text-xs text-gray-400 font-semibold uppercase mb-4">Valorização Patrimonial
+                                    (5 anos)</h4>
                                 <div class="text-3xl font-bold text-gray-900">$312,000.00</div>
                                 <div class="text-xs text-gray-400 mt-1">Baseado em dados históricos 2018-2023</div>
                             </div>
@@ -316,28 +377,30 @@
     <!-- Partnerships -->
     <section class="py-16 bg-white border-t border-gray-100">
         <div class="max-w-7xl mx-auto px-6 md:px-12">
-            <p class="text-center text-xs font-semibold text-gray-400 uppercase tracking-widest mb-10">Parcerias Estratégicas Internacionais</p>
-            <div class="flex flex-wrap justify-center items-center gap-16 grayscale opacity-50 hover:grayscale-0 transition duration-300">
+            <p class="text-center text-xs font-semibold text-gray-400 uppercase tracking-widest mb-10">Parcerias
+                Estratégicas Internacionais</p>
+            <div
+                class="flex flex-wrap justify-center items-center gap-16 grayscale opacity-50 hover:grayscale-0 transition duration-300">
                 @for ($i = 0; $i < 4; $i++)
-                <div>
-                    <img src="{{ asset('assets/Logo_Time.png') }}" alt="Parceiro" class="h-10">
-                </div>
+                    <div>
+                        <img src="{{ asset('assets/Logo_Time.png') }}" alt="Parceiro" class="h-10">
+                    </div>
                 @endfor
             </div>
         </div>
     </section>
 
     @push('scripts')
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const hero = document.querySelector(".hero-section");
-            if (hero) {
-                setTimeout(() => {
-                    hero.classList.add("hero-visible");
-                }, 300);
-            }
-        });
-    </script>
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                const hero = document.querySelector(".hero-section");
+                if (hero) {
+                    setTimeout(() => {
+                        hero.classList.add("hero-visible");
+                    }, 300);
+                }
+            });
+        </script>
     @endpush
 
 </x-layouts.app>

@@ -4,30 +4,80 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Property extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'title', 'description', 'price', 'price_period', 'type', 'property_type',
+        'title', 'slug', 'description', 'price', 'price_period', 'type', 'category', 'property_type',
         'country', 'city', 'location', 'bedrooms', 'bathrooms', 'garages', 'area',
         'image', 'gallery', 'amenities', 'is_featured', 'is_active', 'status',
         'video_url', 'tour_3d_url', 'latitude', 'longitude'
     ];
 
     protected $casts = [
-        'gallery'    => 'array',
-        'amenities'  => 'array',
+        'gallery'     => 'array',
+        'amenities'   => 'array',
         'is_featured' => 'boolean',
         'is_active'   => 'boolean',
     ];
 
+    // ── Route-model binding via slug ──────────────────────────────────────────
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
+
+    // ── Auto-generate unique slug on create/update ────────────────────────────
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::creating(function (Property $property) {
+            if (empty($property->slug)) {
+                $property->slug = static::generateUniqueSlug($property->title, null);
+            }
+        });
+
+        static::updating(function (Property $property) {
+            // Regenerate slug only if title changed and slug was not manually set
+            if ($property->isDirty('title') && !$property->isDirty('slug')) {
+                $property->slug = static::generateUniqueSlug($property->title, $property->id);
+            }
+        });
+    }
+
+    public static function generateUniqueSlug(string $title, ?int $excludeId = null): string
+    {
+        $base = Str::slug($title);
+
+        if (empty($base)) {
+            $base = 'imovel';
+        }
+
+        $slug = $base;
+        $i    = 1;
+
+        while (
+            static::where('slug', $slug)
+                  ->when($excludeId, fn ($q) => $q->where('id', '!=', $excludeId))
+                  ->exists()
+        ) {
+            $slug = $base . '-' . $i++;
+        }
+
+        return $slug;
+    }
+
+    // ── Relationships ─────────────────────────────────────────────────────────
     public function messages()
     {
         return $this->hasMany(ContactMessage::class);
     }
 
+    // ── Accessors ─────────────────────────────────────────────────────────────
     public function getImageUrlAttribute(): string
     {
         if ($this->image && file_exists(public_path('assets/' . $this->image))) {
@@ -52,7 +102,6 @@ class Property extends Model
         };
     }
 
-    // Dynamic typology label accessor
     public function getTypologyDisplayAttribute(): string
     {
         if (in_array(strtolower($this->property_type), ['apartamento', 'casa', 'moradia'])) {
@@ -64,7 +113,6 @@ class Property extends Model
         if (strtolower($this->property_type) === 'terreno') {
             return $this->area ?: 'Terreno';
         }
-        // Fallback
         return $this->bedrooms > 0 ? 'T' . $this->bedrooms : ($this->area ?: ucfirst($this->property_type));
     }
 }

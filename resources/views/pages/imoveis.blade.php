@@ -1,11 +1,12 @@
-<x-layouts.app title="Imóveis"
-    description="Arrendamento de curta e longa duração, compra e venda de imóveis premium em Angola, Portugal e África do Sul.">
+<x-layouts.app
+    :title="$sections['seo']['title'] ?? 'Imóveis em Luanda'"
+    :description="$sections['seo']['description'] ?? 'Arrendamento de curta e longa duração, compra e venda de imóveis premium em Angola, Portugal e África do Sul.'">
 
     {{-- =============================================
     BARRA DE PESQUISA & FILTROS
     ============================================= --}}
     <div class="px-3 flex justify-center mt-12">
-        <div class="w-full max-w-7xl bg-orange-500 rounded-2xl p-6 shadow-2xl" x-data="{
+        <div class="w-full max-w-7xl bg-[#F97316] rounded-2xl p-6 shadow-2xl" x-data="{
                 open: {{ request()->anyFilled(['typology', 'country', 'city']) ? 'true' : 'false' }},
 
                 country: '{{ request('country', '') }}',
@@ -57,18 +58,21 @@
                         placeholder="Pesquisar título, zona, cidade..."
                         class="h-14 rounded-xl px-5 outline-none text-sm text-gray-800 placeholder-gray-400 col-span-1 sm:col-span-2 lg:col-span-1">
 
-                    {{-- Tipo de Negócio --}}
-                    <select name="type" class="h-14 rounded-xl px-5 outline-none text-sm text-gray-600 cursor-pointer">
+                    {{-- Tipo de Negócio / Categoria --}}
+                    <select name="category" class="h-14 rounded-xl px-5 outline-none text-sm text-gray-600 cursor-pointer">
                         <option value="">Tipo de Negócio</option>
-                        <option value="arrendamento" @selected(request('type') === 'arrendamento')>Arrendamento</option>
-                        <option value="venda" @selected(request('type') === 'venda')>Venda</option>
+                        <option value="venda" @selected(request('category') === 'venda')>Venda</option>
+                        <option value="arrendamento-longa-duracao" @selected(request('category') === 'arrendamento-longa-duracao')>
+                            Arrendamento de Longa Duração</option>
+                        <option value="arrendamento-curta-duracao" @selected(request('category') === 'arrendamento-curta-duracao')>
+                            Arrendamento de Curta Duração</option>
                     </select>
 
                     {{-- Tipo de Imóvel --}}
                     <select name="property_type" x-model="propertyType"
                         class="h-14 rounded-xl px-5 outline-none text-sm text-gray-600 cursor-pointer">
                         <option value="">Tipo de Imóvel</option>
-                        @foreach(['apartamento' => 'Apartamento', 'vivenda' => 'Vivenda', 'moradia' => 'Moradia', 'escritório' => 'Escritório', 'loja' => 'Loja', 'terreno' => 'Terreno'] as $val => $label)
+                        @foreach(['apartamento' => 'Apartamento', 'vivenda' => 'Vivenda', "espaços_comerciais" => "Espaços Comercias"] as $val => $label)
                             <option value="{{ $val }}" @selected(request('property_type') === $val)>{{ $label }}</option>
                         @endforeach
                     </select>
@@ -82,7 +86,7 @@
                                 :class="open ? 'rotate-180' : ''">tune</span>
                         </button>
                         <button type="submit"
-                            class="flex-1 h-14 rounded-xl bg-white text-orange-600 uppercase tracking-widest text-sm font-bold hover:bg-orange-50 transition duration-300">
+                            class="flex-1 h-14 rounded-xl bg-white text-[#F97316]/90 uppercase tracking-widest text-sm font-bold hover:bg-[#F97316]/10 transition duration-300">
                             Pesquisar
                         </button>
                     </div>
@@ -182,7 +186,7 @@
                         <div class="flex items-end">
                             <a href="{{ route('properties.index') }}"
                                 class="w-full h-14 rounded-xl border border-white text-white text-sm font-semibold
-                                      hover:bg-white hover:text-orange-500 transition flex items-center justify-center gap-2">
+                                      hover:bg-white hover:text-[#F97316] transition flex items-center justify-center gap-2">
                                 <span class="material-symbols-outlined text-[18px]">filter_alt_off</span>
                                 Limpar Filtros
                             </a>
@@ -197,15 +201,15 @@
     {{-- =============================================
     CHIPS DE FILTROS ACTIVOS
     ============================================= --}}
-    @if(request()->anyFilled(['search', 'type', 'property_type', 'country', 'city', 'typology']))
+    @if(request()->anyFilled(['search', 'category', 'property_type', 'country', 'city', 'typology']))
         <div class="max-w-7xl mx-auto px-4 lg:px-6 mt-6">
             <div class="flex flex-wrap gap-2 items-center">
                 <span class="text-sm text-gray-500 font-medium mr-1">Filtros activos:</span>
-                @foreach(['search' => 'Pesquisa', 'type' => 'Negócio', 'property_type' => 'Tipo', 'country' => 'País', 'city' => 'Cidade', 'typology' => 'Tipologia'] as $param => $label)
+                @foreach(['search' => 'Pesquisa', 'category' => 'Categoria', 'property_type' => 'Tipo', 'country' => 'País', 'city' => 'Cidade', 'typology' => 'Tipologia'] as $param => $label)
                     @if(request()->filled($param))
                         <a href="{{ request()->fullUrlWithoutQuery([$param]) }}"
-                            class="inline-flex items-center gap-1.5 bg-orange-100 text-orange-700 text-xs font-semibold px-3 py-1.5 rounded-full hover:bg-orange-200 transition">
-                            {{ $label }}: {{ ucfirst(request($param)) }}
+                            class="inline-flex items-center gap-1.5 bg-[#F97316]/10 text-[#F97316]/80 text-xs font-semibold px-3 py-1.5 rounded-full hover:bg-[#F97316]/20 transition">
+                            {{ $label }}: {{ ucfirst(str_replace(['-', 'arrendamento-'], [' ', ''], request($param))) }}
                             <span class="material-symbols-outlined text-[14px]">close</span>
                         </a>
                     @endif
@@ -246,7 +250,7 @@
                         <input type="hidden" name="{{ $k }}" value="{{ $v }}">
                     @endforeach
                     <select name="sort" onchange="document.getElementById('sort-form').submit()"
-                        class="h-12 rounded-xl border border-gray-200 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 cursor-pointer">
+                        class="h-12 rounded-xl border border-gray-200 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#F97316] cursor-pointer">
                         <option value="recentes" @selected(request('sort', 'recentes') === 'recentes')>Mais recentes
                         </option>
                         <option value="preco_baixo" @selected(request('sort') === 'preco_baixo')>Menor preço</option>
@@ -273,7 +277,8 @@
                     @endphp
 
                     <article
-                        class="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col group">
+                    onclick="window.location.href='{{ route('properties.show', $property) }}'"
+                        class="bg-white cursor-pointer rounded-2xl overflow-hidden border border-gray-100 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col group">
 
                         {{-- Imagem --}}
                         <div class="relative overflow-hidden h-[240px] shrink-0">
@@ -283,8 +288,8 @@
                             {{-- Badge negócio --}}
                             <span
                                 class="absolute top-3 left-3 text-[11px] font-bold px-3 py-1.5 rounded-lg uppercase tracking-wide shadow"
-                                style="background:{{ $property->type === 'arrendamento' ? '#FFD166' : '#FF5A00' }};
-                                                 color:{{ $property->type === 'arrendamento' ? '#333' : '#fff' }}">
+                                style="background:{{ $property->type === 'arrendamento' ? '#FFD166' : '#F97316' }};
+                                                     color:{{ $property->type === 'arrendamento' ? '#333' : '#fff' }}">
                                 {{ $property->type }}
                             </span>
 
@@ -307,7 +312,7 @@
                         {{-- Conteúdo --}}
                         <div class="p-5 flex flex-col flex-1">
                             <h2
-                                class="text-base font-bold text-gray-900 leading-snug group-hover:text-orange-500 transition line-clamp-2">
+                                class="text-base font-bold text-gray-900 leading-snug group-hover:text-[#F97316] transition line-clamp-2">
                                 {{ $property->title }}
                             </h2>
                             <p class="text-gray-400 text-xs mt-1">{{ ucfirst($property->property_type) }}</p>
@@ -317,26 +322,26 @@
                                 class="mt-4 grid grid-cols-2 gap-x-4 gap-y-2 text-xs text-gray-500 border-t border-b border-gray-100 py-4">
                                 @if($property->bedrooms > 0 && !in_array($pt, ['terreno', 'loja', 'escritório', 'escritorio']))
                                     <div class="flex items-center gap-1.5">
-                                        <span class="material-symbols-outlined text-[17px] text-orange-400">bed</span>
+                                        <span class="material-symbols-outlined text-[17px] text-[#F97316]">bed</span>
                                         <span>{{ $property->bedrooms }} Quarto{{ $property->bedrooms > 1 ? 's' : '' }}</span>
                                     </div>
                                 @endif
                                 @if($property->bathrooms > 0)
                                     <div class="flex items-center gap-1.5">
-                                        <span class="material-symbols-outlined text-[17px] text-orange-400">shower</span>
+                                        <span class="material-symbols-outlined text-[17px] text-[#F97316]">shower</span>
                                         <span>{{ $property->bathrooms }} WC</span>
                                     </div>
                                 @endif
                                 @if($property->garages > 0)
                                     <div class="flex items-center gap-1.5">
                                         <span
-                                            class="material-symbols-outlined text-[17px] text-orange-400">directions_car</span>
+                                            class="material-symbols-outlined text-[17px] text-[#F97316]">directions_car</span>
                                         <span>{{ $property->garages }} Garagem</span>
                                     </div>
                                 @endif
                                 @if($property->area)
                                     <div class="flex items-center gap-1.5">
-                                        <span class="material-symbols-outlined text-[17px] text-orange-400">square_foot</span>
+                                        <span class="material-symbols-outlined text-[17px] text-[#F97316]">square_foot</span>
                                         <span>{{ $property->area }}</span>
                                     </div>
                                 @endif
@@ -345,13 +350,13 @@
                             {{-- Preço + Botão --}}
                             <div class="flex items-end justify-between mt-4 gap-2">
                                 <div>
-                                    <p class="text-orange-500 text-lg font-bold leading-tight">{{ $property->price }}</p>
+                                    <p class="text-[#F97316] text-lg font-bold leading-tight">{{ $property->price }}</p>
                                     @if($property->price_period)
                                         <p class="text-gray-400 text-xs">{{ $property->price_period }}</p>
                                     @endif
                                 </div>
                                 <a href="{{ route('properties.show', $property) }}"
-                                    class="bg-orange-500 text-white text-xs font-bold px-5 py-2.5 rounded-xl uppercase tracking-wider hover:bg-orange-600 transition whitespace-nowrap">
+                                    class="bg-[#F97316] text-white text-xs font-bold px-5 py-2.5 rounded-xl uppercase tracking-wider hover:bg-[#F97316]/90 transition whitespace-nowrap">
                                     Ver Detalhes
                                 </a>
                             </div>
@@ -364,7 +369,7 @@
                         <p class="text-xl font-semibold text-gray-400">Nenhum imóvel encontrado.</p>
                         <p class="text-sm text-gray-400 mt-1">Tente remover ou alterar os filtros seleccionados.</p>
                         <a href="{{ route('properties.index') }}"
-                            class="mt-8 inline-flex items-center gap-2 bg-orange-500 text-white px-7 py-3 rounded-xl font-bold hover:bg-orange-600 transition">
+                            class="mt-8 inline-flex items-center gap-2 bg-[#F97316] text-white px-7 py-3 rounded-xl font-bold hover:bg-[#F97316]/90 transition">
                             <span class="material-symbols-outlined text-[18px]">refresh</span>
                             Ver Todos os Imóveis
                         </a>
@@ -384,7 +389,7 @@
                             {{-- Badge negócio --}}
                             <span
                                 class="absolute top-3 left-3 text-[11px] font-bold px-3 py-1.5 rounded-lg uppercase tracking-wide shadow"
-                                :style="p.type === 'arrendamento' ? 'background: #FFD166; color: #333;' : 'background: #FF5A00; color: #fff;'">
+                                :style="p.type === 'arrendamento' ? 'background: #FFD166; color: #333;' : 'background: #F97316; color: #fff;'">
                                 <span x-text="p.type"></span>
                             </span>
 
@@ -406,7 +411,7 @@
 
                         {{-- Conteúdo --}}
                         <div class="p-5 flex flex-col flex-1">
-                            <h2 class="text-base font-bold text-gray-900 leading-snug group-hover:text-orange-500 transition line-clamp-2"
+                            <h2 class="text-base font-bold text-gray-900 leading-snug group-hover:text-[#F97316] transition line-clamp-2"
                                 x-text="p.title">
                             </h2>
                             <p class="text-gray-400 text-xs mt-1" x-text="p.property_type_label"></p>
@@ -417,28 +422,28 @@
                                 <template
                                     x-if="p.bedrooms > 0 && !['terreno', 'loja', 'escritório', 'escritorio'].includes(p.property_type)">
                                     <div class="flex items-center gap-1.5">
-                                        <span class="material-symbols-outlined text-[17px] text-orange-400">bed</span>
+                                        <span class="material-symbols-outlined text-[17px] text-[#F97316]">bed</span>
                                         <span x-text="p.bedrooms + ' Quarto' + (p.bedrooms > 1 ? 's' : '')"></span>
                                     </div>
                                 </template>
                                 <template x-if="p.bathrooms > 0">
                                     <div class="flex items-center gap-1.5">
                                         <span
-                                            class="material-symbols-outlined text-[17px] text-orange-400">shower</span>
+                                            class="material-symbols-outlined text-[17px] text-[#F97316]">shower</span>
                                         <span x-text="p.bathrooms + ' WC'"></span>
                                     </div>
                                 </template>
                                 <template x-if="p.garages > 0">
                                     <div class="flex items-center gap-1.5">
                                         <span
-                                            class="material-symbols-outlined text-[17px] text-orange-400">directions_car</span>
+                                            class="material-symbols-outlined text-[17px] text-[#F97316]">directions_car</span>
                                         <span x-text="p.garages + ' Garagem'"></span>
                                     </div>
                                 </template>
                                 <template x-if="p.area">
                                     <div class="flex items-center gap-1.5">
                                         <span
-                                            class="material-symbols-outlined text-[17px] text-orange-400">square_foot</span>
+                                            class="material-symbols-outlined text-[17px] text-[#F97316]">square_foot</span>
                                         <span x-text="p.area"></span>
                                     </div>
                                 </template>
@@ -447,13 +452,13 @@
                             {{-- Preço + Botão --}}
                             <div class="flex items-end justify-between mt-4 gap-2">
                                 <div>
-                                    <p class="text-orange-500 text-lg font-bold leading-tight" x-text="p.price"></p>
+                                    <p class="text-[#F97316] text-lg font-bold leading-tight" x-text="p.price"></p>
                                     <template x-if="p.price_period">
                                         <p class="text-gray-400 text-xs" x-text="p.price_period"></p>
                                     </template>
                                 </div>
                                 <a :href="p.url"
-                                    class="bg-orange-500 text-white text-xs font-bold px-5 py-2.5 rounded-xl uppercase tracking-wider hover:bg-orange-600 transition whitespace-nowrap">
+                                    class="bg-[#F97316] text-white text-xs font-bold px-5 py-2.5 rounded-xl uppercase tracking-wider hover:bg-[#F97316]/90 transition whitespace-nowrap">
                                     Ver Detalhes
                                 </a>
                             </div>
@@ -504,7 +509,7 @@
                             A carregar mais imóveis...
                         </span>
                         {{-- Spinner icon --}}
-                        <svg class="animate-spin h-5 w-5 text-orange-500" fill="none" viewBox="0 0 24 24">
+                        <svg class="animate-spin h-5 w-5 text-[#F97316]" fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
                             </circle>
                             <path class="opacity-75" fill="currentColor"
@@ -610,19 +615,15 @@
         </script>
 
         @if(session('error') || session('success'))
-            <div x-data="{ show: true }" 
-                 x-show="show" 
-                 x-init="setTimeout(() => show = false, 5000)"
-                 x-transition:enter="transition ease-out duration-300"
-                 x-transition:enter-start="opacity-0 translate-y-2 sm:translate-y-0 sm:translate-x-2"
-                 x-transition:enter-end="opacity-100 translate-y-0 sm:translate-x-0"
-                 x-transition:leave="transition ease-in duration-200"
-                 x-transition:leave-start="opacity-100"
-                 x-transition:leave-end="opacity-0"
-                 class="fixed bottom-5 right-5 z-50 max-w-sm w-full bg-white border-l-4 {{ session('error') ? 'border-red-500' : 'border-green-500' }} rounded-xl shadow-2xl p-4 flex items-start gap-3 pointer-events-auto border border-gray-150"
-                 role="alert"
-                 x-cloak>
-                
+            <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)"
+                x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="opacity-0 translate-y-2 sm:translate-y-0 sm:translate-x-2"
+                x-transition:enter-end="opacity-100 translate-y-0 sm:translate-x-0"
+                x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100"
+                x-transition:leave-end="opacity-0"
+                class="fixed bottom-5 right-5 z-50 max-w-sm w-full bg-white border-l-4 {{ session('error') ? 'border-red-500' : 'border-green-500' }} rounded-xl shadow-2xl p-4 flex items-start gap-3 pointer-events-auto border border-gray-150"
+                role="alert" x-cloak>
+
                 {{-- Icon --}}
                 <div class="flex-shrink-0 mt-0.5">
                     @if(session('error'))

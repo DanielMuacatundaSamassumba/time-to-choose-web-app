@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Property;
+use App\Models\PageSection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
@@ -31,6 +32,19 @@ class PropertyController extends Controller
             });
         }
 
+        // ── Category / type unified filter (matches menu slugs) ──────
+        // category=venda           → type = 'venda'
+        // category=arrendamento-*  → category field in DB
+        if ($request->filled('category')) {
+            $cat = $request->input('category');
+            if ($cat === 'venda') {
+                $query->where('type', 'venda');
+            } elseif (in_array($cat, ['arrendamento-longa-duracao', 'arrendamento-curta-duracao'])) {
+                $query->where('category', $cat);
+            }
+        }
+
+        // Legacy: direct type filter (kept for backward compat)
         if ($request->filled('type')) {
             $query->where('type', $request->input('type'));
         }
@@ -123,6 +137,7 @@ class PropertyController extends Controller
                     'id' => $p->id,
                     'title' => $p->title,
                     'type' => $p->type,
+                    'category' => $p->category,
                     'property_type' => $p->property_type,
                     'property_type_label' => ucfirst($p->property_type),
                     'price' => $p->price,
@@ -144,7 +159,9 @@ class PropertyController extends Controller
             ]);
         }
 
-        return view('pages.imoveis', compact('properties', 'countries', 'cities'));
+        $sections = PageSection::getForPage('imoveis');
+
+        return view('pages.imoveis', compact('properties', 'countries', 'cities', 'sections'));
     }
 
 

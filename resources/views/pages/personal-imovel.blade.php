@@ -5,7 +5,7 @@
         <style>
             .swiper-button-next,
             .swiper-button-prev {
-                color: #F45600;
+                color: #F97316;
             }
         </style>
     </x-slot>
@@ -26,8 +26,8 @@
     <section class="max-w-7xl mx-auto px-4 lg:px-6 py-8 mt-6">
 
         <nav class="text-sm text-gray-500 mb-6">
-            <a href="{{ url('/') }}" class="hover:text-orange-500">Início</a> /
-            <a href="{{ url('/imoveis') }}" class="hover:text-orange-500">Imóveis</a> /
+            <a href="{{ url('/') }}" class="hover:text-[#F97316]">Início</a> /
+            <a href="{{ url('/imoveis') }}" class="hover:text-[#F97316]">Imóveis</a> /
             <span class="text-gray-800">{{ $property->title }}</span>
         </nav>
 
@@ -71,7 +71,7 @@
         <div class="grid lg:grid-cols-3 gap-10 mt-10">
             <div class="lg:col-span-2">
                 <div class="flex flex-wrap items-center gap-3 mb-3">
-                    <span class="bg-orange-500 text-white px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider">
+                    <span class="bg-[#F97316] text-white px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider">
                         {{ $property->type }}
                     </span>
                     <span class="px-3 py-1 rounded-full text-xs font-semibold {{ $property->status_badge['class'] }}">
@@ -120,12 +120,12 @@
 
                     <div class="flex flex-wrap items-center gap-6 mt-6 text-sm text-gray-600 border-t border-dashed pt-4">
                         <div class="flex items-center gap-2">
-                            <span class="material-symbols-outlined text-orange-500 text-[20px]">movie</span>
+                            <span class="material-symbols-outlined text-[#F97316] text-[20px]">movie</span>
                             <span class="font-semibold text-gray-700">Vídeo Disponível:</span>
                             <span>{{ $property->video_url ? 'Sim' : 'Não' }}</span>
                         </div>
                         <div class="flex items-center gap-2">
-                            <span class="material-symbols-outlined text-orange-500 text-[20px]">3d_rotation</span>
+                            <span class="material-symbols-outlined text-[#F97316] text-[20px]">3d_rotation</span>
                             <span class="font-semibold text-gray-700">Visita 3D:</span>
                             <span>{{ $property->tour_3d_url ? 'Sim' : 'Não' }}</span>
                         </div>
@@ -204,14 +204,14 @@
             <aside>
                 <div class="lg:sticky lg:top-24 bg-white rounded-2xl shadow-xl p-6 border border-gray-100">
                     <p class="text-gray-500 text-sm">Valor</p>
-                    <h2 class="text-4xl font-bold text-orange-500 mt-2">
+                    <h2 class="text-4xl font-bold text-[#F97316] mt-2">
                         {{ $property->price }}
                         @if($property->price_period)
                             <span class="text-lg text-gray-400 font-normal">{{ $property->price_period }}</span>
                         @endif
                     </h2>
 
-                    <a href="tel:+244923000000" class="w-full bg-orange-500 text-center text-white py-4 rounded-xl mt-8 font-bold hover:bg-orange-600 transition flex items-center justify-center gap-2">
+                    <a href="tel:+244923000000" class="w-full bg-[#F97316] text-center text-white py-4 rounded-xl mt-8 font-bold hover:bg-[#F97316]/90 transition flex items-center justify-center gap-2">
                         <span class="material-symbols-outlined">call</span>
                         Ligar para o Consultor
                     </a>
@@ -244,22 +244,22 @@
                         <input type="hidden" name="property_id" value="{{ $property->id }}">
 
                         <input type="text" name="name" value="{{ old('name') }}" required
-                               class="w-full border border-gray-200 rounded-xl p-3 text-sm outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition"
+                               class="w-full border border-gray-200 rounded-xl p-3 text-sm outline-none focus:border-[#F97316] focus:ring-1 focus:ring-[#F97316] transition"
                                placeholder="Seu Nome *">
 
                         <input type="email" name="email" value="{{ old('email') }}" required
-                               class="w-full border border-gray-200 rounded-xl p-3 text-sm outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition"
+                               class="w-full border border-gray-200 rounded-xl p-3 text-sm outline-none focus:border-[#F97316] focus:ring-1 focus:ring-[#F97316] transition"
                                placeholder="Seu Email *">
 
                         <input type="text" name="phone" value="{{ old('phone') }}"
-                               class="w-full border border-gray-200 rounded-xl p-3 text-sm outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition"
+                               class="w-full border border-gray-200 rounded-xl p-3 text-sm outline-none focus:border-[#F97316] focus:ring-1 focus:ring-[#F97316] transition"
                                placeholder="Seu Telefone">
 
                         <textarea name="message" required
-                                  class="w-full border border-gray-200 rounded-xl p-3 h-32 text-sm outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition resize-none"
+                                  class="w-full border border-gray-200 rounded-xl p-3 h-32 text-sm outline-none focus:border-[#F97316] focus:ring-1 focus:ring-[#F97316] transition resize-none"
                                   placeholder="Tenho interesse neste imóvel. Por favor, contacte-me. *">{{ old('message', 'Tenho interesse neste imóvel. Gostaria de agendar uma visita.') }}</textarea>
 
-                        <button type="submit" class="w-full bg-[#f97316] text-white py-4 rounded-xl mt-4 font-bold hover:bg-orange-600 transition">
+                        <button type="submit" class="w-full bg-[#F97316] text-white py-4 rounded-xl mt-4 font-bold hover:bg-[#F97316]/90 transition">
                             Enviar Pedido
                         </button>
                     </form>
@@ -284,7 +284,7 @@
                         <img src="{{ asset('assets/1.jpeg') }}" alt="{{ $item->title }}" class="w-full h-[260px] object-cover group-hover:scale-105 transition duration-500">
                     @endif
                     <span class="absolute top-4 left-4 text-xs font-bold px-3 py-2 rounded-lg"
-                          style="background-color: {{ $item->type === 'arrendamento' ? '#FFD166' : '#FF5A00' }}; color: {{ $item->type === 'arrendamento' ? 'black' : 'white' }}">
+                          style="background-color: {{ $item->type === 'arrendamento' ? '#FFD166' : '#F97316' }}; color: {{ $item->type === 'arrendamento' ? 'black' : 'white' }}">
                         {{ strtoupper($item->type) }}
                     </span>
                 </div>
@@ -323,7 +323,7 @@
                         </div>
                     </div>
                     <div class="flex items-center justify-between mt-4">
-                        <h4 class="text-[#FF5A00] text-base font-bold">{{ $item->price }}</h4>
+                        <h4 class="text-[#F97316] text-base font-bold">{{ $item->price }}</h4>
                         <a href="{{ route('properties.show', $item) }}"
                             class="bg-[#F97316] text-center text-white text-[12px] px-4 py-2.5 rounded-xl uppercase tracking-wider font-semibold hover:bg-[#e65100] transition">
                             Ver Detalhes

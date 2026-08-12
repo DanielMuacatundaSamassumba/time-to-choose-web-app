@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $title ?? 'Painel Admin' }} — Time To Choose</title>
+    <link rel="icon" type="image/png" href="{{ asset('assets/Logo_Time.png') }}">
+    <link rel="shortcut icon" type="image/png" href="{{ asset('assets/Logo_Time.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('assets/Logo_Time.png') }}">
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
@@ -14,13 +17,13 @@
                 extend: {
                     colors: {
                         brand: {
-                            DEFAULT: '#FF6B00',
-                            light:   '#FF8A30',
-                            dark:    '#CC5500',
+                            DEFAULT: '#F97316',
+                            light:   '#FBA968',
+                            dark:    '#EA6C00',
                             50:      '#FFF3EC',
                             100:     '#FFE4CC',
-                            500:     '#FF6B00',
-                            600:     '#E05F00',
+                            500:     '#F97316',
+                            600:     '#EA6C00',
                         },
                         admin: {
                             bg:        '#F5F5F5',
@@ -94,6 +97,34 @@
             @if($unread > 0)
             <span class="ml-auto bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">{{ $unread }}</span>
             @endif
+        </a>
+
+        <a href="{{ route('admin.content.index') }}"
+           class="{{ $linkClass }} {{ request()->routeIs('admin.content.*') ? $activeLinkClass : $inactiveLinkClass }}">
+            <i class="fa-solid fa-file-pen w-5 text-center {{ request()->routeIs('admin.content.*') ? 'text-brand' : '' }}"></i>
+            Páginas & Conteúdo
+        </a>
+
+        <div class="pt-4 pb-2">
+            <p class="text-[10px] font-semibold text-gray-600 uppercase tracking-widest px-4 mb-3">Sistema</p>
+        </div>
+
+        <a href="{{ route('admin.media.index') }}"
+           class="{{ $linkClass }} {{ request()->routeIs('admin.media.*') ? $activeLinkClass : $inactiveLinkClass }}">
+            <i class="fa-solid fa-images w-5 text-center {{ request()->routeIs('admin.media.*') ? 'text-brand' : '' }}"></i>
+            Biblioteca de Media
+        </a>
+
+        <a href="{{ route('admin.users.index') }}"
+           class="{{ $linkClass }} {{ request()->routeIs('admin.users.*') ? $activeLinkClass : $inactiveLinkClass }}">
+            <i class="fa-solid fa-users-gear w-5 text-center {{ request()->routeIs('admin.users.*') ? 'text-brand' : '' }}"></i>
+            Utilizadores
+        </a>
+
+        <a href="{{ route('admin.settings.index') }}"
+           class="{{ $linkClass }} {{ request()->routeIs('admin.settings.*') ? $activeLinkClass : $inactiveLinkClass }}">
+            <i class="fa-solid fa-sliders w-5 text-center {{ request()->routeIs('admin.settings.*') ? 'text-brand' : '' }}"></i>
+            Configurações
         </a>
 
         <div class="pt-4 pb-2">

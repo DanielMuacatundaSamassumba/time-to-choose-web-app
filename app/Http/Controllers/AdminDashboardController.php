@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Property;
 use App\Models\ContactMessage;
+use App\Models\PageSection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -35,9 +36,17 @@ class AdminDashboardController extends Controller
             $query->where('title', 'like', '%' . $request->search . '%')
                   ->orWhere('location', 'like', '%' . $request->search . '%');
         }
-        if ($request->filled('type')) {
-            $query->where('type', $request->type);
+
+        // Unified filter — mirrors the menu and public page selects
+        if ($request->filled('filter_category')) {
+            $fc = $request->input('filter_category');
+            if ($fc === 'venda') {
+                $query->where('type', 'venda');
+            } elseif (in_array($fc, ['arrendamento-longa-duracao', 'arrendamento-curta-duracao'])) {
+                $query->where('category', $fc);
+            }
         }
+
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
@@ -53,32 +62,40 @@ class AdminDashboardController extends Controller
 
     public function propertiesStore(Request $request)
     {
-        $data = $request->validate([
-            'title'         => 'required|string|max:255',
-            'description'   => 'nullable|string',
-            'price'         => 'nullable|string|max:100',
-            'price_period'  => 'nullable|string|max:50',
-            'type'          => 'required|in:arrendamento,venda',
-            'property_type' => 'required|string|max:100',
-            'country'       => 'required|string|max:100',
-            'city'          => 'required|string|max:100',
-            'location'      => 'nullable|string|max:255',
-            'bedrooms'      => 'nullable|integer|min:0',
-            'bathrooms'     => 'nullable|integer|min:0',
-            'garages'       => 'nullable|integer|min:0',
-            'area'          => 'nullable|string|max:50',
-            'status'        => 'required|in:disponivel,reservado,vendido,arrendado',
-            'is_featured'   => 'boolean',
-            'is_active'     => 'boolean',
-            'amenities'     => 'nullable|string',
-            'image'         => 'nullable|image|max:5120',
-            'gallery.*'     => 'nullable|image|max:5120',
-            'video_url'     => 'nullable|string|max:255',
-            'tour_3d_url'   => 'nullable|string|max:255',
-            'latitude'      => 'nullable|string|max:50',
-            'longitude'     => 'nullable|string|max:50',
+        $request->validate([
+            'title'             => 'required|string|max:255',
+            'description'       => 'nullable|string',
+            'price'             => 'nullable|string|max:100',
+            'price_period'      => 'nullable|string|max:50',
+            'business_category' => 'required|in:venda,arrendamento-longa-duracao,arrendamento-curta-duracao',
+            'property_type'     => 'required|string|max:100',
+            'country'           => 'required|string|max:100',
+            'city'              => 'required|string|max:100',
+            'location'          => 'nullable|string|max:255',
+            'bedrooms'          => 'nullable|integer|min:0',
+            'bathrooms'         => 'nullable|integer|min:0',
+            'garages'           => 'nullable|integer|min:0',
+            'area'              => 'nullable|string|max:50',
+            'status'            => 'required|in:disponivel,reservado,vendido,arrendado',
+            'is_featured'       => 'boolean',
+            'is_active'         => 'boolean',
+            'amenities'         => 'nullable|string',
+            'image'             => 'nullable|image|max:51200',
+            'gallery.*'         => 'nullable|image|max:51200',
+            'video_url'         => 'nullable|string|max:255',
+            'tour_3d_url'       => 'nullable|string|max:255',
+            'latitude'          => 'nullable|string|max:50',
+            'longitude'         => 'nullable|string|max:50',
         ]);
 
+        // Derive type + category from the unified business_category field
+        $bc = $request->input('business_category');
+        $type     = $bc === 'venda' ? 'venda' : 'arrendamento';
+        $category = $bc !== 'venda' ? $bc : null;
+
+        $data = $request->except(['_token', 'business_category']);
+        $data['type']        = $type;
+        $data['category']    = $category;
         $data['is_featured'] = $request->boolean('is_featured');
         $data['is_active']   = $request->boolean('is_active', true);
 
@@ -89,8 +106,7 @@ class AdminDashboardController extends Controller
 
         // Upload main image
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('properties', 'public');
-            $data['image'] = $path;
+            $data['image'] = $request->file('image')->store('properties', 'public');
         }
 
         // Upload gallery
@@ -115,32 +131,40 @@ class AdminDashboardController extends Controller
 
     public function propertiesUpdate(Request $request, Property $property)
     {
-        $data = $request->validate([
-            'title'         => 'required|string|max:255',
-            'description'   => 'nullable|string',
-            'price'         => 'nullable|string|max:100',
-            'price_period'  => 'nullable|string|max:50',
-            'type'          => 'required|in:arrendamento,venda',
-            'property_type' => 'required|string|max:100',
-            'country'       => 'required|string|max:100',
-            'city'          => 'required|string|max:100',
-            'location'      => 'nullable|string|max:255',
-            'bedrooms'      => 'nullable|integer|min:0',
-            'bathrooms'     => 'nullable|integer|min:0',
-            'garages'       => 'nullable|integer|min:0',
-            'area'          => 'nullable|string|max:50',
-            'status'        => 'required|in:disponivel,reservado,vendido,arrendado',
-            'is_featured'   => 'boolean',
-            'is_active'     => 'boolean',
-            'amenities'     => 'nullable|string',
-            'image'         => 'nullable|image|max:5120',
-            'gallery.*'     => 'nullable|image|max:5120',
-            'video_url'     => 'nullable|string|max:255',
-            'tour_3d_url'   => 'nullable|string|max:255',
-            'latitude'      => 'nullable|string|max:50',
-            'longitude'     => 'nullable|string|max:50',
+        $request->validate([
+            'title'             => 'required|string|max:255',
+            'description'       => 'nullable|string',
+            'price'             => 'nullable|string|max:100',
+            'price_period'      => 'nullable|string|max:50',
+            'business_category' => 'required|in:venda,arrendamento-longa-duracao,arrendamento-curta-duracao',
+            'property_type'     => 'required|string|max:100',
+            'country'           => 'required|string|max:100',
+            'city'              => 'required|string|max:100',
+            'location'          => 'nullable|string|max:255',
+            'bedrooms'          => 'nullable|integer|min:0',
+            'bathrooms'         => 'nullable|integer|min:0',
+            'garages'           => 'nullable|integer|min:0',
+            'area'              => 'nullable|string|max:50',
+            'status'            => 'required|in:disponivel,reservado,vendido,arrendado',
+            'is_featured'       => 'boolean',
+            'is_active'         => 'boolean',
+            'amenities'         => 'nullable|string',
+            'image'             => 'nullable|image|max:51200',
+            'gallery.*'         => 'nullable|image|max:51200',
+            'video_url'         => 'nullable|string|max:255',
+            'tour_3d_url'       => 'nullable|string|max:255',
+            'latitude'          => 'nullable|string|max:50',
+            'longitude'         => 'nullable|string|max:50',
         ]);
 
+        // Derive type + category from the unified business_category field
+        $bc = $request->input('business_category');
+        $type     = $bc === 'venda' ? 'venda' : 'arrendamento';
+        $category = $bc !== 'venda' ? $bc : null;
+
+        $data = $request->except(['_token', '_method', 'business_category']);
+        $data['type']        = $type;
+        $data['category']    = $category;
         $data['is_featured'] = $request->boolean('is_featured');
         $data['is_active']   = $request->boolean('is_active', true);
 
@@ -149,8 +173,7 @@ class AdminDashboardController extends Controller
         }
 
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('properties', 'public');
-            $data['image'] = $path;
+            $data['image'] = $request->file('image')->store('properties', 'public');
         } else {
             unset($data['image']);
         }
@@ -191,5 +214,140 @@ class AdminDashboardController extends Controller
     {
         $message->delete();
         return back()->with('success', 'Mensagem eliminada.');
+    }
+
+    // ─── Content (Page Sections CMS) ─────────────────────────────────────────
+
+    /**
+     * List of all editable pages.
+     */
+    public function contentIndex()
+    {
+        $pages = [
+            'home' => [
+                'label'    => 'Homepage',
+                'icon'     => 'fa-house',
+                'url'      => '/',
+                'thumb'    => 'Real_estate_consultant_welcoming…_202607030647.jpeg',
+                'sections' => ['Hero', 'Categorias', 'Destaques', 'Serviços', 'Internacionais', 'CTA', 'SEO'],
+                'images'   => ['Hero'],
+            ],
+            'imoveis' => [
+                'label'    => 'Catálogo de Imóveis',
+                'icon'     => 'fa-building',
+                'url'      => '/imoveis',
+                'thumb'    => 'Real_estate_consultant_presentin…_202607021733.jpeg',
+                'sections' => ['Hero', 'SEO'],
+                'images'   => ['Hero'],
+            ],
+            'about' => [
+                'label'    => 'Sobre Nós',
+                'icon'     => 'fa-users',
+                'url'      => '/sobre-nos',
+                'thumb'    => 'Executives_overlooking_Luanda_sk…_202607031225.jpeg',
+                'sections' => ['Hero', 'História', 'Em Números', 'CTA', 'SEO'],
+                'images'   => ['Hero', 'História'],
+            ],
+            'investors' => [
+                'label'    => 'Investidores',
+                'icon'     => 'fa-chart-line',
+                'url'      => '/investidores',
+                'thumb'    => 'Real_estate_consultant_presentin…_202607021733.jpeg',
+                'sections' => ['Hero', 'Oportunidade', 'Serviços', 'Performance', 'SEO'],
+                'images'   => ['Hero', 'Oportunidade'],
+            ],
+            'valuation' => [
+                'label'    => 'Avaliação Imobiliária',
+                'icon'     => 'fa-magnifying-glass-dollar',
+                'url'      => '/avaliacao-de-imoveis',
+                'thumb'    => 'Real_estate_valuation_report_pre…_202607021706.jpeg',
+                'sections' => ['Hero', 'Metodologia', 'Objectivos', 'Modalidades', 'SEO'],
+                'images'   => ['Hero'],
+            ],
+            'management' => [
+                'label'    => 'Gestão de Propriedades',
+                'icon'     => 'fa-screwdriver-wrench',
+                'url'      => '/gestao-de-propriedades',
+                'thumb'    => 'Property_manager_discussing_perf…_202607021718.jpeg',
+                'sections' => ['Hero', 'O Que Fazemos', 'Full-Pack', 'SEO'],
+                'images'   => ['Hero', 'Full-Pack'],
+            ],
+            'partners' => [
+                'label'    => 'Propriedades & Parceiros',
+                'icon'     => 'fa-handshake',
+                'url'      => '/propriedades-e-parceiros',
+                'thumb'    => 'An_ultra-realistic_luxury_real_estate_202607021617.jpeg',
+                'sections' => ['Hero', 'Proposta de Valor', 'Modelos', 'Como Funciona', 'Full-Pack', 'SEO'],
+                'images'   => ['Hero'],
+            ],
+        ];
+
+        return view('admin.content.index', compact('pages'));
+    }
+
+    /**
+     * Show the edit form for a specific page.
+     */
+    public function contentEdit(string $page)
+    {
+        $allowedPages = ['home', 'imoveis', 'about', 'investors', 'valuation', 'management', 'partners'];
+        abort_unless(in_array($page, $allowedPages), 404);
+
+        $sections = PageSection::getForPage($page);
+
+        $pageLabels = [
+            'home'       => 'Homepage',
+            'imoveis'    => 'Catálogo de Imóveis',
+            'about'      => 'Sobre Nós',
+            'investors'  => 'Investidores',
+            'valuation'  => 'Avaliação Imobiliária',
+            'management' => 'Gestão de Propriedades',
+            'partners'   => 'Propriedades & Parceiros',
+        ];
+
+        $pageLabel = $pageLabels[$page] ?? $page;
+
+        return view('admin.content.edit', compact('page', 'sections', 'pageLabel'));
+    }
+
+    /**
+     * Save updated section content + images for a specific page.
+     */
+    public function contentUpdate(Request $request, string $page)
+    {
+        $allowedPages = ['home', 'imoveis', 'about', 'investors', 'valuation', 'management', 'partners'];
+        abort_unless(in_array($page, $allowedPages), 404);
+
+        // ── Handle text fields ────────────────────────────────────────────────
+        $input = $request->except(['_token', '_method']);
+
+        foreach ($input as $key => $value) {
+            if (str_contains($key, '__') && !($value instanceof \Illuminate\Http\UploadedFile)) {
+                [$section, $field] = explode('__', $key, 2);
+                PageSection::updateOrCreate(
+                    ['page' => $page, 'section' => $section, 'field' => $field],
+                    ['value' => $value]
+                );
+            }
+        }
+
+        // ── Handle image uploads ──────────────────────────────────────────────
+        // Image input names follow the pattern: img__{section}__{field}
+        foreach ($request->allFiles() as $key => $file) {
+            if (str_starts_with($key, 'img__')) {
+                $parts = explode('__', $key, 3); // ['img', section, field]
+                if (count($parts) === 3) {
+                    [, $section, $field] = $parts;
+                    $path = $file->store('page-images', 'public');
+                    PageSection::updateOrCreate(
+                        ['page' => $page, 'section' => $section, 'field' => $field],
+                        ['value' => $path]
+                    );
+                }
+            }
+        }
+
+        return redirect()->route('admin.content.edit', $page)
+                         ->with('success', 'Conteúdo actualizado com sucesso!');
     }
 }

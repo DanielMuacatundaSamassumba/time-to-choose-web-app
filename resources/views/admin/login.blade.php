@@ -4,12 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login — Painel Admin | Time To Choose</title>
+    <link rel="icon" type="image/png" href="{{ asset('assets/Logo_Time.png') }}">
+    <link rel="shortcut icon" type="image/png" href="{{ asset('assets/Logo_Time.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('assets/Logo_Time.png') }}">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <style>
         body { font-family: 'Inter', sans-serif; }
-        .gradient-brand { background: linear-gradient(135deg, #FF6B00 0%, #CC4400 100%); }
+        .gradient-brand { background: linear-gradient(135deg, #F97316 0%, #EA6C00 100%); }
     </style>
 </head>
 <body class="min-h-screen bg-[#0F0F0F] flex">
@@ -25,7 +28,7 @@
             <h1 class="text-white text-4xl font-bold leading-tight mb-4">
                 Gerir os seus imóveis<br>nunca foi tão simples.
             </h1>
-            <p class="text-orange-100 text-lg leading-relaxed">
+            <p class="text-[#F97316]/20 text-lg leading-relaxed">
                 Painel de controlo completo para gerir o seu portefólio imobiliário, analisar leads e controlar todas as propriedades em tempo real.
             </p>
         </div>
@@ -34,7 +37,7 @@
                 <div class="w-8 h-8 rounded-full bg-white/30 border-2 border-white flex items-center justify-center text-white text-xs font-bold">A</div>
                 <div class="w-8 h-8 rounded-full bg-white/20 border-2 border-white flex items-center justify-center text-white text-xs font-bold">M</div>
             </div>
-            <p class="text-orange-100 text-sm">Time To Choose © 2026</p>
+            <p class="text-[#F97316]/20 text-sm">Time To Choose © 2026</p>
         </div>
     </div>
 
@@ -66,7 +69,7 @@
                         <i class="fa-solid fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-sm"></i>
                         <input type="email" name="email" value="{{ old('email') }}" required
                                placeholder="admin@timetochoose.ao"
-                               class="w-full bg-white/5 border border-white/10 text-white placeholder-gray-600 rounded-xl pl-11 pr-4 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#FF6B00] focus:border-transparent transition">
+                               class="w-full bg-white/5 border border-white/10 text-white placeholder-gray-600 rounded-xl pl-11 pr-4 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#F97316] focus:border-transparent transition">
                     </div>
                 </div>
 
@@ -76,12 +79,12 @@
                         <i class="fa-solid fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-sm"></i>
                         <input type="password" name="password" required
                                placeholder="••••••••"
-                               class="w-full bg-white/5 border border-white/10 text-white placeholder-gray-600 rounded-xl pl-11 pr-4 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#FF6B00] focus:border-transparent transition">
+                               class="w-full bg-white/5 border border-white/10 text-white placeholder-gray-600 rounded-xl pl-11 pr-4 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#F97316] focus:border-transparent transition">
                     </div>
                 </div>
 
                 <div class="flex items-center gap-2">
-                    <input type="checkbox" name="remember" id="remember" class="w-4 h-4 rounded accent-[#FF6B00]">
+                    <input type="checkbox" name="remember" id="remember" class="w-4 h-4 rounded accent-[#F97316]">
                     <label for="remember" class="text-gray-400 text-sm">Lembrar-me</label>
                 </div>
 

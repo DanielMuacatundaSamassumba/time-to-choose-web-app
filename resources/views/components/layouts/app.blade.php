@@ -4,9 +4,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="{{ $description ?? 'Time To Choose - Mediação, gestão e consultoria imobiliária em Luanda, Angola.' }}">
+    @php
+        $seo = $sections['seo'] ?? [];
+        $metaTitle = !empty($seo['title']) ? $seo['title'] : ($title ?? 'Time To Choose | Imobiliária Luanda');
+        $metaDesc  = !empty($seo['description']) ? $seo['description'] : ($description ?? 'Time To Choose - Mediação, gestão e consultoria imobiliária em Luanda, Angola.');
+        $metaKeys  = !empty($seo['keywords']) ? $seo['keywords'] : 'imóveis, luanda, angola, arrendamento, venda, imobiliária';
+    @endphp
+    <meta name="description" content="{{ $metaDesc }}">
+    <meta name="keywords" content="{{ $metaKeys }}">
 
-    <title>{{ $title ?? 'Time To Choose' }} | Imobiliária Luanda</title>
+    <title>{{ $metaTitle }}</title>
+
+    {{-- Favicon --}}
+    <link rel="icon" type="image/png" href="{{ asset('assets/Logo_Time.png') }}">
+    <link rel="shortcut icon" type="image/png" href="{{ asset('assets/Logo_Time.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('assets/Logo_Time.png') }}">
 
     {{-- Tailwind CSS --}}
     <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
@@ -109,7 +121,7 @@
         }
         .swiper-pagination-bullet-active {
             width: 40px; height: 10px;
-            background: #FF5A00;
+            background: #F97316;
             border-radius: 999px;
         }
 
@@ -181,6 +193,33 @@
             targets.forEach(el => observer.observe(el));
         });
     </script>
+
+    {{-- Google Translate Integration --}}
+    <div id="google_translate_element" style="display:none;"></div>
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'pt',
+                includedLanguages: 'pt,en,fr,zh-CN',
+                autoDisplay: false
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+    <style>
+        .goog-te-banner-frame, .goog-te-banner, .skiptranslate, #goog-gt-tt, .goog-te-balloon-frame, iframe.goog-te-banner-frame {
+            display: none !important;
+            visibility: hidden !important;
+        }
+        body {
+            top: 0px !important;
+        }
+        .goog-text-highlight {
+            background-color: transparent !important;
+            box-shadow: none !important;
+        }
+    </style>
 
     {{-- Slots de scripts extras por página --}}
     {{ $scripts ?? '' }}

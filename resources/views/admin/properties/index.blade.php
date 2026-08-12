@@ -11,11 +11,13 @@
                        class="w-full border border-gray-200 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition">
             </div>
 
-            <select name="type"
+            {{-- Filtro unificado: igual ao menu e à página pública --}}
+            <select name="filter_category"
                     class="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition">
-                <option value="">Todos os tipos</option>
-                <option value="arrendamento" {{ request('type') === 'arrendamento' ? 'selected' : '' }}>Arrendamento</option>
-                <option value="venda" {{ request('type') === 'venda' ? 'selected' : '' }}>Venda</option>
+                <option value="">Tipo de Negócio</option>
+                <option value="venda"                      {{ request('filter_category') === 'venda'                      ? 'selected' : '' }}>🏷️ Venda</option>
+                <option value="arrendamento-longa-duracao" {{ request('filter_category') === 'arrendamento-longa-duracao' ? 'selected' : '' }}>🕐 Arrendamento de Longa Duração</option>
+                <option value="arrendamento-curta-duracao" {{ request('filter_category') === 'arrendamento-curta-duracao' ? 'selected' : '' }}>⚡ Arrendamento de Curta Duração</option>
             </select>
 
             <select name="status"
@@ -33,7 +35,7 @@
                 Filtrar
             </button>
 
-            @if(request()->hasAny(['search', 'type', 'status']))
+            @if(request()->hasAny(['search', 'filter_category', 'status']))
             <a href="{{ route('admin.properties.index') }}" class="text-gray-400 hover:text-gray-600 text-sm px-3 py-2.5">
                 <i class="fa-solid fa-xmark mr-1"></i>Limpar
             </a>
@@ -108,6 +110,11 @@
                                 {{ $property->type === 'arrendamento' ? 'bg-blue-50 text-blue-600' : 'bg-purple-50 text-purple-600' }}">
                                 {{ ucfirst($property->type) }}
                             </span>
+                            @if($property->category === 'arrendamento-longa-duracao')
+                                <span class="block text-[10px] text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full mt-1 w-fit">🕐 Longa Duração</span>
+                            @elseif($property->category === 'arrendamento-curta-duracao')
+                                <span class="block text-[10px] text-[#F97316] bg-[#F97316]/10 px-2 py-0.5 rounded-full mt-1 w-fit">⚡ Curta Duração</span>
+                            @endif
                             <p class="text-[11px] text-admin-muted mt-1">{{ ucfirst($property->property_type) }}</p>
                         </td>
                         <td class="px-4 py-4">

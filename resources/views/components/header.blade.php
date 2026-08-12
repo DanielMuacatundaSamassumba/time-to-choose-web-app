@@ -73,27 +73,32 @@ STICKY HEADER (aparece ao rolar)
                 </a>
                 {{-- Nav Desktop --}}
                 <nav class="hidden lg:flex items-center gap-2 font-semibold uppercase text-sm">
-                    <a href="{{ url('/') }}" class="{{ request()->is('/') ? 'bg-[#F45600] text-white' : 'text-black hover:bg-[#F45600] hover:text-white' }}
+                    <a href="{{ url('/imoveis') }}?category=venda" class="{{ request()->is('/') && !request()->has('category') ? 'bg-[#F97316] text-white' : 'text-black hover:bg-[#F97316] hover:text-white' }}
                               p-2 px-4 rounded-full transition duration-300">
-                        Longa Duração
+                       Venda
                     </a>
-                    <a href="{{ url('/imoveis') }}" class="{{ request()->is('imoveis') ? 'bg-[#F45600] text-white' : 'text-black hover:bg-[#F45600] hover:text-white' }}
+                    <a href="{{ url('/imoveis') }}?category=arrendamento-longa-duracao" class="{{ request('category') === 'arrendamento-longa-duracao' ? 'bg-[#F97316] text-white' : 'text-black hover:bg-[#F97316] hover:text-white' }}
                               p-2 px-4 rounded-full transition duration-300">
-                        Curta Duração
+                       Arrendamento de Longa Duração
+                    </a>
+                    <a href="{{ url('/imoveis') }}?category=arrendamento-curta-duracao" class="{{ request('category') === 'arrendamento-curta-duracao' ? 'bg-[#F97316] text-white' : 'text-black hover:bg-[#F97316] hover:text-white' }}
+                              p-2 px-4 rounded-full transition duration-300">
+                        Arrendamento de Curta Duração
                     </a>
                     <!-- <a href="{{ url('/sobre-nos') }}"
-                       class="{{ request()->is('sobre-nos') ? 'bg-[#F45600] text-white' : 'text-black hover:bg-[#F45600] hover:text-white' }}
+                       class="{{ request()->is('sobre-nos') ? 'bg-[#F97316] text-white' : 'text-black hover:bg-[#F97316] hover:text-white' }}
                               p-2 px-4 rounded-full transition duration-300">
                         Quem Somos
                     </a> -->
                     <!-- <a href="{{ url('/investidores') }}"
-                       class="{{ request()->is('investidores') ? 'bg-[#F45600] text-white' : 'text-black hover:bg-[#F45600] hover:text-white' }}
+                       class="{{ request()->is('investidores') ? 'bg-[#F97316] text-white' : 'text-black hover:bg-[#F97316] hover:text-white' }}
                               p-2 px-4 rounded-full transition duration-300">
                         Investidores
                     </a> -->
                 </nav>
             </div>
             <div class="flex items-center gap-3">
+                <x-language-switcher />
                 {{-- Menu mobile btn (sticky) --}}
                 <button id="sticky-menu-btn"
                     class="relative w-12 h-12 flex flex-col items-center justify-center gap-[6px] lg:hidden">
@@ -104,9 +109,9 @@ STICKY HEADER (aparece ao rolar)
                 {{-- Aside btn (desktop) --}}
                 <button id="aside-menu-btn"
                     class="relative w-12 h-12 hidden lg:flex flex-col items-center justify-center gap-[6px]">
-                    <span class="menu-line w-8 h-[2px] bg-[#F45600] rounded-full"></span>
-                    <span class="menu-line w-8 h-[2px] bg-[#F45600] rounded-full"></span>
-                    <span class="menu-line w-8 h-[2px] bg-[#F45600] rounded-full"></span>
+                    <span class="menu-line w-8 h-[2px] bg-[#F97316] rounded-full"></span>
+                    <span class="menu-line w-8 h-[2px] bg-[#F97316] rounded-full"></span>
+                    <span class="menu-line w-8 h-[2px] bg-[#F97316] rounded-full"></span>
                 </button>
             </div>
         </div>
@@ -118,55 +123,109 @@ HEADER NORMAL (visível no topo ou transparente sobre hero)
 ====================================================== --}}
 <header id="main-header"
     class="{{ $transparent ? 'absolute top-0 left-0 w-full z-50' : 'w-full bg-white border-b border-gray-100 shadow-sm' }}">
+
     <div class="max-w-7xl mx-auto px-6 lg:px-8 py-5 flex items-center justify-between">
+
         {{-- Logo --}}
         <div class="flex items-center gap-8">
+
             <a href="{{ url('/') }}">
-                <img src="{{ asset('assets/Logo_Time.png') }}" alt="Time To Choose"
+                <img src="{{ asset('assets/Logo_Time.png') }}"
+                    alt="Time To Choose"
                     class="{{ $transparent ? 'h-14 lg:h-16 brightness-0 invert' : 'h-12 lg:h-14' }}">
             </a>
 
             {{-- Nav Desktop --}}
-            <nav class="hidden lg:flex items-center gap-2 uppercase text-sm font-semibold">
-                <a href="{{ url('/') }}" class="{{ request()->is('/') ? 'bg-[#F45600] text-white' : ($transparent ? 'text-white hover:bg-white/20' : 'text-black hover:bg-[#F45600] hover:text-white') }}
-                          p-2 px-4 rounded-full transition duration-300">
-                    Curta Duração
+            <nav class="hidden lg:flex items-center gap-2 font-semibold uppercase text-sm">
+
+                {{-- Venda --}}
+                <a href="{{ url('/imoveis') }}?category=venda"
+                    class="{{ request('category') === 'venda'
+                        ? 'bg-[#F97316] text-white'
+                        : ($transparent
+                            ? 'text-white hover:bg-[#F97316] hover:text-white'
+                            : 'text-black hover:bg-[#F97316] hover:text-white') }}
+                        p-2 px-4 rounded-full transition duration-300">
+                    Venda
                 </a>
-                <a href="{{ url('/imoveis') }}" class="{{ request()->is('imoveis') ? 'bg-[#F45600] text-white' : ($transparent ? 'text-white hover:bg-white/20' : 'text-black hover:bg-[#F45600] hover:text-white') }}
-                          p-2 px-4 rounded-full transition duration-300">
-                    Longa Duração
+
+                {{-- Arrendamento de Longa Duração --}}
+                <a href="{{ url('/imoveis') }}?category=arrendamento-longa-duracao"
+                    class="{{ request('category') === 'arrendamento-longa-duracao'
+                        ? 'bg-[#F97316] text-white'
+                        : ($transparent
+                            ? 'text-white hover:bg-[#F97316] hover:text-white'
+                            : 'text-black hover:bg-[#F97316] hover:text-white') }}
+                        p-2 px-4 rounded-full transition duration-300">
+                    Arrendamento de Longa Duração
                 </a>
-                <!-- <a href="{{ url('/sobre-nos') }}"
-                   class="{{ request()->is('sobre-nos') ? 'bg-[#F45600] text-white' : ($transparent ? 'text-white hover:bg-white/20' : 'text-black hover:bg-[#F45600] hover:text-white') }}
-                          p-2 px-4 rounded-full transition duration-300">
+
+                {{-- Arrendamento de Curta Duração --}}
+                <a href="{{ url('/imoveis') }}?category=arrendamento-curta-duracao"
+                    class="{{ request('category') === 'arrendamento-curta-duracao'
+                        ? 'bg-[#F97316] text-white'
+                        : ($transparent
+                            ? 'text-white hover:bg-[#F97316] hover:text-white'
+                            : 'text-black hover:bg-[#F97316] hover:text-white') }}
+                        p-2 px-4 rounded-full transition duration-300">
+                    Arrendamento de Curta Duração
+                </a>
+
+                {{--
+                <a href="{{ url('/sobre-nos') }}"
+                    class="{{ request()->is('sobre-nos')
+                        ? 'bg-[#F97316] text-white'
+                        : ($transparent
+                            ? 'text-white hover:bg-[#F97316] hover:text-white'
+                            : 'text-black hover:bg-[#F97316] hover:text-white') }}
+                    p-2 px-4 rounded-full transition duration-300">
                     Quem Somos
-                </a> -->
-                <!-- <a href="{{ url('/investidores') }}"
-                   class="{{ request()->is('investidores') ? 'bg-[#F45600] text-white' : ($transparent ? 'text-white hover:bg-white/20' : 'text-black hover:bg-[#F45600] hover:text-white') }}
-                          p-2 px-4 rounded-full transition duration-300">
+                </a>
+                --}}
+
+                {{--
+                <a href="{{ url('/investidores') }}"
+                    class="{{ request()->is('investidores')
+                        ? 'bg-[#F97316] text-white'
+                        : ($transparent
+                            ? 'text-white hover:bg-[#F97316] hover:text-white'
+                            : 'text-black hover:bg-[#F97316] hover:text-white') }}
+                    p-2 px-4 rounded-full transition duration-300">
                     Investidores
-                </a> -->
+                </a>
+                --}}
+
             </nav>
         </div>
 
+        {{-- Menu buttons --}}
         <div class="flex items-center gap-3">
-            {{-- Mobile btn (hambúrguer) --}}
-            <button id="hero-menu-btn" class="lg:hidden relative w-12 h-12 flex items-center justify-center z-[10001]">
-                <span class="hero-line {{ $transparent ? 'bg-white' : 'bg-black' }}"></span>
-                <span class="hero-line {{ $transparent ? 'bg-white' : 'bg-black' }}"></span>
-                <span class="hero-line {{ $transparent ? 'bg-white' : 'bg-black' }}"></span>
-            </button>
-            {{-- Aside btn (desktop) --}}
-            <button id="aside-menu-btn-2"
-                class="hidden lg:flex w-12 h-12 flex-col items-center justify-center gap-[6px]">
-                <span
-                    class="menu-line w-8 h-[2px] {{ $transparent ? 'bg-white' : 'bg-[#F45600]' }} rounded-full"></span>
-                <span
-                    class="menu-line w-8 h-[2px] {{ $transparent ? 'bg-white' : 'bg-[#F45600]' }} rounded-full"></span>
-                <span
-                    class="menu-line w-8 h-[2px] {{ $transparent ? 'bg-white' : 'bg-[#F45600]' }} rounded-full"></span>
-            </button>
-        </div>
+            <x-language-switcher :transparent="$transparent" />
+
+    {{-- Mobile btn (hambúrguer) --}}
+<button id="hero-menu-btn"
+    type="button"
+    class="block lg:hidden relative w-12 h-12 flex flex-col items-center justify-center gap-1 z-[10001]">
+
+    <span class="block w-8 h-[3px] bg-black !opacity-100"></span>
+    <span class="block w-8 h-[3px] bg-black !opacity-100"></span>
+    <span class="block w-8 h-[3px] bg-black !opacity-100"></span>
+
+</button>
+
+    {{-- Aside btn (desktop) --}}
+    <button id="aside-menu-btn-2"
+        class="hidden lg:flex w-12 h-12 flex-col items-center justify-center gap-[6px]">
+
+        <span class="menu-line w-8 h-[2px] {{ $transparent ? 'bg-white' : 'bg-[#F97316]' }} rounded-full"></span>
+
+        <span class="menu-line w-8 h-[2px] {{ $transparent ? 'bg-white' : 'bg-[#F97316]' }} rounded-full"></span>
+
+        <span class="menu-line w-8 h-[2px] {{ $transparent ? 'bg-white' : 'bg-[#F97316]' }} rounded-full"></span>
+
+    </button>
+
+</div>
     </div>
 </header>
 
@@ -189,34 +248,47 @@ MENU MOBILE (slide-in)
         </div>
         {{-- Links --}}
         <nav class="flex flex-col p-6 gap-1">
-            <a href="{{ url('/') }}"
-                class="py-4 px-4 rounded-xl text-lg font-semibold {{ request()->is('/') ? 'text-[#F45600] bg-orange-50' : 'text-gray-800 hover:text-[#F45600] hover:bg-orange-50' }} transition duration-200">
-                Arrendamento de Longa Duração
+            <!-- <a href="{{ url('/') }}"
+                class="py-4 px-4 rounded-xl text-lg font-semibold {{ request()->is('/') && !request()->has('category') ? 'text-[#F97316] bg-[#F97316]/10' : 'text-gray-800 hover:text-[#F97316] hover:bg-[#F97316]/10' }} transition duration-200">
+                🏠 Home
+            </a> -->
+            <!-- <a href="{{ url('/imoveis') }}?category=longa-duracao"
+                class="py-4 px-4 rounded-xl text-lg font-semibold {{ request('category') === 'longa-duracao' ? 'text-[#F97316] bg-[#F97316]/10' : 'text-gray-800 hover:text-[#F97316] hover:bg-[#F97316]/10' }} transition duration-200">
+                🕐 Longa Duração
+            </a> -->
+            <!-- <a href="{{ url('/imoveis') }}?category=curta-duracao"
+                class="py-4 px-4 rounded-xl text-lg font-semibold {{ request('category') === 'curta-duracao' ? 'text-[#F97316] bg-[#F97316]/10' : 'text-gray-800 hover:text-[#F97316] hover:bg-[#F97316]/10' }} transition duration-200">
+                ⚡ Curta Duração
+            </a> -->
+              <a href="{{ url('/propriedades-e-parceiros') }}"
+                class="py-4 px-4 rounded-xl text-lg font-semibold {{ request()->is('propriedades-e-parceiros') ? 'text-[#F97316] bg-[#F97316]/10' : 'text-gray-800 hover:text-[#F97316] hover:bg-[#F97316]/10' }} transition duration-200">
+                Proprietários &amp; Parceiros
             </a>
-            <a href="{{ url('/imoveis') }}"
-                class="py-4 px-4 rounded-xl text-lg font-semibold {{ request()->is('imoveis') ? 'text-[#F45600] bg-orange-50' : 'text-gray-800 hover:text-[#F45600] hover:bg-orange-50' }} transition duration-200">
-                Arrendamento de Curta Duração
-            </a>
-            <a href="{{ url('/sobre-nos') }}"
-                class="py-4 px-4 rounded-xl text-lg font-semibold {{ request()->is('sobre-nos') ? 'text-[#F45600] bg-orange-50' : 'text-gray-800 hover:text-[#F45600] hover:bg-orange-50' }} transition duration-200">
+             <a href="{{ url('/avaliacao-de-imoveis') }}" class="flex items-center gap-3 p-4 rounded-xl text-lg font-semibold
+                          {{ request()->is('avaliacao-de-imoveis') ? 'text-[#F97316] bg-[#F97316]/10' : 'text-gray-800 hover:text-[#F97316] hover:bg-[#F97316]/10' }}
+                          transition duration-200">
+
+                    Avaliação Imobiliária
+                </a>
+            <!-- <a href="{{ url('/sobre-nos') }}"
+                class="py-4 px-4 rounded-xl text-lg font-semibold {{ request()->is('sobre-nos') ? 'text-[#F97316] bg-[#F97316]/10' : 'text-gray-800 hover:text-[#F97316] hover:bg-[#F97316]/10' }} transition duration-200">
                 Quem Somos
-            </a>
-            <a href="{{ url('/investidores') }}"
-                class="py-4 px-4 rounded-xl text-lg font-semibold {{ request()->is('investidores') ? 'text-[#F45600] bg-orange-50' : 'text-gray-800 hover:text-[#F45600] hover:bg-orange-50' }} transition duration-200">
-                Investidores
-            </a>
-            <a href="{{ url('/gestao-de-propriedades') }}"
-                class="py-4 px-4 rounded-xl text-lg font-semibold {{ request()->is('gestao-de-propriedades') ? 'text-[#F45600] bg-orange-50' : 'text-gray-800 hover:text-[#F45600] hover:bg-orange-50' }} transition duration-200">
+            </a> -->
+              <a href="{{ url('/gestao-de-propriedades') }}"
+                class="py-4 px-4 rounded-xl text-lg font-semibold {{ request()->is('gestao-de-propriedades') ? 'text-[#F97316] bg-[#F97316]/10' : 'text-gray-800 hover:text-[#F97316] hover:bg-[#F97316]/10' }} transition duration-200">
                 Gestão de Propriedades
             </a>
-            <a href="{{ url('/propriedades-e-parceiros') }}"
-                class="py-4 px-4 rounded-xl text-lg font-semibold {{ request()->is('propriedades-e-parceiros') ? 'text-[#F45600] bg-orange-50' : 'text-gray-800 hover:text-[#F45600] hover:bg-orange-50' }} transition duration-200">
-                Proprietários & Parceiros
+            <a href="{{ url('/investidores') }}"
+                class="py-4 px-4 rounded-xl text-lg font-semibold {{ request()->is('investidores') ? 'text-[#F97316] bg-[#F97316]/10' : 'text-gray-800 hover:text-[#F97316] hover:bg-[#F97316]/10' }} transition duration-200">
+                Investidores
             </a>
+          
+          
         </nav>
         {{-- Rodapé do menu --}}
-        <div class="mt-auto p-6 border-t border-gray-100">
-            <p class="text-sm text-gray-400">+244 923 000 000 · info@timetochoose.ao</p>
+        <div class="mt-auto p-6 border-t border-gray-100 flex items-center justify-between">
+            <p class="text-xs text-gray-400">+244 923 000 000</p>
+            <x-language-switcher :dropUp="true" />
         </div>
     </div>
 </div>
@@ -238,68 +310,45 @@ OVERLAY + ASIDE LATERAL (Desktop)
     </div>
     <nav class="p-8">
         <ul class="space-y-2">
-            <!-- <li>
-                <a href="{{ url('/') }}"
-                   class="flex items-center gap-3 p-4 rounded-xl text-lg font-semibold
-                          {{ request()->is('/') ? 'text-[#F45600] bg-orange-50' : 'text-gray-800 hover:text-[#F45600] hover:bg-orange-50' }}
+       
+         <li>
+                <a href="{{ url('/propriedades-e-parceiros') }}" class="flex items-center gap-3 p-4 rounded-xl text-lg font-semibold
+                          {{ request()->is('propriedades-e-parceiros') ? 'text-[#F97316] bg-[#F97316]/10' : 'text-gray-800 hover:text-[#F97316] hover:bg-[#F97316]/10' }}
                           transition duration-200">
-                    <span class="material-symbols-outlined">home</span>
-                    Longa Duração
-                </a>
-            </li> -->
-            <!-- <li>
-                <a href="{{ url('/imoveis') }}"
-                   class="flex items-center gap-3 p-4 rounded-xl text-lg font-semibold
-                          {{ request()->is('imoveis') ? 'text-[#F45600] bg-orange-50' : 'text-gray-800 hover:text-[#F45600] hover:bg-orange-50' }}
-                          transition duration-200">
-                    <span class="material-symbols-outlined">apartment</span>
-                    Curta Duração
-                </a>
-            </li> -->
-            <li>
-                <a href="{{ url('/sobre-nos') }}" class="flex items-center gap-3 p-4 rounded-xl text-lg font-semibold
-                          {{ request()->is('sobre-nos') ? 'text-[#F45600] bg-orange-50' : 'text-gray-800 hover:text-[#F45600] hover:bg-orange-50' }}
-                          transition duration-200">
-                    <span class="material-symbols-outlined">info</span>
-                    Quem Somos
+                  
+                    Proprietários & Parceiros
                 </a>
             </li>
-            <li>
-                <a href="{{ url('/investidores') }}" class="flex items-center gap-3 p-4 rounded-xl text-lg font-semibold
-                          {{ request()->is('investidores') ? 'text-[#F45600] bg-orange-50' : 'text-gray-800 hover:text-[#F45600] hover:bg-orange-50' }}
+             <li>
+                <a href="{{ url('/avaliacao-de-imoveis') }}" class="flex items-center gap-3 p-4 rounded-xl text-lg font-semibold
+                          {{ request()->is('avaliacao-de-imoveis') ? 'text-[#F97316] bg-[#F97316]/10' : 'text-gray-800 hover:text-[#F97316] hover:bg-[#F97316]/10' }}
                           transition duration-200">
-                    <span class="material-symbols-outlined">trending_up</span>
-                    Investidores
+
+                    Avaliação Imobiliária
                 </a>
             </li>
+           
             <li>
                 <a href="{{ url('/gestao-de-propriedades') }}" class="flex items-center gap-3 p-4 rounded-xl text-lg font-semibold
-                          {{ request()->is('gestao-de-propriedades') ? 'text-[#F45600] bg-orange-50' : 'text-gray-800 hover:text-[#F45600] hover:bg-orange-50' }}
+                          {{ request()->is('gestao-de-propriedades') ? 'text-[#F97316] bg-[#F97316]/10' : 'text-gray-800 hover:text-[#F97316] hover:bg-[#F97316]/10' }}
                           transition duration-200">
-                    <span class="material-symbols-outlined">manage_accounts</span>
+                 
                     Gestão de Propriedades
                 </a>
             </li>
             <li>
-                <a href="{{ url('/avaliacao-de-imoveis') }}" class="flex items-center gap-3 p-4 rounded-xl text-lg font-semibold
-                          {{ request()->is('avaliacao-de-imoveis') ? 'text-[#F45600] bg-orange-50' : 'text-gray-800 hover:text-[#F45600] hover:bg-orange-50' }}
+                <a href="{{ url('/investidores') }}" class="flex items-center gap-3 p-4 rounded-xl text-lg font-semibold
+                          {{ request()->is('investidores') ? 'text-[#F97316] bg-[#F97316]/10' : 'text-gray-800 hover:text-[#F97316] hover:bg-[#F97316]/10' }}
                           transition duration-200">
-                    <span class="material-symbols-outlined">assessment</span>
-                    Avaliação Imobiliária
+   
+                    Investidores
                 </a>
             </li>
-            <li>
-                <a href="{{ url('/propriedades-e-parceiros') }}" class="flex items-center gap-3 p-4 rounded-xl text-lg font-semibold
-                          {{ request()->is('propriedades-e-parceiros') ? 'text-[#F45600] bg-orange-50' : 'text-gray-800 hover:text-[#F45600] hover:bg-orange-50' }}
-                          transition duration-200">
-                    <span class="material-symbols-outlined">handshake</span>
-                    Proprietários & Parceiros
-                </a>
-            </li>
+          
         </ul>
     </nav>
     <div class="px-8 pb-8">
-        <div class="bg-orange-50 rounded-2xl p-6">
+        <div class="bg-[#F97316]/10 rounded-2xl p-6">
             <p class="text-sm text-gray-500 font-semibold uppercase mb-2">Contactos</p>
             <p class="text-gray-800 font-medium">+244 923 000 000</p>
             <p class="text-gray-500 text-sm">info@timetochoose.ao</p>
@@ -310,64 +359,272 @@ OVERLAY + ASIDE LATERAL (Desktop)
 {{-- ======================================================
 SCRIPTS DO HEADER
 ====================================================== --}}
+
+
 <script>
-    (function () {
-        // --- Sticky header ao rolar ---
-        const stickyHeader = document.getElementById('sticky-header');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 300) {
-                stickyHeader.classList.remove('-translate-y-full', 'opacity-0');
-                stickyHeader.classList.add('translate-y-0', 'opacity-100');
-            } else {
-                stickyHeader.classList.add('-translate-y-full', 'opacity-0');
-                stickyHeader.classList.remove('translate-y-0', 'opacity-100');
-            }
-        });
+(function () {
 
-        // --- Mobile menu ---
-        const heroMenuBtn = document.getElementById('hero-menu-btn');
-        const stickyMenuBtn = document.getElementById('sticky-menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-        const closeMobile = document.getElementById('close-mobile-menu');
+    // =====================================================
+    // STICKY HEADER AO ROLAR
+    // =====================================================
 
-        function openMobileMenu() {
-            mobileMenu.classList.remove('translate-x-full', 'opacity-0');
-            mobileMenu.classList.add('translate-x-0', 'opacity-100');
-            document.body.style.overflow = 'hidden';
+    const stickyHeader = document.getElementById('sticky-header');
+
+    window.addEventListener('scroll', function () {
+
+        if (!stickyHeader) return;
+
+        if (window.scrollY > 300) {
+
+            stickyHeader.classList.remove(
+                '-translate-y-full',
+                'opacity-0'
+            );
+
+            stickyHeader.classList.add(
+                'translate-y-0',
+                'opacity-100'
+            );
+
+        } else {
+
+            stickyHeader.classList.add(
+                '-translate-y-full',
+                'opacity-0'
+            );
+
+            stickyHeader.classList.remove(
+                'translate-y-0',
+                'opacity-100'
+            );
         }
-        function closeMobileMenu() {
-            mobileMenu.classList.add('translate-x-full', 'opacity-0');
-            mobileMenu.classList.remove('translate-x-0', 'opacity-100');
-            document.body.style.overflow = '';
+    });
+
+
+    // =====================================================
+    // MOBILE MENU
+    // =====================================================
+
+    const heroMenuBtn = document.getElementById('hero-menu-btn');
+    const stickyMenuBtn = document.getElementById('sticky-menu-btn');
+
+    const mobileMenu = document.getElementById('mobile-menu');
+    const closeMobile = document.getElementById('close-mobile-menu');
+
+
+    // -----------------------------------------------------
+    // ABRIR MENU MOBILE
+    // -----------------------------------------------------
+
+    function openMobileMenu() {
+
+        if (!mobileMenu) return;
+
+        // Abrir o slide
+        mobileMenu.classList.remove(
+            'translate-x-full',
+            'opacity-0'
+        );
+
+        mobileMenu.classList.add(
+            'translate-x-0',
+            'opacity-100'
+        );
+
+        // Esconder o hambúrguer
+        if (heroMenuBtn) {
+            heroMenuBtn.classList.add('hidden');
         }
 
-        heroMenuBtn?.addEventListener('click', openMobileMenu);
-        stickyMenuBtn?.addEventListener('click', openMobileMenu);
-        closeMobile?.addEventListener('click', closeMobileMenu);
+        // Bloquear scroll
+        document.body.style.overflow = 'hidden';
+    }
 
-        // --- Aside lateral (desktop) ---
-        const asideBtn = document.getElementById('aside-menu-btn');
-        const asideBtn2 = document.getElementById('aside-menu-btn-2');
-        const aside = document.getElementById('desktop-aside');
-        const overlay = document.getElementById('desktop-overlay');
-        const closeAside = document.getElementById('close-aside');
 
-        function openAside() {
-            aside.classList.remove('translate-x-full');
-            overlay.classList.remove('opacity-0', 'invisible');
-            overlay.classList.add('opacity-100', 'visible');
-            document.body.style.overflow = 'hidden';
+    // -----------------------------------------------------
+    // FECHAR MENU MOBILE
+    // -----------------------------------------------------
+
+    function closeMobileMenu() {
+
+        if (!mobileMenu) return;
+
+        // Fechar o slide
+        mobileMenu.classList.add(
+            'translate-x-full',
+            'opacity-0'
+        );
+
+        mobileMenu.classList.remove(
+            'translate-x-0',
+            'opacity-100'
+        );
+
+        // Mostrar novamente o hambúrguer
+        if (heroMenuBtn) {
+            heroMenuBtn.classList.remove('hidden');
         }
-        function closeAsideMenu() {
-            aside.classList.add('translate-x-full');
-            overlay.classList.add('opacity-0', 'invisible');
-            overlay.classList.remove('opacity-100', 'visible');
-            document.body.style.overflow = '';
+
+        // Liberar scroll
+        document.body.style.overflow = '';
+    }
+
+
+    // -----------------------------------------------------
+    // BOTÃO HAMBÚRGUER
+    // -----------------------------------------------------
+
+    if (heroMenuBtn) {
+        heroMenuBtn.addEventListener(
+            'click',
+            openMobileMenu
+        );
+    }
+
+
+    // -----------------------------------------------------
+    // BOTÃO DO STICKY HEADER
+    // -----------------------------------------------------
+
+    if (stickyMenuBtn) {
+        stickyMenuBtn.addEventListener(
+            'click',
+            openMobileMenu
+        );
+    }
+
+
+    // -----------------------------------------------------
+    // BOTÃO X / FECHAR
+    // -----------------------------------------------------
+
+    if (closeMobile) {
+        closeMobile.addEventListener(
+            'click',
+            closeMobileMenu
+        );
+    }
+
+
+    // =====================================================
+    // ASIDE LATERAL DESKTOP
+    // =====================================================
+
+    const asideBtn = document.getElementById('aside-menu-btn');
+    const asideBtn2 = document.getElementById('aside-menu-btn-2');
+
+    const aside = document.getElementById('desktop-aside');
+    const overlay = document.getElementById('desktop-overlay');
+
+    const closeAside = document.getElementById('close-aside');
+
+
+    // -----------------------------------------------------
+    // ABRIR ASIDE
+    // -----------------------------------------------------
+
+    function openAside() {
+
+        if (aside) {
+            aside.classList.remove(
+                'translate-x-full'
+            );
         }
 
-        asideBtn?.addEventListener('click', openAside);
-        asideBtn2?.addEventListener('click', openAside);
-        closeAside?.addEventListener('click', closeAsideMenu);
-        overlay?.addEventListener('click', closeAsideMenu);
-    })();
+        if (overlay) {
+
+            overlay.classList.remove(
+                'opacity-0',
+                'invisible'
+            );
+
+            overlay.classList.add(
+                'opacity-100',
+                'visible'
+            );
+        }
+
+        // Bloquear scroll
+        document.body.style.overflow = 'hidden';
+    }
+
+
+    // -----------------------------------------------------
+    // FECHAR ASIDE
+    // -----------------------------------------------------
+
+    function closeAsideMenu() {
+
+        if (aside) {
+            aside.classList.add(
+                'translate-x-full'
+            );
+        }
+
+        if (overlay) {
+
+            overlay.classList.add(
+                'opacity-0',
+                'invisible'
+            );
+
+            overlay.classList.remove(
+                'opacity-100',
+                'visible'
+            );
+        }
+
+        // Liberar scroll
+        document.body.style.overflow = '';
+    }
+
+
+    // -----------------------------------------------------
+    // BOTÃO ASIDE PRINCIPAL
+    // -----------------------------------------------------
+
+    if (asideBtn) {
+        asideBtn.addEventListener(
+            'click',
+            openAside
+        );
+    }
+
+
+    // -----------------------------------------------------
+    // BOTÃO ASIDE 2
+    // -----------------------------------------------------
+
+    if (asideBtn2) {
+        asideBtn2.addEventListener(
+            'click',
+            openAside
+        );
+    }
+
+
+    // -----------------------------------------------------
+    // FECHAR ASIDE
+    // -----------------------------------------------------
+
+    if (closeAside) {
+        closeAside.addEventListener(
+            'click',
+            closeAsideMenu
+        );
+    }
+
+
+    // -----------------------------------------------------
+    // FECHAR AO CLICAR NO OVERLAY
+    // -----------------------------------------------------
+
+    if (overlay) {
+        overlay.addEventListener(
+            'click',
+            closeAsideMenu
+        );
+    }
+
+})();
 </script>
