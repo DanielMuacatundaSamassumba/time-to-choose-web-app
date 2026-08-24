@@ -281,16 +281,24 @@
     <!-- Gallery -->
     <div>
         <label class="{{ $labelClass }}">Galeria <span class="text-gray-400 font-normal">(múltiplas imagens)</span></label>
-        @if($isEdit && $property->gallery)
-        <div class="flex flex-wrap gap-2 mb-3">
+        @if($isEdit && $property->gallery && count($property->gallery))
+        <p class="text-xs text-admin-muted mb-2">Imagens actuais — marca o ícone para remover ao guardar:</p>
+        <div class="flex flex-wrap gap-3 mb-4">
             @foreach($property->gallery as $img)
-            <div class="w-20 h-16 rounded-lg overflow-hidden bg-gray-100">
+            <label class="relative w-20 h-16 rounded-lg overflow-hidden bg-gray-100 block cursor-pointer group">
                 @if(str_starts_with($img, 'properties/'))
-                    <img src="{{ Storage::url($img) }}" class="w-full h-full object-cover">
+                    <img src="{{ Storage::url($img) }}" class="w-full h-full object-cover peer-checked:opacity-40">
                 @else
                     <img src="{{ asset('assets/' . $img) }}" class="w-full h-full object-cover">
                 @endif
-            </div>
+                <input type="checkbox" name="remove_gallery[]" value="{{ $img }}"
+                       class="peer absolute opacity-0 w-0 h-0">
+                <span class="absolute top-1 right-1 w-5 h-5 rounded-full bg-white/90 text-gray-500 flex items-center justify-center text-[10px] shadow peer-checked:bg-red-500 peer-checked:text-white transition"
+                      title="Remover imagem">
+                    <i class="fa-solid fa-trash"></i>
+                </span>
+                <span class="absolute inset-0 bg-red-500/30 opacity-0 peer-checked:opacity-100 transition pointer-events-none"></span>
+            </label>
             @endforeach
         </div>
         @endif
@@ -307,12 +315,15 @@
                            }
                            totalMB += f.size / 1024 / 1024;
                        }
-                       if (!galleryError && totalMB > 80) {
-                           galleryError = 'Total da galeria (' + totalMB.toFixed(1) + ' MB) excede 80 MB. Seleciona menos imagens.';
+                       if (!galleryError && totalMB > 100) {
+                           galleryError = 'Total da galeria (' + totalMB.toFixed(1) + ' MB) excede 100 MB. Seleciona menos imagens.';
                            $event.target.value = '';
                        }
                    ">
-            <p class="text-xs text-gray-400 mt-1">Máx. 50 MB por imagem — total até 80 MB</p>
+            <p class="text-xs text-gray-400 mt-1">
+                @if($isEdit) As novas imagens são <strong>adicionadas</strong> às existentes. @endif
+                Máx. 50 MB por imagem — até 60 imagens, total 100 MB.
+            </p>
             <p x-show="galleryError" x-text="galleryError" class="text-xs text-red-500 mt-1 font-semibold"></p>
         </div>
     </div>

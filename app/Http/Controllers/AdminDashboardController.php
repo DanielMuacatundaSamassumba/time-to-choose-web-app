@@ -188,15 +188,28 @@ class AdminDashboardController extends Controller
             unset($data['image']);
         }
 
+        // Start from the images already saved for this property
+        $gallery = is_array($property->gallery) ? $property->gallery : [];
+
+        // Remove images the user unchecked in the form
+        $toRemove = (array) $request->input('remove_gallery', []);
+        if (!empty($toRemove)) {
+            foreach ($toRemove as $img) {
+                if (str_starts_with($img, 'properties/')) {
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($img);
+                }
+            }
+            $gallery = array_values(array_diff($gallery, $toRemove));
+        }
+
+        // Append any newly uploaded images to the existing gallery
         if ($request->hasFile('gallery')) {
-            $gallery = [];
             foreach ($request->file('gallery') as $file) {
                 $gallery[] = $file->store('properties', 'public');
             }
-            $data['gallery'] = $gallery;
-        } else {
-            unset($data['gallery']);
         }
+
+        $data['gallery'] = $gallery ?: null;
 
         $property->update($data);
 
