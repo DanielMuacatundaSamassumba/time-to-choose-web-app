@@ -67,7 +67,7 @@ class AdminDashboardController extends Controller
             'description'       => 'nullable|string',
             'price'             => 'nullable|string|max:100',
             'price_period'      => 'nullable|string|max:50',
-            'business_category' => 'required|in:venda,arrendamento-longa-duracao,arrendamento-curta-duracao',
+            'business_category' => 'required|in:venda,arrendamento-longa-duracao,arrendamento-curta-duracao,transpasse',
             'property_type'     => 'required|string|max:100',
             'country'           => 'required|string|max:100',
             'city'              => 'required|string|max:100',
@@ -90,7 +90,9 @@ class AdminDashboardController extends Controller
 
         // Derive type + category from the unified business_category field
         $bc = $request->input('business_category');
-        $type     = $bc === 'venda' ? 'venda' : 'arrendamento';
+  $type = $bc === 'venda'
+    ? 'venda'
+    : ($bc === 'transpasse' ? 'Transpasse' : 'arrendamento');
         $category = $bc !== 'venda' ? $bc : null;
 
         $data = $request->except(['_token', 'business_category']);
@@ -131,31 +133,39 @@ class AdminDashboardController extends Controller
 
     public function propertiesUpdate(Request $request, Property $property)
     {
-        $request->validate([
-            'title'             => 'required|string|max:255',
-            'description'       => 'nullable|string',
-            'price'             => 'nullable|string|max:100',
-            'price_period'      => 'nullable|string|max:50',
-            'business_category' => 'required|in:venda,arrendamento-longa-duracao,arrendamento-curta-duracao',
-            'property_type'     => 'required|string|max:100',
-            'country'           => 'required|string|max:100',
-            'city'              => 'required|string|max:100',
-            'location'          => 'nullable|string|max:255',
-            'bedrooms'          => 'nullable|integer|min:0',
-            'bathrooms'         => 'nullable|integer|min:0',
-            'garages'           => 'nullable|integer|min:0',
-            'area'              => 'nullable|string|max:50',
-            'status'            => 'required|in:disponivel,reservado,vendido,arrendado',
-            'is_featured'       => 'boolean',
-            'is_active'         => 'boolean',
-            'amenities'         => 'nullable|string',
-            'image'             => 'nullable|image|max:51200',
-            'gallery.*'         => 'nullable|image|max:51200',
-            'video_url'         => 'nullable|string|max:255',
-            'tour_3d_url'       => 'nullable|string|max:255',
-            'latitude'          => 'nullable|string|max:50',
-            'longitude'         => 'nullable|string|max:50',
-        ]);
+      $request->merge([
+        'bedrooms'  => $request->input('bedrooms') ?: 0,
+        'bathrooms' => $request->input('bathrooms') ?: 0,
+        'garages'   => $request->input('garages') ?: 0,
+    ]);
+
+    $validated = $request->validate([
+        'title'             => 'required|string|max:255',
+        'description'       => 'nullable|string',
+        'price'             => 'nullable|string|max:100',
+        'price_period'      => 'nullable|string|max:50',
+        'business_category' => 'required|in:venda,arrendamento-longa-duracao,arrendamento-curta-duracao,transpasse',
+        'property_type'     => 'required|string|max:100',
+        'country'           => 'required|string|max:100',
+        'city'              => 'required|string|max:100',
+        'location'          => 'nullable|string|max:255',
+
+        'bedrooms'          => 'required|integer|min:0',
+        'bathrooms'         => 'required|integer|min:0',
+        'garages'           => 'required|integer|min:0',
+
+        'area'              => 'nullable|string|max:50',
+        'status'            => 'required|in:disponivel,reservado,vendido,arrendado',
+        'is_featured'       => 'boolean',
+        'is_active'         => 'boolean',
+        'amenities'         => 'nullable|string',
+        'image'             => 'nullable|image|max:51200',
+        'gallery.*'         => 'nullable|image|max:51200',
+        'video_url'         => 'nullable|string|max:255',
+        'tour_3d_url'       => 'nullable|string|max:255',
+        'latitude'          => 'nullable|string|max:50',
+        'longitude'         => 'nullable|string|max:50',
+    ]);
 
         // Derive type + category from the unified business_category field
         $bc = $request->input('business_category');

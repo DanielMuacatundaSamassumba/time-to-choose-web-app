@@ -69,12 +69,15 @@
                 <option value="arrendamento-curta-duracao" {{ $bc === 'arrendamento-curta-duracao' ? 'selected' : '' }}>
                  Arrendamento de Curta Duração
                 </option>
+                <option value="transpasse" {{ $bc === 'transpasse' ? 'selected' : '' }}>
+               Transpasse
+                </option>
             </select>
         </div>
         <div>
             <label class="{{ $labelClass }}">Tipo de Imóvel <span class="text-red-400">*</span></label>
             <select name="property_type" class="{{ $inputClass }}" required>
-                @foreach(['apartamento','vivenda','Espaços Comercias'] as $pt)
+                @foreach(['apartamento','vivenda','Espaços Comercias', "terreno"] as $pt)
                 <option value="{{ $pt }}" {{ old('property_type', $property?->property_type) === $pt ? 'selected' : '' }}>
                     {{ ucfirst($pt) }}
                 </option>

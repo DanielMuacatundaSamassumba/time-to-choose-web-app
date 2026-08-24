@@ -200,7 +200,7 @@ Uso: <x-footer />
                 &copy; {{ date('Y') }} Time To Choose. Todos os direitos reservados.
             </p>
             <div class="flex items-center gap-6 text-gray-500 text-sm">
-                <x-language-switcher :dropUp="true" />
+                <!--<x-language-switcher :dropUp="true" />-->
                 <a href="#" class="hover:text-[#F97316] transition duration-200">Política de Privacidade</a>
                 <a href="#" class="hover:text-[#F97316] transition duration-200">Termos de Utilização</a>
                 <a href="#" class="hover:text-[#F97316] transition duration-200">Cookies</a>

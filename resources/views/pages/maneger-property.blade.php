@@ -144,15 +144,15 @@
                 <h3 class="text-2xl font-bold text-gray-900">Gestão Financeira</h3>
                 <ul class="space-y-4">
                     <li class="flex items-start gap-3">
-                        <span class="material-symbols-outlined text-[#F97316] text-sm mt-1">check_circle</span>
+                        <span class="material-symbols-outlined text-[#F97316] text-sm mt-1" translate="no">check_circle</span>
                         <span class="text-gray-600 font-medium">Cobrança de rendas</span>
                     </li>
                     <li class="flex items-start gap-3">
-                        <span class="material-symbols-outlined text-[#F97316] text-sm mt-1">check_circle</span>
+                        <span class="material-symbols-outlined text-[#F97316] text-sm mt-1" translate="no">check_circle</span>
                         <span class="text-gray-600 font-medium">Relatórios mensais</span>
                     </li>
                     <li class="flex items-start gap-3">
-                        <span class="material-symbols-outlined text-[#F97316] text-sm mt-1">check_circle</span>
+                        <span class="material-symbols-outlined text-[#F97316] text-sm mt-1" translate="no">check_circle</span>
                         <span class="text-gray-600 font-medium">Controlo de pagamentos</span>
                     </li>
                 </ul>
@@ -166,11 +166,11 @@
                 <h3 class="text-2xl font-bold text-gray-900">Gestão Operacional</h3>
                 <ul class="space-y-4">
                     <li class="flex items-start gap-3">
-                        <span class="material-symbols-outlined text-[#F97316] text-sm mt-1">check_circle</span>
+                        <span class="material-symbols-outlined text-[#F97316] text-sm mt-1" translate="no">check_circle</span>
                         <span class="text-gray-600 font-medium">Manutenção preventiva e corretiva</span>
                     </li>
                     <li class="flex items-start gap-3">
-                        <span class="material-symbols-outlined text-[#F97316] text-sm mt-1">check_circle</span>
+                        <span class="material-symbols-outlined text-[#F97316] text-sm mt-1" translate="no">check_circle</span>
                         <span class="text-gray-600 font-medium">Equipa de limpeza dedicada</span>
                     </li>
                 </ul>
@@ -184,15 +184,15 @@
                 <h3 class="text-2xl font-bold text-gray-900">Gestão Comercial</h3>
                 <ul class="space-y-4">
                     <li class="flex items-start gap-3">
-                        <span class="material-symbols-outlined text-[#F97316] text-sm mt-1">check_circle</span>
+                        <span class="material-symbols-outlined text-[#F97316] text-sm mt-1" translate="no">check_circle</span>
                         <span class="text-gray-600 font-medium">Marketing profissional</span>
                     </li>
                     <li class="flex items-start gap-3">
-                        <span class="material-symbols-outlined text-[#F97316] text-sm mt-1">check_circle</span>
+                        <span class="material-symbols-outlined text-[#F97316] text-sm mt-1" translate="no">check_circle</span>
                         <span class="text-gray-600 font-medium">Gestão de ocupação</span>
                     </li>
                     <li class="flex items-start gap-3">
-                        <span class="material-symbols-outlined text-[#F97316] text-sm mt-1">check_circle</span>
+                        <span class="material-symbols-outlined text-[#F97316] text-sm mt-1" translate="no">check_circle</span>
                         <span class="text-gray-600 font-medium">Ajuste dinâmico de preços</span>
                     </li>
                 </ul>

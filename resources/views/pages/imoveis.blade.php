@@ -66,13 +66,15 @@
                             Arrendamento de Longa Duração</option>
                         <option value="arrendamento-curta-duracao" @selected(request('category') === 'arrendamento-curta-duracao')>
                             Arrendamento de Curta Duração</option>
+                        <option value="transpasse" @selected(request('category') === 'transpasse')>
+                            Transpasse</option>
                     </select>
 
                     {{-- Tipo de Imóvel --}}
                     <select name="property_type" x-model="propertyType"
                         class="h-14 rounded-xl px-5 outline-none text-sm text-gray-600 cursor-pointer">
                         <option value="">Tipo de Imóvel</option>
-                        @foreach(['apartamento' => 'Apartamento', 'vivenda' => 'Vivenda', "espaços_comerciais" => "Espaços Comercias"] as $val => $label)
+                        @foreach(['apartamento' => 'Apartamento', 'vivenda' => 'Vivenda', "espaços_comerciais" => "Espaços Comercias", "terrenos"=>'terrenos'] as $val => $label)
                             <option value="{{ $val }}" @selected(request('property_type') === $val)>{{ $label }}</option>
                         @endforeach
                     </select>
@@ -82,11 +84,11 @@
                         <button type="button" @click="open = !open"
                             class="flex items-center justify-center gap-2 text-white border border-white/60 rounded-xl px-4 h-14 hover:bg-white/10 transition shrink-0"
                             title="Filtros avançados">
-                            <span class="material-symbols-outlined text-[22px] transition-transform duration-300"
-                                :class="open ? 'rotate-180' : ''">tune</span>
+                            <span class="material-symbols-outlined text-[22px] transition-transform duration-300" 
+                                :class="open ? 'rotate-180' : ''" translate="no">tune</span>
                         </button>
                         <button type="submit"
-                            class="flex-1 h-14 rounded-xl bg-white text-[#F97316]/90 uppercase tracking-widest text-sm font-bold hover:bg-[#F97316]/10 transition duration-300">
+                            class="flex-1 h-14 rounded-xl bg-white text-[#F97316]/90 uppercase tracking-widest text-sm font-bold transition duration-300">
                             Pesquisar
                         </button>
                     </div>
@@ -187,7 +189,7 @@
                             <a href="{{ route('properties.index') }}"
                                 class="w-full h-14 rounded-xl border border-white text-white text-sm font-semibold
                                       hover:bg-white hover:text-[#F97316] transition flex items-center justify-center gap-2">
-                                <span class="material-symbols-outlined text-[18px]">filter_alt_off</span>
+                                <span class="material-symbols-outlined text-[18px]" translate="no">filter_alt_off</span>
                                 Limpar Filtros
                             </a>
                         </div>
@@ -201,22 +203,39 @@
     {{-- =============================================
     CHIPS DE FILTROS ACTIVOS
     ============================================= --}}
-    @if(request()->anyFilled(['search', 'category', 'property_type', 'country', 'city', 'typology']))
-        <div class="max-w-7xl mx-auto px-4 lg:px-6 mt-6">
-            <div class="flex flex-wrap gap-2 items-center">
-                <span class="text-sm text-gray-500 font-medium mr-1">Filtros activos:</span>
-                @foreach(['search' => 'Pesquisa', 'category' => 'Categoria', 'property_type' => 'Tipo', 'country' => 'País', 'city' => 'Cidade', 'typology' => 'Tipologia'] as $param => $label)
-                    @if(request()->filled($param))
-                        <a href="{{ request()->fullUrlWithoutQuery([$param]) }}"
-                            class="inline-flex items-center gap-1.5 bg-[#F97316]/10 text-[#F97316]/80 text-xs font-semibold px-3 py-1.5 rounded-full hover:bg-[#F97316]/20 transition">
-                            {{ $label }}: {{ ucfirst(str_replace(['-', 'arrendamento-'], [' ', ''], request($param))) }}
-                            <span class="material-symbols-outlined text-[14px]">close</span>
-                        </a>
-                    @endif
-                @endforeach
-            </div>
+   @if(request()->anyFilled(['search', 'category', 'property_type', 'country', 'city', 'typology']))
+    <div class="max-w-7xl mx-auto px-4 lg:px-6 mt-6">
+        <div class="flex flex-wrap gap-2 items-center">
+            <span class="text-sm text-gray-500 font-medium mr-1">
+                Filtros activos:
+            </span>
+
+            @foreach([
+                'search' => 'Pesquisa',
+                'category' => 'Categoria',
+                'property_type' => 'Tipo',
+                'country' => 'País',
+                'city' => 'Cidade',
+                'typology' => 'Tipologia'
+            ] as $param => $label)
+
+                @if(request()->filled($param))
+                    <a href="{{ request()->fullUrlWithoutQuery([$param]) }}"
+                        class="inline-flex items-center gap-1.5 bg-[#F97316]/10 text-[#F97316]/80 text-xs font-semibold px-3 py-1.5 rounded-full hover:bg-[#F97316]/20 transition">
+
+                        {{ $label }}:
+                        {{ ucfirst(str_replace('-', ' ', request($param))) }}
+
+                        <span class="material-symbols-outlined text-[14px]" translate="no">
+                            close
+                        </span>
+                    </a>
+                @endif
+
+            @endforeach
         </div>
-    @endif
+    </div>
+@endif
 
     {{-- =============================================
     LISTAGEM DE IMÓVEIS
@@ -303,7 +322,7 @@
                             <div
                                 class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/65 to-transparent px-4 py-3">
                                 <p class="text-white/90 text-xs flex items-center gap-1">
-                                    <span class="material-symbols-outlined text-[14px]">location_on</span>
+                                    <span class="material-symbols-outlined text-[14px]" translate="no">location_on</span>
                                     {{ $property->city }}, {{ $property->country }}
                                 </p>
                             </div>
@@ -322,26 +341,26 @@
                                 class="mt-4 grid grid-cols-2 gap-x-4 gap-y-2 text-xs text-gray-500 border-t border-b border-gray-100 py-4">
                                 @if($property->bedrooms > 0 && !in_array($pt, ['terreno', 'loja', 'escritório', 'escritorio']))
                                     <div class="flex items-center gap-1.5">
-                                        <span class="material-symbols-outlined text-[17px] text-[#F97316]">bed</span>
+                                        <span class="material-symbols-outlined text-[17px] text-[#F97316]" translate="no">bed</span>
                                         <span>{{ $property->bedrooms }} Quarto{{ $property->bedrooms > 1 ? 's' : '' }}</span>
                                     </div>
                                 @endif
                                 @if($property->bathrooms > 0)
                                     <div class="flex items-center gap-1.5">
-                                        <span class="material-symbols-outlined text-[17px] text-[#F97316]">shower</span>
+                                        <span class="material-symbols-outlined text-[17px] text-[#F97316]" translate="no">shower</span>
                                         <span>{{ $property->bathrooms }} WC</span>
                                     </div>
                                 @endif
                                 @if($property->garages > 0)
                                     <div class="flex items-center gap-1.5">
                                         <span
-                                            class="material-symbols-outlined text-[17px] text-[#F97316]">directions_car</span>
+                                            class="material-symbols-outlined text-[17px] text-[#F97316]" translate="no">directions_car</span>
                                         <span>{{ $property->garages }} Garagem</span>
                                     </div>
                                 @endif
                                 @if($property->area)
                                     <div class="flex items-center gap-1.5">
-                                        <span class="material-symbols-outlined text-[17px] text-[#F97316]">square_foot</span>
+                                        <span class="material-symbols-outlined text-[17px] text-[#F97316]" translate="no">square_foot</span>
                                         <span>{{ $property->area }}</span>
                                     </div>
                                 @endif
@@ -365,12 +384,12 @@
 
                 @empty
                     <div class="col-span-3 text-center py-24">
-                        <span class="material-symbols-outlined text-7xl text-gray-200 mb-4 block">search_off</span>
+                        <span class="material-symbols-outlined text-7xl text-gray-200 mb-4 block" translate="no">search_off</span>
                         <p class="text-xl font-semibold text-gray-400">Nenhum imóvel encontrado.</p>
                         <p class="text-sm text-gray-400 mt-1">Tente remover ou alterar os filtros seleccionados.</p>
                         <a href="{{ route('properties.index') }}"
                             class="mt-8 inline-flex items-center gap-2 bg-[#F97316] text-white px-7 py-3 rounded-xl font-bold hover:bg-[#F97316]/90 transition">
-                            <span class="material-symbols-outlined text-[18px]">refresh</span>
+                            <span class="material-symbols-outlined text-[18px]" translate="no">refresh</span>
                             Ver Todos os Imóveis
                         </a>
                     </div>
@@ -403,7 +422,7 @@
                             <div
                                 class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/65 to-transparent px-4 py-3">
                                 <p class="text-white/90 text-xs flex items-center gap-1">
-                                    <span class="material-symbols-outlined text-[14px]">location_on</span>
+                                    <span class="material-symbols-outlined text-[14px]" translate="no">location_on</span>
                                     <span x-text="p.city + ', ' + p.country"></span>
                                 </p>
                             </div>
@@ -422,28 +441,28 @@
                                 <template
                                     x-if="p.bedrooms > 0 && !['terreno', 'loja', 'escritório', 'escritorio'].includes(p.property_type)">
                                     <div class="flex items-center gap-1.5">
-                                        <span class="material-symbols-outlined text-[17px] text-[#F97316]">bed</span>
+                                        <span class="material-symbols-outlined text-[17px] text-[#F97316]" translate="no">bed</span>
                                         <span x-text="p.bedrooms + ' Quarto' + (p.bedrooms > 1 ? 's' : '')"></span>
                                     </div>
                                 </template>
                                 <template x-if="p.bathrooms > 0">
                                     <div class="flex items-center gap-1.5">
                                         <span
-                                            class="material-symbols-outlined text-[17px] text-[#F97316]">shower</span>
+                                            class="material-symbols-outlined text-[17px] text-[#F97316]" translate="no">shower</span>
                                         <span x-text="p.bathrooms + ' WC'"></span>
                                     </div>
                                 </template>
                                 <template x-if="p.garages > 0">
                                     <div class="flex items-center gap-1.5">
                                         <span
-                                            class="material-symbols-outlined text-[17px] text-[#F97316]">directions_car</span>
+                                            class="material-symbols-outlined text-[17px] text-[#F97316]" translate="no">directions_car</span>
                                         <span x-text="p.garages + ' Garagem'"></span>
                                     </div>
                                 </template>
                                 <template x-if="p.area">
                                     <div class="flex items-center gap-1.5">
                                         <span
-                                            class="material-symbols-outlined text-[17px] text-[#F97316]">square_foot</span>
+                                            class="material-symbols-outlined text-[17px] text-[#F97316]" translate="no">square_foot</span>
                                         <span x-text="p.area"></span>
                                     </div>
                                 </template>
@@ -627,9 +646,9 @@
                 {{-- Icon --}}
                 <div class="flex-shrink-0 mt-0.5">
                     @if(session('error'))
-                        <span class="material-symbols-outlined text-red-500 text-[20px] font-bold">error</span>
+                        <span class="material-symbols-outlined text-red-500 text-[20px] font-bold" translate="no">error</span>
                     @else
-                        <span class="material-symbols-outlined text-green-500 text-[20px] font-bold">check_circle</span>
+                        <span class="material-symbols-outlined text-green-500 text-[20px] font-bold" translate="no">check_circle</span>
                     @endif
                 </div>
 
@@ -645,7 +664,7 @@
 
                 {{-- Close Button --}}
                 <button @click="show = false" class="text-gray-400 hover:text-gray-600 transition flex-shrink-0">
-                    <span class="material-symbols-outlined text-[16px] font-bold">close</span>
+                    <span class="material-symbols-outlined text-[16px] font-bold" translate="no">close</span>
                 </button>
             </div>
         @endif

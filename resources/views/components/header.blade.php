@@ -248,18 +248,18 @@ MENU MOBILE (slide-in)
         </div>
         {{-- Links --}}
         <nav class="flex flex-col p-6 gap-1">
-            <!-- <a href="{{ url('/') }}"
+            <a href="{{ url('/imoveis') }}?category=venda"
                 class="py-4 px-4 rounded-xl text-lg font-semibold {{ request()->is('/') && !request()->has('category') ? 'text-[#F97316] bg-[#F97316]/10' : 'text-gray-800 hover:text-[#F97316] hover:bg-[#F97316]/10' }} transition duration-200">
-                🏠 Home
-            </a> -->
-            <!-- <a href="{{ url('/imoveis') }}?category=longa-duracao"
+              Venda
+            </a> 
+          <a  href="{{ url('/imoveis') }}?category=arrendamento-longa-duracao"
                 class="py-4 px-4 rounded-xl text-lg font-semibold {{ request('category') === 'longa-duracao' ? 'text-[#F97316] bg-[#F97316]/10' : 'text-gray-800 hover:text-[#F97316] hover:bg-[#F97316]/10' }} transition duration-200">
-                🕐 Longa Duração
-            </a> -->
-            <!-- <a href="{{ url('/imoveis') }}?category=curta-duracao"
+            Arrendamento de Longa Duração
+            </a> 
+        <a  href="{{ url('/imoveis') }}?category=arrendamento-curta-duracao"
                 class="py-4 px-4 rounded-xl text-lg font-semibold {{ request('category') === 'curta-duracao' ? 'text-[#F97316] bg-[#F97316]/10' : 'text-gray-800 hover:text-[#F97316] hover:bg-[#F97316]/10' }} transition duration-200">
-                ⚡ Curta Duração
-            </a> -->
+                Arrendamento Curta Duração
+            </a> 
               <a href="{{ url('/propriedades-e-parceiros') }}"
                 class="py-4 px-4 rounded-xl text-lg font-semibold {{ request()->is('propriedades-e-parceiros') ? 'text-[#F97316] bg-[#F97316]/10' : 'text-gray-800 hover:text-[#F97316] hover:bg-[#F97316]/10' }} transition duration-200">
                 Proprietários &amp; Parceiros

@@ -175,7 +175,7 @@
                         'Sistemas de Segurança', 'Serviços Premium On-Demand'
                     ] as $beneficio)
                     <div class="flex items-center gap-3">
-                        <span class="material-symbols-outlined text-white text-sm" style="font-variation-settings: 'FILL' 1">check_circle</span>
+                        <span class="material-symbols-outlined text-white text-sm" style="font-variation-settings: 'FILL' 1" translate="no">check_circle</span>
                         <span class="text-white text-sm font-medium">{{ $beneficio }}</span>
                     </div>
                     @endforeach

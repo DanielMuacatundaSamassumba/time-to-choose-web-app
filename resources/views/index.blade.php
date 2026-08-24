@@ -44,6 +44,7 @@
                             <option value="venda">Venda</option>
                             <option value="arrendamento-longa-duracao">Arrendamento de Longa Duração</option>
                             <option value="arrendamento-curta-duracao">Arrendamento de Curta Duração</option>
+                            <option value="transpasse">Transpasse</option>
                         </select>
 
                         <select name="property_type" id="hp_property_type"
@@ -51,17 +52,18 @@
                             <option value="">Tipo de Imóvel</option>
                             <option value="apartamento">Apartamento</option>
                             <option value="vivenda">Vivenda</option>
+                            <option value="terrenos ">Terrenos  </option>
                             <option value="Espacos-comercias">Espaços Comerciais</option>
                         </select>
 
                         <div class="flex items-center gap-3">
                             <button type="button" @click="open=!open"
                                 class="flex items-center gap-2 text-white border border-white/70 rounded-xl px-4 py-3 hover:bg-white/10 transition shrink-0">
-                                <span class="material-symbols-outlined transition duration-300"
+                                <span class="material-symbols-outlined transition duration-300"  translate="no"
                                     :class="open ? 'rotate-180' : ''">tune</span>
                             </button>
                             <button type="submit" class="flex-1 h-14 rounded-xl bg-white text-[#F97316]/90 uppercase tracking-wider text-sm
-                                           font-bold hover:bg-[#F97316]/10 transition duration-300">
+                                           font-bold transition duration-300">
                                 Pesquisar
                             </button>
                         </div>
@@ -166,9 +168,9 @@
                         'icon' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>',
                     ],
                     [
-                        'label' => 'Espaços Comerciais',
-                        'filter' => 'property_type=Espacos-comercias',
-                        'query' => fn() => \App\Models\Property::where('is_active', true)->where('property_type', 'Espacos-comercias')->count(),
+                        'label' => 'Transpasse',
+                        'filter' => 'category=transpasse',
+                        'query' => fn() => \App\Models\Property::where('is_active', true)->where('category', 'transpasse')->count(),
                         'icon' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>',
                     ],
                 ];
@@ -247,25 +249,25 @@
                                 <div class="grid grid-cols-2 gap-4">
                                     @if($imovel->bedrooms > 0)
                                         <div class="flex items-center gap-2">
-                                            <span class="material-symbols-outlined text-zinc-500">domain</span>
+                                            <span class="material-symbols-outlined text-zinc-500 "  translate="no">domain</span>
                                             <span>{{ $imovel->bedrooms }} Quarto{{ $imovel->bedrooms > 1 ? 's' : '' }}</span>
                                         </div>
                                     @endif
                                     @if($imovel->bathrooms > 0)
                                         <div class="flex items-center gap-2">
-                                            <span class="material-symbols-outlined text-zinc-500">shower</span>
+                                            <span class="material-symbols-outlined text-zinc-500"  translate="no">shower</span>
                                             <span>{{ $imovel->bathrooms }} WC</span>
                                         </div>
                                     @endif
                                     @if($imovel->garages > 0)
                                         <div class="flex items-center gap-2">
-                                            <span class="material-symbols-outlined text-zinc-500">directions_car</span>
+                                            <span class="material-symbols-outlined text-zinc-500"  translate="no">directions_car</span>
                                             <span>{{ $imovel->garages }} Garagem{{ $imovel->garages > 1 ? 's' : '' }}</span>
                                         </div>
                                     @endif
                                     @if($imovel->area)
                                         <div class="flex items-center gap-2">
-                                            <span class="material-symbols-outlined text-zinc-500">square_foot</span>
+                                            <span class="material-symbols-outlined text-zinc-500"  translate="no">square_foot</span>
                                             <span>{{ $imovel->area }}</span>
                                         </div>
                                     @endif
@@ -334,7 +336,7 @@
                 @endphp
                 @foreach($srvList as $srv)
                     <div class="service-card h-full min-h-[220px] p-8 border border-[#ddd]">
-                        <span class="material-symbols-outlined text-[50px] text-black mb-6 block">
+                        <span class="material-symbols-outlined text-[50px] text-black mb-6 block"  translate="no">
                             {{ $srv['icon'] }}
                         </span>
                         <h3 class="text-xl font-bold mb-5">{{ $srv['title'] }}</h3>
@@ -399,7 +401,7 @@
                                     </span>
                                     <h3 class="text-white text-xl font-bold leading-tight">{{ $slide->title }}</h3>
                                     <p class="text-white/80 mt-2 text-sm flex items-center gap-1">
-                                        <span class="material-symbols-outlined text-[16px]">location_on</span>
+                                        <span class="material-symbols-outlined text-[16px]"  translate="no">location_on</span>
                                         {{ $slide->location }}
                                     </p>
                                     <div class="mt-4">

@@ -35,14 +35,19 @@ class PropertyController extends Controller
         // ── Category / type unified filter (matches menu slugs) ──────
         // category=venda           → type = 'venda'
         // category=arrendamento-*  → category field in DB
-        if ($request->filled('category')) {
-            $cat = $request->input('category');
-            if ($cat === 'venda') {
-                $query->where('type', 'venda');
-            } elseif (in_array($cat, ['arrendamento-longa-duracao', 'arrendamento-curta-duracao'])) {
-                $query->where('category', $cat);
-            }
-        }
+      if ($request->filled('category')) {
+    $cat = $request->input('category');
+
+    if ($cat === 'venda') {
+        $query->where('type', 'venda');
+    } elseif (in_array($cat, [
+        'transpasse',
+        'arrendamento-longa-duracao',
+        'arrendamento-curta-duracao'
+    ])) {
+        $query->where('category', $cat);
+    }
+}
 
         // Legacy: direct type filter (kept for backward compat)
         if ($request->filled('type')) {

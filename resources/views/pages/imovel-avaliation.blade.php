@@ -46,7 +46,6 @@
                 transition: opacity .9s ease, transform .9s cubic-bezier(.16, 1, .3, 1);
             }
 
-            .hero-section.hero-visible .hero-title,
             .hero-section.hero-visible .hero-text,
             .hero-section.hero-visible .hero-buttons {
                 opacity: 1;
@@ -161,7 +160,7 @@
                                 class="flex gap-6 p-8 rounded-md bg-white border border-gray-200/50 shadow-sm transition-all hover:border-[#F97316]/30 cursor-pointer">
                                 <div
                                     class="shrink-0 w-14 h-14 rounded-full bg-[#F97316] text-white flex items-center justify-center">
-                                    <span class="material-symbols-outlined">sell</span>
+                                    <span class="material-symbols-outlined"  translate="no">sell</span>
                                 </div>
                                 <div>
                                     <h4 class="text-xl font-bold text-gray-900 mb-2">{{ $obj['title'] }}</h4>
@@ -205,7 +204,7 @@
                     {{-- Checklist --}}
                     <div class="bg-[#ffff] rounded-sm p-8 mt-4 reveal">
                         <div class="flex items-center gap-3 mb-6">
-                            <span class="material-symbols-outlined text-[#F97316]">checklist</span>
+                            <span class="material-symbols-outlined text-[#F97316]" translate="no">checklist</span>
                             <h4 class="text-2xl font-bold text-gray-900">Checklist de Documentos</h4>
                         </div>
                         <ul class="space-y-4">
@@ -217,7 +216,7 @@
                                     'Documento de Identificação do Proprietário'
                                 ] as $doc)
                                 <li class="check-item">
-                                    <span class="material-symbols-outlined text-[#F97316] text-sm"
+                                    <span class="material-symbols-outlined text-[#F97316] text-sm" translate="no"
                                         style="font-variation-settings:'FILL' 1;">check_circle</span>
                                     <span class="text-gray-700 font-medium">{{ $doc }}</span>
                                 </li>

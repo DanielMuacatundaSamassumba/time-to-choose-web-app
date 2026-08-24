@@ -89,7 +89,7 @@
                      'desc' => 'Operamos com seguros de responsabilidade civil e jurídica, oferecendo aos nossos clientes a tranquilidade necessária para investimentos imobiliários complexos em Angola.'],
                 ] as $card)
                 <div class="bg-white p-10 rounded-2xl shadow-sm reveal h-full flex flex-col">
-                    <span class="material-symbols-outlined text-[#F97316] text-4xl mb-6">{{ $card['icon'] }}</span>
+                    <span class="material-symbols-outlined text-[#F97316] text-4xl mb-6"  translate="no">{{ $card['icon'] }}</span>
                     <h3 class="text-2xl font-bold text-gray-900 mb-4">{{ $card['title'] }}</h3>
                     <p class="text-gray-600 text-base leading-relaxed flex-grow">{{ $card['desc'] }}</p>
                 </div>

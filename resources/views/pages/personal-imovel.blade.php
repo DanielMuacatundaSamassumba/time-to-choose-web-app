@@ -81,32 +81,32 @@
 
                 <h1 class="text-3xl md:text-4xl font-bold text-gray-900 leading-tight">{{ $property->title }}</h1>
                 <p class="text-gray-500 mt-3 flex items-center gap-1">
-                    <span class="material-symbols-outlined text-[18px]">location_on</span>
+                    <span class="material-symbols-outlined text-[18px]"  translate="no">location_on</span>
                     {{ $property->location }}
                 </p>
 
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
                     @if($property->bedrooms > 0)
                     <div class="bg-white rounded-xl p-4 text-center shadow-sm border border-gray-100">
-                        <span class="material-symbols-outlined text-zinc-500">bed</span>
+                        <span class="material-symbols-outlined text-zinc-500"  translate="no">bed</span>
                         <br><b>{{ $property->bedrooms }} Quarto{{ $property->bedrooms > 1 ? 's' : '' }}</b>
                     </div>
                     @endif
                     @if($property->bathrooms > 0)
                     <div class="bg-white rounded-xl p-4 text-center shadow-sm border border-gray-100">
-                        <span class="material-symbols-outlined text-zinc-500">shower</span>
+                        <span class="material-symbols-outlined text-zinc-500"  translate="no">shower</span>
                         <br><b>{{ $property->bathrooms }} Casa{{ $property->bathrooms > 1 ? 's' : '' }} de Banho</b>
                     </div>
                     @endif
                     @if($property->garages > 0)
                     <div class="bg-white rounded-xl p-4 text-center shadow-sm border border-gray-100">
-                        <span class="material-symbols-outlined text-zinc-500">directions_car</span>
+                        <span class="material-symbols-outlined text-zinc-500"  translate="no">directions_car</span>
                         <br><b>{{ $property->garages }} Garagem</b>
                     </div>
                     @endif
                     @if($property->area)
                     <div class="bg-white rounded-xl p-4 text-center shadow-sm border border-gray-100">
-                        <span class="material-symbols-outlined text-zinc-500">square_foot</span>
+                        <span class="material-symbols-outlined text-zinc-500"  translate="no">square_foot</span>
                         <br><b>{{ $property->area }}</b>
                     </div>
                     @endif
@@ -120,12 +120,12 @@
 
                     <div class="flex flex-wrap items-center gap-6 mt-6 text-sm text-gray-600 border-t border-dashed pt-4">
                         <div class="flex items-center gap-2">
-                            <span class="material-symbols-outlined text-[#F97316] text-[20px]">movie</span>
+                            <span class="material-symbols-outlined text-[#F97316] text-[20px]"  translate="no">movie</span>
                             <span class="font-semibold text-gray-700">Vídeo Disponível:</span>
                             <span>{{ $property->video_url ? 'Sim' : 'Não' }}</span>
                         </div>
                         <div class="flex items-center gap-2">
-                            <span class="material-symbols-outlined text-[#F97316] text-[20px]">3d_rotation</span>
+                            <span class="material-symbols-outlined text-[#F97316] text-[20px] "  translate="no">3d_rotation</span>
                             <span class="font-semibold text-gray-700">Visita 3D:</span>
                             <span>{{ $property->tour_3d_url ? 'Sim' : 'Não' }}</span>
                         </div>
@@ -212,7 +212,7 @@
                     </h2>
 
                     <a href="tel:+244923000000" class="w-full bg-[#F97316] text-center text-white py-4 rounded-xl mt-8 font-bold hover:bg-[#F97316]/90 transition flex items-center justify-center gap-2">
-                        <span class="material-symbols-outlined">call</span>
+                        <span class="material-symbols-outlined"  translate="no">call</span>
                         Ligar para o Consultor
                     </a>
 
@@ -291,32 +291,32 @@
                 <div class="p-6 flex flex-col flex-1">
                     <h3 class="text-lg font-bold leading-tight text-gray-900">{{ $item->title }}</h3>
                     <p class="text-[#999] mt-2 flex items-center gap-1 text-sm">
-                        <span class="material-symbols-outlined text-[16px]">location_on</span>
+                        <span class="material-symbols-outlined text-[16px]"  translate="no">location_on</span>
                         {{ $item->location }}
                     </p>
                     <div class="py-4 mt-4 border-t border-b border-gray-100 flex-1">
                         <div class="grid grid-cols-2 gap-3 text-xs text-gray-500">
                             @if($item->bedrooms > 0)
                             <div class="flex items-center gap-1.5">
-                                <span class="material-symbols-outlined text-zinc-500 text-[18px]">domain</span>
+                                <span class="material-symbols-outlined text-zinc-500 text-[18px]"  translate="no">domain</span>
                                 <span>{{ $item->bedrooms }} Quartos</span>
                             </div>
                             @endif
                             @if($item->bathrooms > 0)
                             <div class="flex items-center gap-1.5">
-                                <span class="material-symbols-outlined text-zinc-500 text-[18px]">shower</span>
+                                <span class="material-symbols-outlined text-zinc-500 text-[18px]"  translate="no">shower</span>
                                 <span>{{ $item->bathrooms }} WC</span>
                             </div>
                             @endif
                             @if($item->garages > 0)
                             <div class="flex items-center gap-1.5">
-                                <span class="material-symbols-outlined text-zinc-500 text-[18px]">directions_car</span>
+                                <span class="material-symbols-outlined text-zinc-500 text-[18px] "  translate="no">directions_car</span>
                                 <span>{{ $item->garages }} Garagem</span>
                             </div>
                             @endif
                             @if($item->area)
                             <div class="flex items-center gap-1.5">
-                                <span class="material-symbols-outlined text-zinc-500 text-[18px]">square_foot</span>
+                                <span class="material-symbols-outlined text-zinc-500 text-[18px]"  translate="no">square_foot</span>
                                 <span>{{ $item->area }}</span>
                             </div>
                             @endif

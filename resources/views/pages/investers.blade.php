@@ -206,15 +206,15 @@
                             património.</p>
                         <ul class="space-y-3 mb-8">
                             <li class="flex items-center gap-2 text-sm text-gray-700">
-                                <span class="material-symbols-outlined text-[#F97316] text-sm">check_circle</span>
+                                <span class="material-symbols-outlined text-[#F97316] text-sm" translate="no">check_circle</span>
                                 Propriedade plena
                             </li>
                             <li class="flex items-center gap-2 text-sm text-gray-700">
-                                <span class="material-symbols-outlined text-[#F97316] text-sm">check_circle</span>
+                                <span class="material-symbols-outlined text-[#F97316] text-sm" translate="no">check_circle</span>
                                 Yield de 8-12%
                             </li>
                             <li class="flex items-center gap-2 text-sm text-gray-700">
-                                <span class="material-symbols-outlined text-[#F97316] text-sm">check_circle</span>
+                                <span class="material-symbols-outlined text-[#F97316] text-sm" translate="no">check_circle</span>
                                 Gestão LP incluída
                             </li>
                         </ul>
@@ -234,15 +234,15 @@
                             otimização de ocupação. Foco em contratos corporativos de curta e média duração.</p>
                         <ul class="space-y-3 mb-8">
                             <li class="flex items-center gap-2 text-sm text-gray-700">
-                                <span class="material-symbols-outlined text-[#F97316] text-sm">check_circle</span>
+                                <span class="material-symbols-outlined text-[#F97316] text-sm" translate="no">check_circle</span>
                                 Investimento reduzido
                             </li>
                             <li class="flex items-center gap-2 text-sm text-gray-700">
-                                <span class="material-symbols-outlined text-[#F97316] text-sm">check_circle</span>
+                                <span class="material-symbols-outlined text-[#F97316] text-sm " translate="no">check_circle</span>
                                 Retorno rápido
                             </li>
                             <li class="flex items-center gap-2 text-sm text-gray-700">
-                                <span class="material-symbols-outlined text-[#F97316] text-sm">check_circle</span>
+                                <span class="material-symbols-outlined text-[#F97316] text-sm" translate="no">check_circle</span>
                                 Escalabilidade alta
                             </li>
                         </ul>
@@ -262,15 +262,15 @@
                             do inquilino corporativo. Nós cuidamos de tudo, você apenas recebe o rendimento.</p>
                         <ul class="space-y-3 mb-8">
                             <li class="flex items-center gap-2 text-sm text-white/90">
-                                <span class="material-symbols-outlined text-white text-sm">check_circle</span>
+                                <span class="material-symbols-outlined text-white text-sm " translate="no">check_circle</span>
                                 100% Passivo
                             </li>
                             <li class="flex items-center gap-2 text-sm text-white/90">
-                                <span class="material-symbols-outlined text-white text-sm">check_circle</span>
+                                <span class="material-symbols-outlined text-white text-sm " translate="no">check_circle</span>
                                 Clientes Exclusivos
                             </li>
                             <li class="flex items-center gap-2 text-sm text-white/90">
-                                <span class="material-symbols-outlined text-white text-sm">check_circle</span>
+                                <span class="material-symbols-outlined text-white text-sm" translate="no">check_circle</span>
                                 Relatórios mensais
                             </li>
                         </ul>
@@ -296,7 +296,7 @@
                     <div class="space-y-4">
                         <div class="flex items-center gap-4 p-4 rounded-xl bg-gray-50 border border-gray-200">
                             <div class="bg-[#F97316]/10 p-2.5 rounded-lg text-[#F97316]">
-                                <span class="material-symbols-outlined text-2xl">trending_up</span>
+                                <span class="material-symbols-outlined text-2xl" translate="no">trending_up</span>
                             </div>
                             <div>
                                 <div class="text-xs text-gray-500 uppercase font-semibold">ROI Estimado</div>
@@ -306,7 +306,7 @@
                         </div>
                         <div class="flex items-center gap-4 p-4 rounded-xl bg-gray-50 border border-gray-200">
                             <div class="bg-[#F97316]/10 p-2.5 rounded-lg text-[#F97316]">
-                                <span class="material-symbols-outlined text-2xl">payments</span>
+                                <span class="material-symbols-outlined text-2xl" translate="no">payments</span>
                             </div>
                             <div>
                                 <div class="text-xs text-gray-500 uppercase font-semibold">Payback Period</div>
