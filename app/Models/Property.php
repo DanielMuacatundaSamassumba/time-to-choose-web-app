@@ -11,10 +11,15 @@ class Property extends Model
     use HasFactory;
 
     protected $fillable = [
-        'title', 'slug', 'description', 'price', 'price_period', 'type', 'category', 'property_type',
+        'title', 'slug', 'description', 'price', 'price_period', 'type', 'category', 'property_type', 'land_type',
         'country', 'city', 'location', 'bedrooms', 'bathrooms', 'garages', 'area',
         'image', 'gallery', 'amenities', 'is_featured', 'is_active', 'status',
-        'video_url', 'tour_3d_url', 'latitude', 'longitude'
+        'video_url', 'tour_3d_url', 'latitude', 'longitude',
+        'owner_name', 'owner_phone', 'owner_whatsapp', 'owner_email', 'owner_website'
+    ];
+
+    protected $hidden = [
+        'owner_name', 'owner_phone', 'owner_whatsapp', 'owner_email', 'owner_website'
     ];
 
     protected $casts = [
@@ -28,6 +33,24 @@ class Property extends Model
     public function getRouteKeyName(): string
     {
         return 'slug';
+    }
+
+    // ── Classificação de Terrenos ──────────────────────────────────────────
+    public static function landTypes(): array
+    {
+        return [
+            'urbanos'           => 'Urbano',
+            'rusticos'          => 'Rústico',
+            'industriais'       => 'Industrial',
+            'projecto-aprovado' => 'Projecto Aprovado',
+        ];
+    }
+
+    public function getLandTypeLabelAttribute(): ?string
+    {
+        if (empty($this->land_type)) return null;
+        $types = static::landTypes();
+        return $types[$this->land_type] ?? ucfirst($this->land_type);
     }
 
     // ── Auto-generate unique slug on create/update ────────────────────────────
@@ -92,6 +115,26 @@ class Property extends Model
         return asset('assets/1.jpeg');
     }
 
+    public function getPriceAttribute($value): ?string
+    {
+        if (!$value) {
+            return $value;
+        }
+
+        if (stripos($value, 'sob consulta') !== false) {
+            return 'Sob Consulta';
+        }
+
+        if (preg_match('/^(\d+)(\s*.*)$/', trim($value), $matches)) {
+            $num = (float) $matches[1];
+            $formatted = number_format($num, 0, ',', '.');
+            $suffix = $matches[2];
+            return $formatted . $suffix;
+        }
+
+        return $value;
+    }
+
     public function getStatusBadgeAttribute(): array
     {
         return match ($this->status) {
@@ -102,17 +145,116 @@ class Property extends Model
         };
     }
 
+    public function getBusinessBadgeAttribute(): array
+    {
+        $cat = strtolower((string) ($this->category ?? ''));
+        $type = strtolower((string) ($this->type ?? ''));
+
+        if ($cat === 'arrendamento-longa-duracao') {
+            return [
+                'label'       => 'Longa Duração',
+                'short_label' => 'Longa Duração',
+                'bg'          => '#2563EB',
+                'color'       => '#ffffff',
+                'class'       => 'bg-[#2563EB] text-white',
+            ];
+        }
+
+        if ($cat === 'arrendamento-curta-duracao') {
+            return [
+                'label'       => 'Curta Duração',
+                'short_label' => 'Curta Duração',
+                'bg'          => '#FFD166',
+                'color'       => '#111827',
+                'class'       => 'bg-[#FFD166] text-black',
+            ];
+        }
+
+        if ($cat === 'transpasse' || $type === 'transpasse') {
+            return [
+                'label'       => 'Transpasse',
+                'short_label' => 'Transpasse',
+                'bg'          => '#8B5CF6',
+                'color'       => '#ffffff',
+                'class'       => 'bg-[#8B5CF6] text-white',
+            ];
+        }
+
+        if ($type === 'arrendamento') {
+            return [
+                'label'       => 'Arrendamento',
+                'short_label' => 'Arrendamento',
+                'bg'          => '#FFD166',
+                'color'       => '#000000',
+                'class'       => 'bg-[#FFD166] text-black',
+            ];
+        }
+
+        return [
+            'label'       => 'Venda',
+            'short_label' => 'Venda',
+            'bg'          => '#F97316',
+            'color'       => '#ffffff',
+            'class'       => 'bg-[#F97316] text-white',
+        ];
+    }
+
+    public function getBusinessLabelAttribute(): string
+    {
+        return $this->business_badge['label'];
+    }
+
+    // ── Tipos de Imóveis (Centralizado & Extensível via CMS) ─────────────────
+    public static function propertyTypes(): array
+    {
+        return PropertyType::typeMap();
+    }
+
+    public function getPropertyTypeLabelAttribute(): string
+    {
+        $types = static::propertyTypes();
+        $raw = trim((string) ($this->property_type ?? ''));
+        $key = strtolower($raw);
+
+        if (isset($types[$key])) {
+            return $types[$key];
+        }
+
+        // Mapeamento flexível para registos existentes ou variações com/sem acento
+        if (str_contains($key, 'comercia')) return 'Espaços Comerciais';
+        if (str_contains($key, 'escrit'))   return 'Escritórios';
+        if (str_contains($key, 'armaz'))    return 'Armazéns';
+        if (str_contains($key, 'terren'))   return 'Terrenos';
+        if (str_contains($key, 'vivend'))   return 'Vivendas';
+        if (str_contains($key, 'apart'))    return 'Apartamentos';
+        if (str_contains($key, 'empreend')) return 'Empreendimentos';
+        if (str_contains($key, 'loja'))     return 'Lojas';
+
+        return ucfirst($raw);
+    }
+
     public function getTypologyDisplayAttribute(): string
     {
-        if (in_array(strtolower($this->property_type), ['apartamento', 'casa', 'moradia'])) {
-            return 'T' . $this->bedrooms;
+        $pt = strtolower(trim((string) ($this->property_type ?? '')));
+
+        if (str_contains($pt, 'apart') || str_contains($pt, 'moradia') || $pt === 'casa') {
+            return 'T' . ($this->bedrooms ?: 0);
         }
-        if (strtolower($this->property_type) === 'vivenda') {
-            return 'V' . $this->bedrooms;
+        if (str_contains($pt, 'vivend')) {
+            return 'V' . ($this->bedrooms ?: 0);
         }
-        if (strtolower($this->property_type) === 'terreno') {
+        if (str_contains($pt, 'terren')) {
+            if ($this->land_type_label) {
+                return $this->land_type_label . ($this->area ? ' (' . $this->area . ')' : '');
+            }
             return $this->area ?: 'Terreno';
         }
-        return $this->bedrooms > 0 ? 'T' . $this->bedrooms : ($this->area ?: ucfirst($this->property_type));
+
+        // Para outros tipos de imóveis não consta nem T nem V
+        if (!empty($this->area)) {
+            return $this->area;
+        }
+
+        return $this->property_type_label;
     }
 }

@@ -25,9 +25,23 @@
             </div>
         </div>
 
+        @php
+            $cityMap = \App\Models\Country::getCityMap();
+        @endphp
         {{-- SEARCH BAR --}}
         <div class="p-3">
-            <div x-data="{ open: false }" class="relative -mt-40
+            <div x-data="{
+                    open: false,
+                    country: '{{ request('country', '') }}',
+                    city: '{{ request('city', '') }}',
+                    cityMap: {{ json_encode($cityMap) }},
+                    get cities() {
+                        return this.country ? (this.cityMap[this.country] ?? []) : [];
+                    },
+                    onCountryChange() {
+                        this.city = '';
+                    }
+                 }" class="relative -mt-40
                         lg:absolute lg:left-1/2 lg:-translate-x-1/2 lg:bottom-[-40px]
                         w-full max-w-7xl
                         bg-[#F97316] rounded-2xl shadow-2xl p-6 z-30">
@@ -50,20 +64,21 @@
                         <select name="property_type" id="hp_property_type"
                             class="h-14 rounded-xl px-5 outline-none text-sm text-gray-500 cursor-pointer">
                             <option value="">Tipo de Imóvel</option>
-                            <option value="apartamento">Apartamento</option>
-                            <option value="vivenda">Vivenda</option>
-                            <option value="terrenos ">Terrenos  </option>
-                            <option value="Espacos-comercias">Espaços Comerciais</option>
+                            @foreach(\App\Models\Property::propertyTypes() as $val => $label)
+                                <option value="{{ $val }}" @selected(request('property_type') === $val)>{{ $label }}</option>
+                            @endforeach
                         </select>
 
                         <div class="flex items-center gap-3">
                             <button type="button" @click="open=!open"
-                                class="flex items-center gap-2 text-white border border-white/70 rounded-xl px-4 py-3 hover:bg-white/10 transition shrink-0">
+                                class="flex items-center gap-2 text-white border border-white/70 rounded-xl px-4 py-3 hover:bg-white/10 transition shrink-0"
+                                :class="open ? 'bg-white/15 border-white' : ''">
                                 <span class="material-symbols-outlined transition duration-300"  translate="no"
                                     :class="open ? 'rotate-180' : ''">tune</span>
                             </button>
-                            <button type="submit" class="flex-1 h-14 rounded-xl bg-white text-[#F97316]/90 uppercase tracking-wider text-sm
-                                           font-bold transition duration-300">
+                            <button type="submit"
+                                :class="open ? 'hidden lg:flex' : 'flex'"
+                                class="flex-1 h-14 rounded-xl bg-white text-[#F97316]/90 uppercase tracking-wider text-sm font-bold items-center justify-center transition duration-300">
                                 Pesquisar
                             </button>
                         </div>
@@ -74,48 +89,94 @@
                         <div class="border-t border-white/30 my-5"></div>
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
 
-                            <select name="country"
+                            <select name="country" x-model="country" @change="onCountryChange()"
                                 class="h-14 rounded-xl px-5 text-sm text-gray-500 outline-none cursor-pointer">
                                 <option value="">Todos os Países</option>
-                                <option value="Angola">Angola</option>
-                                <option value="Portugal">Portugal</option>
-                                <option value="África do Sul">África do Sul</option>
+                                <template x-for="(citiesList, c) in cityMap" :key="c">
+                                    <option :value="c" :selected="country === c" x-text="c"></option>
+                                </template>
                             </select>
 
-                            <select name="city"
+                            <select name="city" x-model="city"
                                 class="h-14 rounded-xl px-5 text-sm text-gray-500 outline-none cursor-pointer">
-                                <option value="">Todas as Cidades</option>
-                                <option value="Luanda">Luanda</option>
-                                <option value="Benguela">Benguela</option>
-                                <option value="Lisboa">Lisboa</option>
-                                <option value="Porto">Porto</option>
-                                <option value="Pretória">Pretória</option>
-                                <option value="Joanesburgo">Joanesburgo</option>
+                                <option value="" x-text="country ? 'Todas as Cidades de ' + country : 'Todas as Cidades'"></option>
+                                <template x-if="country">
+                                    <template x-for="cityName in cities" :key="cityName">
+                                        <option :value="cityName" :selected="city === cityName" x-text="cityName"></option>
+                                    </template>
+                                </template>
+                                <template x-if="!country">
+                                    <template x-for="cityName in Object.values(cityMap).flat().filter((v, i, a) => a.indexOf(v) === i).sort()" :key="cityName">
+                                        <option :value="cityName" :selected="city === cityName" x-text="cityName"></option>
+                                    </template>
+                                </template>
                             </select>
 
                             <div x-data="{
-                                pt: '',
+                                pt: '{{ request('property_type', '') }}',
+                                get isVivenda() {
+                                    return this.pt === 'vivenda' || this.pt.includes('vivend');
+                                },
+                                get isApartment() {
+                                    return this.pt === 'apartamento' || this.pt.includes('apart') || this.pt.includes('moradia') || this.pt === 'casa';
+                                },
+                                get isTerrain() {
+                                    return this.pt === 'terreno' || this.pt.includes('terren');
+                                },
+                                get isResidential() {
+                                    return (!this.pt || this.isApartment || this.isVivenda) && !this.isTerrain;
+                                },
                                 get prefix() {
-                                    if (this.pt === 'vivenda') return 'V';
-                                    if (this.pt === 'Espacos-comercias') return 'm²';
+                                    if (this.isVivenda) return 'V';
                                     return 'T';
                                 }
                             }"
-                                x-init="() => { document.getElementById('hp_property_type').addEventListener('change', e => pt = e.target.value) }">
-                                <select name="typology"
-                                    class="h-14 rounded-xl px-5 text-sm text-gray-500 outline-none w-full cursor-pointer">
-                                    <option value="">Tipologia</option>
-                                    <template x-for="n in [0,1,2,3,4,5]" :key="n">
-                                        <option :value="n" x-text="prefix + n"></option>
-                                    </template>
-                                    <option :value="'6+'" x-text="prefix + '6+'"></option>
-                                </select>
+                                x-init="() => {
+                                    const el = document.getElementById('hp_property_type');
+                                    if (el) {
+                                        pt = el.value;
+                                        el.addEventListener('change', e => pt = e.target.value);
+                                    }
+                                }">
+                                <template x-if="isResidential">
+                                    <select name="typology"
+                                        class="h-14 rounded-xl px-5 text-sm text-gray-500 outline-none w-full cursor-pointer">
+                                        <option value="" x-text="isVivenda ? 'Tipologia (V1, V2...)' : 'Tipologia (T1, T2...)'"></option>
+                                        <template x-for="n in [0,1,2,3,4,5]" :key="n">
+                                            <option :value="n" x-text="prefix + n"></option>
+                                        </template>
+                                        <option :value="'6+'" x-text="prefix + '6+'"></option>
+                                    </select>
+                                </template>
+
+                                <template x-if="isTerrain">
+                                    <select name="typology"
+                                        class="h-14 rounded-xl px-5 text-sm text-gray-500 outline-none w-full cursor-pointer">
+                                        <option value="">Classificação do Terreno</option>
+                                        <option value="urbanos" {{ request('typology') === 'urbanos' ? 'selected' : '' }}>Urbanos</option>
+                                        <option value="rusticos" {{ request('typology') === 'rusticos' ? 'selected' : '' }}>Rústicos</option>
+                                        <option value="industriais" {{ request('typology') === 'industriais' ? 'selected' : '' }}>Industriais</option>
+                                        <option value="projecto-aprovado" {{ request('typology') === 'projecto-aprovado' ? 'selected' : '' }}>Projecto Aprovado</option>
+                                    </select>
+                                </template>
+
+                                <template x-if="!isResidential && !isTerrain">
+                                    <div class="h-14 rounded-xl px-4 bg-white/10 border border-white/20 flex items-center justify-center text-white/80 text-xs font-medium text-center">
+                                        Tipologia não aplicável
+                                    </div>
+                                </template>
                             </div>
 
-                            <div class="flex justify-end">
-                                <button type="reset" class="h-14 px-6 rounded-xl border border-white text-white text-sm font-semibold
+                            <div class="flex flex-col gap-3 justify-end">
+                                <button type="button" @click="country = ''; city = ''; $el.closest('form').reset()" class="h-14 px-6 rounded-xl border border-white text-white text-sm font-semibold
                                                hover:bg-white hover:text-[#F97316] transition w-full">
                                     Limpar Filtros
+                                </button>
+
+                                {{-- Pesquisar (No mobile é o último elemento) --}}
+                                <button type="submit"
+                                    class="lg:hidden w-full h-14 rounded-xl bg-white text-[#F97316] shadow-md uppercase tracking-widest text-sm font-bold flex items-center justify-center transition">
+                                    Pesquisar
                                 </button>
                             </div>
                         </div>
@@ -237,9 +298,9 @@
                                 <img src="{{ asset('assets/1.jpeg') }}" alt="{{ $imovel->title }}"
                                     class="w-full h-[260px] object-cover">
                             @endif
-                            <span class="absolute top-4 left-4 text-xs font-bold px-3 py-2 rounded-lg"
-                                style="background-color: {{ $imovel->type === 'arrendamento' ? '#FFD166' : '#F97316' }}; color: {{ $imovel->type === 'arrendamento' ? 'black' : 'white' }}">
-                                {{ strtoupper($imovel->type) }}
+                            <span class="absolute top-4 left-4 text-xs font-bold px-3 py-2 rounded-lg shadow-sm"
+                                style="background-color: {{ $imovel->business_badge['bg'] }}; color: {{ $imovel->business_badge['color'] }}">
+                                {{ mb_strtoupper($imovel->business_badge['label']) }}
                             </span>
                         </div>
                         <div class="p-6">
@@ -274,7 +335,12 @@
                                 </div>
                             </div>
                             <div class="flex items-center justify-between mt-6 gap-2">
-                                <h4 class="text-[#F97316] text-lg font-bold">{{ $imovel->price }}</h4>
+                                <div>
+                                    <h4 class="text-[#F97316] text-lg font-bold leading-tight">{{ $imovel->price }}</h4>
+                                    @if($imovel->price_period)
+                                        <span class="text-xs text-gray-500 font-normal">{{ $imovel->price_period }}</span>
+                                    @endif
+                                </div>
                                 <a href="{{ route('properties.show', $imovel) }}" class="bg-[#F97316] text-center text-white text-[12px] px-6 py-3 rounded-md
                                           uppercase tracking-wider font-semibold hover:bg-[#e65100] transition w-[160px]">
                                     Ver Detalhes
@@ -396,8 +462,9 @@
                                 </div>
                                 <div class="absolute bottom-0 left-0 right-0 p-8 z-10">
                                     <span
-                                        class="bg-[#F97316] text-white text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider mb-3 inline-block">
-                                        {{ $slide->type }}
+                                        class="text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider mb-3 inline-block shadow-sm"
+                                        style="background-color: {{ $slide->business_badge['bg'] }}; color: {{ $slide->business_badge['color'] }}">
+                                        {{ $slide->business_badge['label'] }}
                                     </span>
                                     <h3 class="text-white text-xl font-bold leading-tight">{{ $slide->title }}</h3>
                                     <p class="text-white/80 mt-2 text-sm flex items-center gap-1">
@@ -425,22 +492,56 @@
 
 
     {{-- ======================================================
-    CTA BANNER
+    CTA BANNER (Gerenciado via CMS)
     ====================================================== --}}
+    @php
+        $ctaTitle = $sections['cta']['title'] ?? 'Encontre o imóvel ideal para si';
+        $ctaSubtitle = $sections['cta']['subtitle'] ?? 'Descubra oportunidades exclusivas de compra, venda e arrendamento em Luanda e nas principais cidades de Angola.';
+        $ctaBtnText = $sections['cta']['button_text'] ?? 'Ver Imóveis';
+        $ctaBtnUrl = !empty($sections['cta']['button_url']) ? $sections['cta']['button_url'] : url('/imoveis');
+        // Se a url começar por http:// ou https://, é externa
+        $isExternal = str_starts_with($ctaBtnUrl, 'http://') || str_starts_with($ctaBtnUrl, 'https://');
+        $ctaBtnTarget = $sections['cta']['button_target'] ?? ($isExternal ? '_blank' : '_self');
+        $ctaImage = $sections['cta']['image'] ?? null;
+        $ctaBgColor = !empty($sections['cta']['bg_color']) ? $sections['cta']['bg_color'] : '#F97316';
+
+        $ctaImageUrl = null;
+        if ($ctaImage) {
+            $ctaImageUrl = str_starts_with($ctaImage, 'page-images/') || str_starts_with($ctaImage, 'properties/')
+                ? \Illuminate\Support\Facades\Storage::url($ctaImage)
+                : asset('assets/' . $ctaImage);
+        }
+    @endphp
+
     <section class="bg-[#F7F7F7] pt-20 pb-0 mb-10">
         <div class="w-full max-w-7xl mx-auto px-4 lg:px-6">
-            <div class="bg-[#F97316] rounded-[32px] py-20 px-8 lg:px-20 text-center">
-                <h2 class="text-white text-4xl lg:text-6xl font-bold leading-tight">
-                    {{ $sections['cta']['title'] ?? 'Encontre o imóvel ideal para si' }}
-                </h2>
-                <p class="text-white/90 text-xl lg:text-2xl mt-6 max-w-4xl mx-auto">
-                    {{ $sections['cta']['subtitle'] ?? 'Descubra oportunidades exclusivas de compra, venda e arrendamento em Luanda e nas principais cidades de Angola.' }}
-                </p>
-                <div class="mt-10">
-                    <a href="{{ url('/imoveis') }}" class="inline-flex items-center px-8 py-4 bg-white text-[#F97316]
-                              rounded-xl font-bold uppercase tracking-wider hover:scale-105 transition">
-                        {{ $sections['cta']['button_text'] ?? 'Ver Imóveis' }}
-                    </a>
+            <div class="relative rounded-[32px] py-20 px-8 lg:px-20 text-center overflow-hidden shadow-sm transition-all"
+                 style="background-color: {{ $ctaBgColor }}; @if($ctaImageUrl) background-image: url('{{ $ctaImageUrl }}'); background-size: cover; background-position: center; @endif">
+
+                @if($ctaImageUrl)
+                    {{-- Overlay escurecido para legibilidade com imagem de fundo --}}
+                    <div class="absolute inset-0 bg-black/45 backdrop-blur-[1px] rounded-[32px]"></div>
+                @endif
+
+                <div class="relative z-10">
+                    <h2 class="text-white text-4xl lg:text-6xl font-bold leading-tight drop-shadow-sm">
+                        {!! nl2br(e($ctaTitle)) !!}
+                    </h2>
+                    @if($ctaSubtitle)
+                    <p class="text-white/95 text-xl lg:text-2xl mt-6 max-w-4xl mx-auto drop-shadow-sm">
+                        {!! nl2br(e($ctaSubtitle)) !!}
+                    </p>
+                    @endif
+                    @if($ctaBtnText)
+                    <div class="mt-10">
+                        <a href="{{ $ctaBtnUrl }}"
+                           target="{{ $ctaBtnTarget }}"
+                           @if($ctaBtnTarget === '_blank') rel="noopener noreferrer" @endif
+                           class="inline-flex items-center px-8 py-4 bg-white text-[#F97316] rounded-xl font-bold uppercase tracking-wider hover:scale-105 shadow-md transition">
+                            {{ $ctaBtnText }}
+                        </a>
+                    </div>
+                    @endif
                 </div>
             </div>
         </div>

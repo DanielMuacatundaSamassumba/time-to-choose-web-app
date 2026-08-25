@@ -105,6 +105,22 @@
             Páginas & Conteúdo
         </a>
 
+        <a href="{{ route('admin.locations.index') }}"
+           class="{{ $linkClass }} {{ request()->routeIs('admin.locations.*') ? $activeLinkClass : $inactiveLinkClass }}">
+            <i class="fa-solid fa-earth-africa w-5 text-center {{ request()->routeIs('admin.locations.*') ? 'text-brand' : '' }}"></i>
+            Países & Cidades
+            @php $totalCountries = \App\Models\Country::count(); @endphp
+            <span class="ml-auto bg-brand/20 text-brand text-[10px] font-bold px-2 py-0.5 rounded-full">{{ $totalCountries }}</span>
+        </a>
+
+        <a href="{{ route('admin.property-types.index') }}"
+           class="{{ $linkClass }} {{ request()->routeIs('admin.property-types.*') ? $activeLinkClass : $inactiveLinkClass }}">
+            <i class="fa-solid fa-shapes w-5 text-center {{ request()->routeIs('admin.property-types.*') ? 'text-brand' : '' }}"></i>
+            Tipos de Imóvel
+            @php $totalTypes = \App\Models\PropertyType::count(); @endphp
+            <span class="ml-auto bg-brand/20 text-brand text-[10px] font-bold px-2 py-0.5 rounded-full">{{ $totalTypes }}</span>
+        </a>
+
         <div class="pt-4 pb-2">
             <p class="text-[10px] font-semibold text-gray-600 uppercase tracking-widest px-4 mb-3">Sistema</p>
         </div>

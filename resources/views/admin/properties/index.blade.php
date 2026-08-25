@@ -18,6 +18,15 @@
                 <option value="venda"                      {{ request('filter_category') === 'venda'                      ? 'selected' : '' }}>️ Venda</option>
                 <option value="arrendamento-longa-duracao" {{ request('filter_category') === 'arrendamento-longa-duracao' ? 'selected' : '' }}> Arrendamento de Longa Duração</option>
                 <option value="arrendamento-curta-duracao" {{ request('filter_category') === 'arrendamento-curta-duracao' ? 'selected' : '' }}>⚡ Arrendamento de Curta Duração</option>
+                <option value="transpasse"                 {{ request('filter_category') === 'transpasse'                 ? 'selected' : '' }}> Transpasse</option>
+            </select>
+
+            <select name="property_type"
+                    class="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition">
+                <option value="">Todos os Tipos de Imóvel</option>
+                @foreach(\App\Models\Property::propertyTypes() as $val => $label)
+                    <option value="{{ $val }}" {{ request('property_type') === $val ? 'selected' : '' }}>{{ $label }}</option>
+                @endforeach
             </select>
 
             <select name="status"
@@ -35,7 +44,7 @@
                 Filtrar
             </button>
 
-            @if(request()->hasAny(['search', 'filter_category', 'status']))
+            @if(request()->hasAny(['search', 'filter_category', 'property_type', 'status']))
             <a href="{{ route('admin.properties.index') }}" class="text-gray-400 hover:text-gray-600 text-sm px-3 py-2.5">
                 <i class="fa-solid fa-xmark mr-1"></i>Limpar
             </a>
@@ -65,6 +74,7 @@
                         <th class="text-left text-xs font-semibold text-admin-muted uppercase tracking-wider px-4 py-4">Tipo</th>
                         <th class="text-left text-xs font-semibold text-admin-muted uppercase tracking-wider px-4 py-4">Preço</th>
                         <th class="text-left text-xs font-semibold text-admin-muted uppercase tracking-wider px-4 py-4">Estado</th>
+                        <th class="text-left text-xs font-semibold text-admin-muted uppercase tracking-wider px-4 py-4">Visibilidade</th>
                         <th class="text-left text-xs font-semibold text-admin-muted uppercase tracking-wider px-4 py-4">Destaque</th>
                         <th class="text-left text-xs font-semibold text-admin-muted uppercase tracking-wider px-4 py-4">Criado</th>
                         <th class="px-4 py-4"></th>
@@ -75,7 +85,7 @@
                     <tr class="hover:bg-gray-50 transition group">
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-4">
-                                <div class="w-14 h-14 rounded-xl overflow-hidden flex-shrink-0 bg-gray-100">
+                                <a href="{{ route('admin.properties.show', $property) }}" class="w-14 h-14 rounded-xl overflow-hidden flex-shrink-0 bg-gray-100 block hover:opacity-90 transition">
                                     @if($property->image && file_exists(public_path('assets/' . $property->image)))
                                         <img src="{{ asset('assets/' . $property->image) }}" class="w-full h-full object-cover">
                                     @elseif($property->image && str_starts_with($property->image, 'properties/'))
@@ -85,9 +95,12 @@
                                             <i class="fa-solid fa-building text-brand"></i>
                                         </div>
                                     @endif
-                                </div>
+                                </a>
                                 <div>
-                                    <p class="font-semibold text-sm text-admin-text">{{ $property->title }}</p>
+                                    <a href="{{ route('admin.properties.show', $property) }}"
+                                       class="font-semibold text-sm text-admin-text hover:text-brand transition block">
+                                        {{ $property->title }}
+                                    </a>
                                     <p class="text-xs text-admin-muted mt-0.5">
                                         <i class="fa-solid fa-location-dot mr-1 text-brand/60"></i>{{ $property->location }}
                                     </p>
@@ -101,36 +114,44 @@
                                         @if($property->area)
                                         <span><i class="fa-solid fa-ruler-combined mr-1"></i>{{ $property->area }}</span>
                                         @endif
+                                        @if($property->owner_name || $property->owner_phone)
+                                        <span title="Proprietário: {{ $property->owner_name }} ({{ $property->owner_phone }})"
+                                              class="cursor-help text-amber-700 bg-amber-50 border border-amber-200 text-[10px] font-medium px-1.5 py-0.2 rounded flex items-center gap-1">
+                                            <i class="fa-solid fa-user-shield text-[9px]"></i>
+                                            {{ $property->owner_name ?: $property->owner_phone }}
+                                        </span>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
                         </td>
-                    <td class="px-4 py-4"> 
-    <span class="text-xs font-semibold px-2.5 py-1 rounded-full 
-        {{ $property->type === 'arrendamento' ? 'bg-blue-50 text-blue-600' : 'bg-purple-50 text-purple-600' }}"> 
-        {{ ucfirst($property->type) }} 
-    </span> 
- 
-    @if($property->category === 'arrendamento-longa-duracao') 
-        <span class="block text-[10px] text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full mt-1 w-fit"> 
-             Longa Duração 
-        </span> 
- 
-    @elseif($property->category === 'arrendamento-curta-duracao') 
-        <span class="block text-[10px] text-[#F97316] bg-[#F97316]/10 px-2 py-0.5 rounded-full mt-1 w-fit"> 
-             Curta Duração 
-        </span> 
- 
-    @elseif($property->category === 'transpasse') 
-        <span class="block text-[10px] text-[#F97316] bg-[#F97316]/10 px-2 py-0.5 rounded-full mt-1 w-fit"> 
-            Transpasse 
-        </span> 
-    @endif 
- 
-    <p class="text-[11px] text-admin-muted mt-1"> 
-        {{ ucfirst($property->property_type) }} 
-    </p> 
-</td>
+                        <td class="px-4 py-4 whitespace-nowrap"> 
+                            @if($property->category === 'arrendamento-longa-duracao') 
+                                <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-50 text-blue-700"> 
+                                    Longa Duração 
+                                </span> 
+                            @elseif($property->category === 'arrendamento-curta-duracao') 
+                                <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-50 text-amber-700"> 
+                                    Curta Duração 
+                                </span> 
+                            @elseif($property->category === 'transpasse' || strtolower($property->type) === 'transpasse') 
+                                <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-purple-50 text-purple-700"> 
+                                    Transpasse 
+                                </span> 
+                            @elseif(strtolower($property->type) === 'arrendamento') 
+                                <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-50 text-blue-700"> 
+                                    Arrendamento 
+                                </span> 
+                            @else 
+                                <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-orange-50 text-orange-700"> 
+                                    Venda 
+                                </span> 
+                            @endif 
+     
+                            <p class="text-[11px] text-admin-muted mt-1"> 
+                                {{ $property->property_type_label }} 
+                            </p> 
+                        </td>
                         <td class="px-4 py-4">
                             <p class="text-sm font-bold text-brand">{{ $property->price }}</p>
                             @if($property->price_period)
@@ -141,6 +162,18 @@
                             <span class="text-xs font-semibold px-2.5 py-1 rounded-full {{ $property->status_badge['class'] }}">
                                 {{ $property->status_badge['label'] }}
                             </span>
+                        </td>
+                        <td class="px-4 py-4">
+                            <form action="{{ route('admin.properties.toggle-active', $property) }}" method="POST">
+                                @csrf
+                                @method('PATCH')
+                                <button type="submit"
+                                        title="{{ $property->is_active ? 'Clique para ocultar do site' : 'Clique para tornar visível no site' }}"
+                                        class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full transition {{ $property->is_active ? 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100' : 'bg-gray-100 text-gray-500 hover:bg-gray-200' }}">
+                                    <i class="fa-solid {{ $property->is_active ? 'fa-circle-check text-emerald-500' : 'fa-eye-slash text-gray-400' }} text-[11px]"></i>
+                                    <span>{{ $property->is_active ? 'Visível' : 'Oculto' }}</span>
+                                </button>
+                            </form>
                         </td>
                         <td class="px-4 py-4">
                             @if($property->is_featured)
@@ -154,9 +187,13 @@
                         </td>
                         <td class="px-4 py-4">
                             <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition">
+                                <a href="{{ route('admin.properties.show', $property) }}"
+                                   title="Ver Ficha Técnica" class="p-2 text-gray-400 hover:text-brand hover:bg-brand/10 rounded-lg transition">
+                                    <i class="fa-solid fa-file-lines text-xs"></i>
+                                </a>
                                 <a href="{{ route('properties.show', $property) }}" target="_blank"
-                                   title="Ver no site" class="p-2 text-gray-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition">
-                                    <i class="fa-solid fa-eye text-xs"></i>
+                                   title="Ver no site público" class="p-2 text-gray-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition">
+                                    <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
                                 </a>
                                 <a href="{{ route('admin.properties.edit', $property) }}"
                                    title="Editar" class="p-2 text-gray-400 hover:text-brand hover:bg-brand/10 rounded-lg transition">

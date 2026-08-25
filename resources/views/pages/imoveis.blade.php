@@ -14,29 +14,37 @@
                 propertyType: '{{ request('property_type', '') }}',
                 typology: '{{ request('typology', '') }}',
 
-                /* ── País → Cidades ── */
-                cityMap: {
-                    'Angola':       ['Luanda','Benguela','Lubango','Cabinda','Malanje','Namibe','Huambo','Soyo','Saurimo'],
-                    'Portugal':     ['Lisboa','Porto','Faro','Braga','Coimbra','Setúbal','Aveiro','Évora','Funchal'],
-                    'África do Sul':['Pretória','Joanesburgo','Cidade do Cabo','Durban','East London','Bloemfontein','Port Elizabeth']
-                },
+                /* ── País → Cidades (Dinâmico do Banco de Dados / CMS) ── */
+                cityMap: {{ json_encode(\App\Models\Country::getCityMap()) }},
                 get cities() {
                     return this.country ? (this.cityMap[this.country] ?? []) : [];
                 },
+                onCountryChange() {
+                    this.city = '';
+                },
 
-                /* ── Tipo de Imóvel → Tipologia ── */
+                /* ── Tipo de Imóvel → Tipologia (T para apartamento, V para vivenda, outros sem T/V) ── */
+                get isApartment() {
+                    return this.propertyType === 'apartamento' || this.propertyType.includes('apart') || this.propertyType.includes('moradia') || this.propertyType === 'casa';
+                },
+                get isVivenda() {
+                    return this.propertyType === 'vivenda' || this.propertyType.includes('vivend');
+                },
+                get isResidential() {
+                    return !this.propertyType || this.isApartment || this.isVivenda;
+                },
                 get typologyPrefix() {
-                    if (this.propertyType === 'vivenda') return 'V';
+                    if (this.isVivenda) return 'V';
                     return 'T';
                 },
                 get isTerrain() {
-                    return this.propertyType === 'terreno';
+                    return this.propertyType === 'terreno' || this.propertyType.includes('terren');
                 },
                 get isCommercial() {
-                    return ['escritório','loja'].includes(this.propertyType);
+                    return !this.isResidential && !this.isTerrain;
                 },
                 get showTypology() {
-                    return !this.isTerrain && !this.isCommercial;
+                    return this.isResidential;
                 },
                 get typologyNumbers() {
                     return [0,1,2,3,4,5];
@@ -74,21 +82,23 @@
                     <select name="property_type" x-model="propertyType"
                         class="h-14 rounded-xl px-5 outline-none text-sm text-gray-600 cursor-pointer">
                         <option value="">Tipo de Imóvel</option>
-                        @foreach(['apartamento' => 'Apartamento', 'vivenda' => 'Vivenda', "espaços_comerciais" => "Espaços Comercias", "terrenos"=>'terrenos'] as $val => $label)
+                        @foreach(\App\Models\Property::propertyTypes() as $val => $label)
                             <option value="{{ $val }}" @selected(request('property_type') === $val)>{{ $label }}</option>
                         @endforeach
                     </select>
 
-                    {{-- Botão Filtros + Pesquisar --}}
+                    {{-- Botão Filtros + Pesquisar (Linha 1) --}}
                     <div class="flex items-center gap-3">
                         <button type="button" @click="open = !open"
                             class="flex items-center justify-center gap-2 text-white border border-white/60 rounded-xl px-4 h-14 hover:bg-white/10 transition shrink-0"
+                            :class="open ? 'bg-white/15 border-white' : ''"
                             title="Filtros avançados">
                             <span class="material-symbols-outlined text-[22px] transition-transform duration-300" 
                                 :class="open ? 'rotate-180' : ''" translate="no">tune</span>
                         </button>
                         <button type="submit"
-                            class="flex-1 h-14 rounded-xl bg-white text-[#F97316]/90 uppercase tracking-widest text-sm font-bold transition duration-300">
+                            :class="open ? 'hidden lg:flex' : 'flex'"
+                            class="flex-1 h-14 rounded-xl bg-white text-[#F97316]/90 uppercase tracking-widest text-sm font-bold items-center justify-center transition duration-300">
                             Pesquisar
                         </button>
                     </div>
@@ -118,19 +128,16 @@
                                 class="block text-white/80 text-xs font-semibold uppercase tracking-wider mb-2">Cidade</label>
                             <select name="city" x-model="city"
                                 class="w-full h-14 rounded-xl px-4 text-sm text-gray-600 outline-none cursor-pointer">
-                                <option value="">
-                                    <span x-text="country ? 'Selecionar cidade' : 'Todas as Cidades'"></span>
-                                </option>
-                                <template x-if="!country">
-                                    <optgroup label="Cidades">
-                                        @foreach($cities as $c)
-                                            <option value="{{ $c }}" @selected(request('city') === $c)>{{ $c }}</option>
-                                        @endforeach
-                                    </optgroup>
-                                </template>
+                                <option value="" x-text="country ? 'Todas as Cidades de ' + country : 'Todas as Cidades'"></option>
                                 <template x-if="country">
                                     {{-- Com país selecionado: mostra cidades do Alpine cityMap --}}
                                     <template x-for="c in cities" :key="c">
+                                        <option :value="c" :selected="city === c" x-text="c"></option>
+                                    </template>
+                                </template>
+                                <template x-if="!country">
+                                    {{-- Sem país: mostra todas as cidades do mapa --}}
+                                    <template x-for="c in Object.values(cityMap).flat().filter((v, i, a) => a.indexOf(v) === i).sort()" :key="c">
                                         <option :value="c" :selected="city === c" x-text="c"></option>
                                     </template>
                                 </template>
@@ -140,7 +147,7 @@
                         {{-- Tipologia (dinâmica conforme Tipo de Imóvel) --}}
                         <div>
                             <label class="block text-white/80 text-xs font-semibold uppercase tracking-wider mb-2">
-                                <span x-text="isTerrain ? 'Área (m²)' : isCommercial ? 'Área' : 'Tipologia'"></span>
+                                <span x-text="isTerrain ? 'Classificação' : isCommercial ? 'Área' : 'Tipologia'"></span>
                             </label>
 
                             {{-- Apartamento / Vivenda / Moradia → T0..T6+ ou V1..V6+ --}}
@@ -157,16 +164,15 @@
                                 </select>
                             </template>
 
-                            {{-- Terreno → faixas de área --}}
+                            {{-- Terreno → Classificação: Urbanos, Rústicos, Industriais, Projecto Aprovado --}}
                             <template x-if="isTerrain">
                                 <select name="typology" x-model="typology"
                                     class="w-full h-14 rounded-xl px-4 text-sm text-gray-600 outline-none cursor-pointer">
-                                    <option value="">Qualquer Área</option>
-                                    <option value="200" :selected="typology === '200'">Até 200 m²</option>
-                                    <option value="500" :selected="typology === '500'">Até 500 m²</option>
-                                    <option value="1000" :selected="typology === '1000'">Até 1.000 m²</option>
-                                    <option value="2000" :selected="typology === '2000'">Até 2.000 m²</option>
-                                    <option value="5000" :selected="typology === '5000'">Até 5.000 m²</option>
+                                    <option value="">Todas as Classificações</option>
+                                    <option value="urbanos" :selected="typology === 'urbanos'">Urbanos</option>
+                                    <option value="rusticos" :selected="typology === 'rusticos'">Rústicos</option>
+                                    <option value="industriais" :selected="typology === 'industriais'">Industriais</option>
+                                    <option value="projecto-aprovado" :selected="typology === 'projecto-aprovado'">Projecto Aprovado</option>
                                 </select>
                             </template>
 
@@ -184,14 +190,21 @@
                             </template>
                         </div>
 
-                        {{-- Limpar filtros --}}
-                        <div class="flex items-end">
+                        {{-- Botões de Ação na Linha 2 --}}
+                        <div class="flex flex-col gap-3 justify-end">
+                            {{-- Limpar filtros --}}
                             <a href="{{ route('properties.index') }}"
                                 class="w-full h-14 rounded-xl border border-white text-white text-sm font-semibold
                                       hover:bg-white hover:text-[#F97316] transition flex items-center justify-center gap-2">
                                 <span class="material-symbols-outlined text-[18px]" translate="no">filter_alt_off</span>
                                 Limpar Filtros
                             </a>
+
+                            {{-- Pesquisar (No mobile é o último elemento do formulário) --}}
+                            <button type="submit"
+                                class="lg:hidden w-full h-14 rounded-xl bg-white text-[#F97316] shadow-md uppercase tracking-widest text-sm font-bold flex items-center justify-center transition">
+                                Pesquisar
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -283,16 +296,7 @@
                 @forelse($properties as $property)
 
                     @php
-                        $pt = strtolower($property->property_type);
-                        if ($pt === 'vivenda') {
-                            $badge = 'V' . $property->bedrooms;
-                        } elseif (in_array($pt, ['terreno'])) {
-                            $badge = $property->area ?? '—';
-                        } elseif (in_array($pt, ['escritório', 'escritorio', 'loja'])) {
-                            $badge = $property->area ?? ucfirst($pt);
-                        } else {
-                            $badge = 'T' . $property->bedrooms;
-                        }
+                        $badge = $property->typology_display;
                     @endphp
 
                     <article
@@ -307,9 +311,9 @@
                             {{-- Badge negócio --}}
                             <span
                                 class="absolute top-3 left-3 text-[11px] font-bold px-3 py-1.5 rounded-lg uppercase tracking-wide shadow"
-                                style="background:{{ $property->type === 'arrendamento' ? '#FFD166' : '#F97316' }};
-                                                     color:{{ $property->type === 'arrendamento' ? '#333' : '#fff' }}">
-                                {{ $property->type }}
+                                style="background:{{ $property->business_badge['bg'] }};
+                                                     color:{{ $property->business_badge['color'] }}">
+                                {{ $property->business_badge['label'] }}
                             </span>
 
                             {{-- Badge tipologia --}}
@@ -334,12 +338,12 @@
                                 class="text-base font-bold text-gray-900 leading-snug group-hover:text-[#F97316] transition line-clamp-2">
                                 {{ $property->title }}
                             </h2>
-                            <p class="text-gray-400 text-xs mt-1">{{ ucfirst($property->property_type) }}</p>
+                            <p class="text-gray-400 text-xs mt-1">{{ $property->property_type_label }}</p>
 
                             {{-- Atributos --}}
                             <div
                                 class="mt-4 grid grid-cols-2 gap-x-4 gap-y-2 text-xs text-gray-500 border-t border-b border-gray-100 py-4">
-                                @if($property->bedrooms > 0 && !in_array($pt, ['terreno', 'loja', 'escritório', 'escritorio']))
+                                @if($property->bedrooms > 0 && !in_array(strtolower((string) $property->property_type), ['terreno', 'terrenos', 'loja', 'lojas', 'escritório', 'escritorio', 'armazem', 'armazens', 'espaco-comercial', 'empreendimento']))
                                     <div class="flex items-center gap-1.5">
                                         <span class="material-symbols-outlined text-[17px] text-[#F97316]" translate="no">bed</span>
                                         <span>{{ $property->bedrooms }} Quarto{{ $property->bedrooms > 1 ? 's' : '' }}</span>
@@ -408,8 +412,8 @@
                             {{-- Badge negócio --}}
                             <span
                                 class="absolute top-3 left-3 text-[11px] font-bold px-3 py-1.5 rounded-lg uppercase tracking-wide shadow"
-                                :style="p.type === 'arrendamento' ? 'background: #FFD166; color: #333;' : 'background: #F97316; color: #fff;'">
-                                <span x-text="p.type"></span>
+                                :style="'background: ' + (p.business_badge ? p.business_badge.bg : '#F97316') + '; color: ' + (p.business_badge ? p.business_badge.color : '#fff') + ';'">
+                                <span x-text="p.business_label || p.type"></span>
                             </span>
 
                             {{-- Badge tipologia --}}
@@ -439,7 +443,7 @@
                             <div
                                 class="mt-4 grid grid-cols-2 gap-x-4 gap-y-2 text-xs text-gray-500 border-t border-b border-gray-100 py-4">
                                 <template
-                                    x-if="p.bedrooms > 0 && !['terreno', 'loja', 'escritório', 'escritorio'].includes(p.property_type)">
+                                    x-if="p.bedrooms > 0 && !['terreno', 'terrenos', 'loja', 'lojas', 'escritório', 'escritorio', 'armazem', 'armazens', 'espaco-comercial', 'empreendimento'].includes((p.property_type || '').toLowerCase())">
                                     <div class="flex items-center gap-1.5">
                                         <span class="material-symbols-outlined text-[17px] text-[#F97316]" translate="no">bed</span>
                                         <span x-text="p.bedrooms + ' Quarto' + (p.bedrooms > 1 ? 's' : '')"></span>
@@ -618,15 +622,23 @@
                     },
 
                     getBadge(p) {
-                        const pt = p.property_type.toLowerCase();
-                        if (pt === 'vivenda') {
-                            return 'V' + p.bedrooms;
-                        } else if (pt === 'terreno') {
-                            return p.area || '—';
-                        } else if (['escritório', 'escritorio', 'loja'].includes(pt)) {
-                            return p.area || p.property_type_label;
+                        const pt = (p.property_type || '').toLowerCase();
+                        if (pt.includes('vivend')) {
+                            return 'V' + (p.bedrooms || 0);
+                        } else if (pt.includes('terren')) {
+                            return p.area || 'Terreno';
+                        } else if (pt.includes('armaz')) {
+                            return p.area || 'Armazém';
+                        } else if (pt.includes('loja')) {
+                            return p.area || 'Loja';
+                        } else if (pt.includes('escrit')) {
+                            return p.area || 'Escritório';
+                        } else if (pt.includes('comercia')) {
+                            return p.area || 'Comercial';
+                        } else if (pt.includes('apart') || pt.includes('moradia') || pt === 'casa') {
+                            return 'T' + (p.bedrooms || 0);
                         } else {
-                            return 'T' + p.bedrooms;
+                            return p.area || p.property_type_label;
                         }
                     }
                 }));

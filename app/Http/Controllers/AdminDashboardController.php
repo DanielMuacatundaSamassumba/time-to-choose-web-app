@@ -47,6 +47,11 @@ class AdminDashboardController extends Controller
             }
         }
 
+        if ($request->filled('property_type')) {
+            $pt = strtolower($request->input('property_type'));
+            $query->where('property_type', 'like', '%' . $pt . '%');
+        }
+
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
@@ -65,10 +70,13 @@ class AdminDashboardController extends Controller
         $request->validate([
             'title'             => 'required|string|max:255',
             'description'       => 'nullable|string',
+            'price_amount'      => 'nullable|string|max:100',
+            'price_currency'    => 'nullable|string|max:50',
             'price'             => 'nullable|string|max:100',
             'price_period'      => 'nullable|string|max:50',
             'business_category' => 'required|in:venda,arrendamento-longa-duracao,arrendamento-curta-duracao,transpasse',
             'property_type'     => 'required|string|max:100',
+            'land_type'         => 'nullable|string|max:100',
             'country'           => 'required|string|max:100',
             'city'              => 'required|string|max:100',
             'location'          => 'nullable|string|max:255',
@@ -86,6 +94,11 @@ class AdminDashboardController extends Controller
             'tour_3d_url'       => 'nullable|string|max:255',
             'latitude'          => 'nullable|string|max:50',
             'longitude'         => 'nullable|string|max:50',
+            'owner_name'        => 'nullable|string|max:255',
+            'owner_phone'       => 'nullable|string|max:50',
+            'owner_whatsapp'    => 'nullable|string|max:50',
+            'owner_email'       => 'nullable|email|max:255',
+            'owner_website'     => 'nullable|string|max:255',
         ]);
 
         // Derive type + category from the unified business_category field
@@ -95,11 +108,30 @@ class AdminDashboardController extends Controller
     : ($bc === 'transpasse' ? 'Transpasse' : 'arrendamento');
         $category = $bc !== 'venda' ? $bc : null;
 
-        $data = $request->except(['_token', 'business_category']);
+        $data = $request->except(['_token', 'business_category', 'price_amount', 'price_currency']);
         $data['type']        = $type;
         $data['category']    = $category;
         $data['is_featured'] = $request->boolean('is_featured');
-        $data['is_active']   = $request->boolean('is_active', true);
+        $data['is_active']   = $request->boolean('is_active');
+
+        // Process price amount + currency (format with dots from 1.000)
+        $currency = $request->input('price_currency', 'Kz');
+        $amount = trim((string) $request->input('price_amount', $request->input('price', '')));
+        if ($currency === 'Sob Consulta') {
+            $data['price'] = 'Sob Consulta';
+        } elseif (!empty($amount)) {
+            $digits = preg_replace('/[^\d]/', '', $amount);
+            if (is_numeric($digits) && strlen($digits) > 0) {
+                $formatted = number_format((float) $digits, 0, ',', '.');
+                $data['price'] = $formatted . ' ' . $currency;
+            } else {
+                $data['price'] = $amount . ' ' . $currency;
+            }
+        } else {
+            $data['price'] = null;
+        }
+
+        $data['price_period'] = $request->filled('price_period') ? $request->input('price_period') : null;
 
         // Parse amenities
         if (isset($data['amenities']) && is_string($data['amenities'])) {
@@ -142,10 +174,13 @@ class AdminDashboardController extends Controller
     $validated = $request->validate([
         'title'             => 'required|string|max:255',
         'description'       => 'nullable|string',
+        'price_amount'      => 'nullable|string|max:100',
+        'price_currency'    => 'nullable|string|max:50',
         'price'             => 'nullable|string|max:100',
         'price_period'      => 'nullable|string|max:50',
         'business_category' => 'required|in:venda,arrendamento-longa-duracao,arrendamento-curta-duracao,transpasse',
         'property_type'     => 'required|string|max:100',
+        'land_type'         => 'nullable|string|max:100',
         'country'           => 'required|string|max:100',
         'city'              => 'required|string|max:100',
         'location'          => 'nullable|string|max:255',
@@ -165,18 +200,44 @@ class AdminDashboardController extends Controller
         'tour_3d_url'       => 'nullable|string|max:255',
         'latitude'          => 'nullable|string|max:50',
         'longitude'         => 'nullable|string|max:50',
+        'owner_name'        => 'nullable|string|max:255',
+        'owner_phone'       => 'nullable|string|max:50',
+        'owner_whatsapp'    => 'nullable|string|max:50',
+        'owner_email'       => 'nullable|email|max:255',
+        'owner_website'     => 'nullable|string|max:255',
     ]);
 
         // Derive type + category from the unified business_category field
         $bc = $request->input('business_category');
-        $type     = $bc === 'venda' ? 'venda' : 'arrendamento';
+        $type = $bc === 'venda'
+            ? 'venda'
+            : ($bc === 'transpasse' ? 'Transpasse' : 'arrendamento');
         $category = $bc !== 'venda' ? $bc : null;
 
-        $data = $request->except(['_token', '_method', 'business_category']);
+        $data = $request->except(['_token', '_method', 'business_category', 'price_amount', 'price_currency']);
         $data['type']        = $type;
         $data['category']    = $category;
         $data['is_featured'] = $request->boolean('is_featured');
-        $data['is_active']   = $request->boolean('is_active', true);
+        $data['is_active']   = $request->boolean('is_active');
+
+        // Process price amount + currency (format with dots from 1.000)
+        $currency = $request->input('price_currency', 'Kz');
+        $amount = trim((string) $request->input('price_amount', $request->input('price', '')));
+        if ($currency === 'Sob Consulta') {
+            $data['price'] = 'Sob Consulta';
+        } elseif (!empty($amount)) {
+            $digits = preg_replace('/[^\d]/', '', $amount);
+            if (is_numeric($digits) && strlen($digits) > 0) {
+                $formatted = number_format((float) $digits, 0, ',', '.');
+                $data['price'] = $formatted . ' ' . $currency;
+            } else {
+                $data['price'] = $amount . ' ' . $currency;
+            }
+        } else {
+            $data['price'] = null;
+        }
+
+        $data['price_period'] = $request->filled('price_period') ? $request->input('price_period') : null;
 
         if (isset($data['amenities']) && is_string($data['amenities'])) {
             $data['amenities'] = array_filter(array_map('trim', explode(',', $data['amenities'])));
@@ -222,6 +283,18 @@ class AdminDashboardController extends Controller
         $property->delete();
         return redirect()->route('admin.properties.index')
                          ->with('success', 'Imóvel eliminado com sucesso!');
+    }
+
+    public function propertiesShow(Property $property)
+    {
+        return view('admin.properties.show', compact('property'));
+    }
+
+    public function propertiesToggleActive(Property $property)
+    {
+        $property->update(['is_active' => !$property->is_active]);
+        $msg = $property->is_active ? 'Imóvel agora está visível no site!' : 'Imóvel agora está oculto do site público!';
+        return back()->with('success', $msg);
     }
 
     // ─── Messages ────────────────────────────────────────────────────────────────

@@ -8,6 +8,8 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ConfiguracoesController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\MediaController;
+use App\Http\Controllers\LocationController;
+use App\Http\Controllers\PropertyTypeController;
 use App\Models\PageSection;
 
 // --- Public Routes ---
@@ -67,12 +69,14 @@ Route::middleware(\App\Http\Middleware\AdminMiddleware::class)->prefix('admin')-
     Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
 
     // Properties CRUD
-    Route::get('/imoveis',                   [AdminDashboardController::class, 'propertiesIndex'])->name('properties.index');
-    Route::get('/imoveis/criar',             [AdminDashboardController::class, 'propertiesCreate'])->name('properties.create');
-    Route::post('/imoveis',                  [AdminDashboardController::class, 'propertiesStore'])->name('properties.store');
-    Route::get('/imoveis/{property}/editar', [AdminDashboardController::class, 'propertiesEdit'])->name('properties.edit');
-    Route::put('/imoveis/{property}',        [AdminDashboardController::class, 'propertiesUpdate'])->name('properties.update');
-    Route::delete('/imoveis/{property}',     [AdminDashboardController::class, 'propertiesDestroy'])->name('properties.destroy');
+    Route::get('/imoveis',                        [AdminDashboardController::class, 'propertiesIndex'])->name('properties.index');
+    Route::get('/imoveis/criar',                  [AdminDashboardController::class, 'propertiesCreate'])->name('properties.create');
+    Route::post('/imoveis',                       [AdminDashboardController::class, 'propertiesStore'])->name('properties.store');
+    Route::get('/imoveis/{property}/ficha',       [AdminDashboardController::class, 'propertiesShow'])->name('properties.show');
+    Route::get('/imoveis/{property}/editar',      [AdminDashboardController::class, 'propertiesEdit'])->name('properties.edit');
+    Route::put('/imoveis/{property}',             [AdminDashboardController::class, 'propertiesUpdate'])->name('properties.update');
+    Route::patch('/imoveis/{property}/visibilidade',[AdminDashboardController::class, 'propertiesToggleActive'])->name('properties.toggle-active');
+    Route::delete('/imoveis/{property}',          [AdminDashboardController::class, 'propertiesDestroy'])->name('properties.destroy');
 
     // Messages
     Route::get('/mensagens',              [AdminDashboardController::class, 'messagesIndex'])->name('messages.index');
@@ -94,6 +98,21 @@ Route::middleware(\App\Http\Middleware\AdminMiddleware::class)->prefix('admin')-
     Route::get('/utilizadores/{user}/editar',     [UserController::class, 'edit'])->name('users.edit');
     Route::put('/utilizadores/{user}',            [UserController::class, 'update'])->name('users.update');
     Route::delete('/utilizadores/{user}',         [UserController::class, 'destroy'])->name('users.destroy');
+
+    // Localizacoes (Paises e Cidades)
+    Route::get('/localizacoes',                      [LocationController::class, 'index'])->name('locations.index');
+    Route::post('/localizacoes/paises',              [LocationController::class, 'storeCountry'])->name('locations.countries.store');
+    Route::put('/localizacoes/paises/{country}',     [LocationController::class, 'updateCountry'])->name('locations.countries.update');
+    Route::delete('/localizacoes/paises/{country}',  [LocationController::class, 'destroyCountry'])->name('locations.countries.destroy');
+    Route::post('/localizacoes/cidades',             [LocationController::class, 'storeCity'])->name('locations.cities.store');
+    Route::put('/localizacoes/cidades/{city}',       [LocationController::class, 'updateCity'])->name('locations.cities.update');
+    Route::delete('/localizacoes/cidades/{city}',    [LocationController::class, 'destroyCity'])->name('locations.cities.destroy');
+
+    // Tipos de Imoveis (CMS)
+    Route::get('/tipos-de-imoveis',                    [PropertyTypeController::class, 'index'])->name('property-types.index');
+    Route::post('/tipos-de-imoveis',                   [PropertyTypeController::class, 'store'])->name('property-types.store');
+    Route::put('/tipos-de-imoveis/{propertyType}',     [PropertyTypeController::class, 'update'])->name('property-types.update');
+    Route::delete('/tipos-de-imoveis/{propertyType}',  [PropertyTypeController::class, 'destroy'])->name('property-types.destroy');
 
     // Media / Biblioteca de Imagens
     Route::get('/media',    [MediaController::class, 'index'])->name('media.index');

@@ -71,8 +71,9 @@
         <div class="grid lg:grid-cols-3 gap-10 mt-10">
             <div class="lg:col-span-2">
                 <div class="flex flex-wrap items-center gap-3 mb-3">
-                    <span class="bg-[#F97316] text-white px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider">
-                        {{ $property->type }}
+                    <span class="px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider shadow-sm"
+                          style="background-color: {{ $property->business_badge['bg'] }}; color: {{ $property->business_badge['color'] }}">
+                        {{ $property->business_badge['label'] }}
                     </span>
                     <span class="px-3 py-1 rounded-full text-xs font-semibold {{ $property->status_badge['class'] }}">
                         {{ $property->status_badge['label'] }}
@@ -283,9 +284,9 @@
                     @else
                         <img src="{{ asset('assets/1.jpeg') }}" alt="{{ $item->title }}" class="w-full h-[260px] object-cover group-hover:scale-105 transition duration-500">
                     @endif
-                    <span class="absolute top-4 left-4 text-xs font-bold px-3 py-2 rounded-lg"
-                          style="background-color: {{ $item->type === 'arrendamento' ? '#FFD166' : '#F97316' }}; color: {{ $item->type === 'arrendamento' ? 'black' : 'white' }}">
-                        {{ strtoupper($item->type) }}
+                    <span class="absolute top-4 left-4 text-xs font-bold px-3 py-2 rounded-lg shadow-sm"
+                          style="background-color: {{ $item->business_badge['bg'] }}; color: {{ $item->business_badge['color'] }}">
+                        {{ mb_strtoupper($item->business_badge['label']) }}
                     </span>
                 </div>
                 <div class="p-6 flex flex-col flex-1">

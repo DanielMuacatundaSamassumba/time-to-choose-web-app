@@ -122,6 +122,29 @@
                     name="{{ $inputName }}"
                     class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-admin-text focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/10 transition"
                     rows="3">{{ $currentVal }}</textarea>
+            @elseif($fieldType === 'select')
+                <select
+                    id="field_{{ $section }}_{{ $field['key'] }}"
+                    name="{{ $inputName }}"
+                    class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-admin-text focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/10 transition">
+                    @foreach($field['options'] ?? [] as $optVal => $optLabel)
+                        <option value="{{ $optVal }}" {{ (string)$currentVal === (string)$optVal ? 'selected' : '' }}>{{ $optLabel }}</option>
+                    @endforeach
+                </select>
+            @elseif($fieldType === 'color')
+                <div class="flex items-center gap-3">
+                    <input
+                        type="color"
+                        id="field_{{ $section }}_{{ $field['key'] }}"
+                        name="{{ $inputName }}"
+                        value="{{ $currentVal ?: '#F97316' }}"
+                        class="w-12 h-11 border border-gray-200 rounded-xl p-1 cursor-pointer bg-white">
+                    <input
+                        type="text"
+                        value="{{ $currentVal ?: '#F97316' }}"
+                        oninput="document.getElementById('field_{{ $section }}_{{ $field['key'] }}').value = this.value"
+                        class="flex-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-mono text-admin-text focus:outline-none focus:border-brand">
+                </div>
             @else
                 <input
                     type="text"

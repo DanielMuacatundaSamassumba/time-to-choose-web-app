@@ -55,46 +55,94 @@
                 @php
                     $bc = old('business_category',
                         $property?->category
-                            ? $property->category          // arrendamento-longa/curta
-                            : ($property?->type === 'venda' ? 'venda' : '')
+                            ? $property->category          // arrendamento-longa/curta, transpasse
+                            : ($property?->type === 'venda' ? 'venda' : ($property?->type ? strtolower($property->type) : ''))
                     );
                 @endphp
                 <option value="" disabled {{ $bc === '' ? 'selected' : '' }}>— Selecionar —</option>
-                <option value="venda"                      {{ $bc === 'venda'                      ? 'selected' : '' }}>
+                <option value="venda" {{ $bc === 'venda' ? 'selected' : '' }}>
                     Venda
                 </option>
-                <option value="arrendamento-longa-duracao" {{ $bc === 'arrendamento-longa-duracao' ? 'selected' : '' }}>
-                     Arrendamento de Longa Duração
-                </option>
-                <option value="arrendamento-curta-duracao" {{ $bc === 'arrendamento-curta-duracao' ? 'selected' : '' }}>
-                 Arrendamento de Curta Duração
-                </option>
+                <optgroup label="Arrendamento">
+                    <option value="arrendamento-longa-duracao" {{ $bc === 'arrendamento-longa-duracao' ? 'selected' : '' }}>
+                        Arrendamento de Longa Duração
+                    </option>
+                    <option value="arrendamento-curta-duracao" {{ $bc === 'arrendamento-curta-duracao' ? 'selected' : '' }}>
+                        Arrendamento de Curta Duração
+                    </option>
+                </optgroup>
                 <option value="transpasse" {{ $bc === 'transpasse' ? 'selected' : '' }}>
-               Transpasse
+                    Transpasse
                 </option>
             </select>
+            <p class="text-[11px] text-gray-500 mt-1">Selecione se é Venda, Longa Duração, Curta Duração ou Transpasse.</p>
         </div>
         <div>
             <label class="{{ $labelClass }}">Tipo de Imóvel <span class="text-red-400">*</span></label>
-            <select name="property_type" class="{{ $inputClass }}" required>
-                @foreach(['apartamento','vivenda','Espaços Comercias', "terreno"] as $pt)
-                <option value="{{ $pt }}" {{ old('property_type', $property?->property_type) === $pt ? 'selected' : '' }}>
-                    {{ ucfirst($pt) }}
-                </option>
+            <select name="property_type" id="form_property_type" class="{{ $inputClass }}" required>
+                <option value="" disabled {{ empty($property?->property_type) ? 'selected' : '' }}>— Selecionar —</option>
+                @php
+                    $currentPt = strtolower(trim((string) old('property_type', $property?->property_type ?? '')));
+                @endphp
+                @foreach(\App\Models\Property::propertyTypes() as $key => $label)
+                    <option value="{{ $key }}" {{ ($currentPt === $key || ($key === 'espaco-comercial' && str_contains($currentPt, 'comercia')) || ($key === 'escritorio' && str_contains($currentPt, 'escrit')) || ($key === 'terreno' && str_contains($currentPt, 'terren'))) ? 'selected' : '' }}>
+                        {{ $label }}
+                    </option>
                 @endforeach
             </select>
         </div>
+        {{-- Valor do Preço e Moeda Separados --}}
+        @php
+            $rawPrice = $property?->price ?? '';
+            $extractedCurrency = 'Kz';
+            $extractedAmount = $rawPrice;
+
+            if (stripos($rawPrice, 'sob consulta') !== false) {
+                $extractedCurrency = 'Sob Consulta';
+                $extractedAmount = '';
+            } elseif (preg_match('/(usd|\$)/i', $rawPrice)) {
+                $extractedCurrency = 'USD';
+                $extractedAmount = trim(preg_replace('/(usd|\$)/i', '', $rawPrice));
+            } elseif (preg_match('/(eur|euros|€)/i', $rawPrice)) {
+                $extractedCurrency = 'EUR';
+                $extractedAmount = trim(preg_replace('/(eur|euros|€)/i', '', $rawPrice));
+            } elseif (preg_match('/(kz|aoa|kwanzas)/i', $rawPrice)) {
+                $extractedCurrency = 'Kz';
+                $extractedAmount = trim(preg_replace('/(kz|aoa|kwanzas)/i', '', $rawPrice));
+            }
+
+            $currentCurrency = old('price_currency', $extractedCurrency);
+            $currentAmount = old('price_amount', $extractedAmount);
+            $currentPeriod = old('price_period', $property?->price_period ?? '');
+        @endphp
+
         <div>
-            <label class="{{ $labelClass }}">Preço</label>
-            <input type="text" name="price" value="{{ old('price', $property?->price) }}"
-                   placeholder="Ex: 350.000 Kz"
+            <label class="{{ $labelClass }}">Valor</label>
+            <input type="text" name="price_amount" id="price_amount" value="{{ $currentAmount }}"
+                   placeholder="Ex: 3.750.000"
+                   oninput="formatPriceInput(this)"
                    class="{{ $inputClass }}">
         </div>
+
         <div>
-            <label class="{{ $labelClass }}">Período</label>
-            <input type="text" name="price_period" value="{{ old('price_period', $property?->price_period) }}"
-                   placeholder="Ex: / mês"
-                   class="{{ $inputClass }}">
+            <label class="{{ $labelClass }}">Moeda</label>
+            <select name="price_currency" class="{{ $inputClass }}">
+                <option value="Kz" {{ $currentCurrency === 'Kz' ? 'selected' : '' }}>Kz (AOA - Kwanzas)</option>
+                <option value="USD" {{ $currentCurrency === 'USD' ? 'selected' : '' }}>USD ($ - Dólares)</option>
+                <option value="EUR" {{ $currentCurrency === 'EUR' ? 'selected' : '' }}>EUR (€ - Euros)</option>
+                <option value="Sob Consulta" {{ $currentCurrency === 'Sob Consulta' ? 'selected' : '' }}>Sob Consulta</option>
+            </select>
+        </div>
+
+        <div>
+            <label class="{{ $labelClass }}">Período de Arrendamento</label>
+            <select name="price_period" class="{{ $inputClass }}">
+                <option value="" {{ empty($currentPeriod) ? 'selected' : '' }}>— Não aplicável (Venda/Total) —</option>
+                <option value="/ mês" {{ in_array($currentPeriod, ['/ mês', '/ mes', 'mês', 'mes']) ? 'selected' : '' }}>/ Mês</option>
+                <option value="/ dia" {{ in_array($currentPeriod, ['/ dia', 'dia']) ? 'selected' : '' }}>/ Dia</option>
+                <option value="/ ano" {{ in_array($currentPeriod, ['/ ano', 'ano']) ? 'selected' : '' }}>/ Ano</option>
+                <option value="/ semana" {{ in_array($currentPeriod, ['/ semana', 'semana']) ? 'selected' : '' }}>/ Semana</option>
+            </select>
         </div>
         <div class="col-span-2">
             <label class="{{ $labelClass }}">Localização (Zona/Bairro)</label>
@@ -103,22 +151,69 @@
                    class="{{ $inputClass }}">
         </div>
 
-        {{-- País e Cidade --}}
-        <div>
-            <label class="{{ $labelClass }}">País <span class="text-red-400">*</span></label>
-            <select name="country" class="{{ $inputClass }}" required>
-                @foreach(['Angola','Portugal','África do Sul','Estados Unidos','Brasil','França','Espanha','Outro'] as $c)
-                <option value="{{ $c }}" {{ old('country', $property?->country ?? 'Angola') === $c ? 'selected' : '' }}>
-                    {{ $c }}
-                </option>
-                @endforeach
-            </select>
-        </div>
-        <div>
-            <label class="{{ $labelClass }}">Cidade <span class="text-red-400">*</span></label>
-            <input type="text" name="city" value="{{ old('city', $property?->city ?? 'Luanda') }}"
-                   placeholder="Ex: Luanda, Lisboa, Pretória..."
-                   class="{{ $inputClass }}" required>
+        {{-- País e Cidade Dependentes --}}
+        @php
+            $cityMap = \App\Models\Country::getCityMap();
+            $currentCountry = old('country', $property?->country ?? 'Angola');
+            $currentCity = old('city', $property?->city ?? 'Luanda');
+        @endphp
+        <div class="col-span-1 md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-5"
+             x-data="{
+                 cityMap: {{ json_encode($cityMap) }},
+                 selectedCountry: '{{ $currentCountry }}',
+                 selectedCity: '{{ $currentCity }}',
+                 customCity: false,
+                 get availableCities() {
+                     return this.selectedCountry ? (this.cityMap[this.selectedCountry] ?? []) : [];
+                 },
+                 onCountryChange() {
+                     const cities = this.availableCities;
+                     if (cities.length > 0) {
+                         if (!cities.includes(this.selectedCity)) {
+                             this.selectedCity = cities[0];
+                         }
+                         this.customCity = false;
+                     } else {
+                         this.selectedCity = '';
+                         this.customCity = true;
+                     }
+                 }
+             }">
+            <div>
+                <label class="{{ $labelClass }}">País <span class="text-red-400">*</span></label>
+                <select name="country" x-model="selectedCountry" @change="onCountryChange()" class="{{ $inputClass }}" required>
+                    <option value="" disabled>— Selecione o País —</option>
+                    @foreach(array_keys($cityMap) as $c)
+                    <option value="{{ $c }}">{{ $c }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div>
+                <div class="flex items-center justify-between mb-2">
+                    <label class="{{ $labelClass }} !mb-0">Cidade <span class="text-red-400">*</span></label>
+                    <button type="button" @click="customCity = !customCity" class="text-[11px] text-brand hover:underline">
+                        <span x-show="!customCity">+ Digitar outra</span>
+                        <span x-show="customCity">← Escolher da lista</span>
+                    </button>
+                </div>
+
+                {{-- Select de Cidades vinculadas ao país --}}
+                <div x-show="!customCity && availableCities.length > 0">
+                    <select name="city" x-model="selectedCity" :disabled="customCity" class="{{ $inputClass }}" required>
+                        <template x-for="cityName in availableCities" :key="cityName">
+                            <option :value="cityName" :selected="selectedCity === cityName" x-text="cityName"></option>
+                        </template>
+                    </select>
+                </div>
+
+                {{-- Input texto quando não há cidades ou para cidade personalizada --}}
+                <div x-show="customCity || availableCities.length === 0" x-cloak>
+                    <input type="text" name="city" x-model="selectedCity" :disabled="!customCity && availableCities.length > 0"
+                           placeholder="Digite o nome da cidade..."
+                           class="{{ $inputClass }}" required>
+                </div>
+            </div>
         </div>
 
         <div>
@@ -137,6 +232,40 @@
                    class="{{ $inputClass }}">
         </div>
     </div>
+
+    {{-- Classificação do Terreno (Exibido quando Tipo de Imóvel = Terrenos) --}}
+    <div x-data="{ pt: '{{ old('property_type', $property?->property_type ?? '') }}' }"
+         x-init="() => {
+             const el = document.getElementById('form_property_type');
+             if (el) {
+                 pt = el.value;
+                 el.addEventListener('change', e => pt = e.target.value);
+             }
+         }"
+         x-show="pt.includes('terren')"
+         x-cloak
+         class="mt-5 bg-orange-50/70 border border-orange-200 rounded-2xl p-5 transition">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+            <div class="md:col-span-2">
+                <label class="block text-sm font-bold text-gray-900 mb-1 flex items-center gap-2">
+                    <i class="fa-solid fa-mountain-sun text-brand"></i>
+                    Classificação do Terreno
+                </label>
+                <p class="text-xs text-gray-500">Defina se o terreno é Urbano, Rústico, Industrial ou com Projecto Aprovado para correta filtragem no site.</p>
+            </div>
+            <div>
+                <select name="land_type" class="{{ $inputClass }}">
+                    <option value="">— Selecionar Classificação —</option>
+                    @php
+                        $currentLandType = old('land_type', $property?->land_type ?? '');
+                    @endphp
+                    @foreach(\App\Models\Property::landTypes() as $lKey => $lLabel)
+                        <option value="{{ $lKey }}" @selected($currentLandType === $lKey)>{{ $lLabel }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- Details -->
@@ -146,8 +275,25 @@
         Detalhes
     </h3>
     <div class="grid grid-cols-3 gap-5 mb-5">
-        <div>
-            <label class="{{ $labelClass }}"><i class="fa-solid fa-bed mr-1 text-brand/60"></i>Quartos</label>
+        <div x-data="{
+            pt: '{{ old('property_type', $property?->property_type ?? '') }}',
+            get label() {
+                if (this.pt.includes('vivend')) return 'Quartos (Tipologia V: V1, V2...)';
+                if (this.pt.includes('apart') || this.pt.includes('moradia') || this.pt === 'casa') return 'Quartos (Tipologia T: T1, T2...)';
+                return 'Quartos (N/A para não residencial)';
+            }
+        }"
+        x-init="() => {
+            const el = document.getElementById('form_property_type');
+            if (el) {
+                pt = el.value;
+                el.addEventListener('change', e => pt = e.target.value);
+            }
+        }">
+            <label class="{{ $labelClass }}">
+                <i class="fa-solid fa-bed mr-1 text-brand/60"></i>
+                <span x-text="label">Quartos</span>
+            </label>
             <input type="number" name="bedrooms" min="0" value="{{ old('bedrooms', $property?->bedrooms ?? 0) }}"
                    class="{{ $inputClass }}">
         </div>
@@ -173,7 +319,7 @@
     <div class="grid grid-cols-2 gap-4 mt-5">
         <label class="flex items-center gap-3 p-4 border border-gray-200 rounded-xl cursor-pointer hover:border-brand transition">
             <input type="checkbox" name="is_featured" value="1" class="accent-brand w-4 h-4"
-                   {{ old('is_featured', $property?->is_featured) ? 'checked' : '' }}>
+                   {{ old('is_featured', $property?->is_featured ?? false) ? 'checked' : '' }}>
             <div>
                 <p class="text-sm font-semibold text-admin-text">Em Destaque</p>
                 <p class="text-xs text-admin-muted">Aparece na homepage</p>
@@ -182,7 +328,7 @@
         </label>
         <label class="flex items-center gap-3 p-4 border border-gray-200 rounded-xl cursor-pointer hover:border-brand transition">
             <input type="checkbox" name="is_active" value="1" class="accent-brand w-4 h-4"
-                   {{ old('is_active', $property?->is_active ?? true) ? 'checked' : '' }}>
+                   {{ old('is_active', $property ? (bool)$property->is_active : true) ? 'checked' : '' }}>
             <div>
                 <p class="text-sm font-semibold text-admin-text">Activo</p>
                 <p class="text-xs text-admin-muted">Visível no site público</p>
@@ -221,6 +367,57 @@
             <label class="{{ $labelClass }}">Longitude (Opcional)</label>
             <input type="text" name="longitude" value="{{ old('longitude', $property?->longitude) }}"
                    placeholder="Ex: 13.2306"
+                   class="{{ $inputClass }}">
+        </div>
+    </div>
+</div>
+
+<!-- Dados do Proprietário (Confidencial / Uso Interno) -->
+<div class="bg-white rounded-2xl border border-admin-border p-6">
+    <div class="flex items-center justify-between mb-2">
+        <h3 class="font-bold text-admin-text flex items-center gap-2">
+            <i class="fa-solid fa-user-shield text-brand"></i>
+            Dados do Proprietário
+            <span class="text-xs font-normal text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                <i class="fa-solid fa-lock text-[10px]"></i>Uso Interno / Confidencial
+            </span>
+        </h3>
+    </div>
+    <p class="text-xs text-admin-muted mb-5">Estas informações de contacto são estritamente para gestão interna e <strong>não são visíveis ao público</strong> em nenhuma página do site.</p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div class="col-span-1 md:col-span-2 lg:col-span-1">
+            <label class="{{ $labelClass }}">Nome do Proprietário</label>
+            <input type="text" name="owner_name" value="{{ old('owner_name', $property?->owner_name) }}"
+                   placeholder="Ex: Manuel António, Imobiliária XPTO"
+                   class="{{ $inputClass }}">
+        </div>
+
+        <div>
+            <label class="{{ $labelClass }}">Telefone</label>
+            <input type="text" name="owner_phone" value="{{ old('owner_phone', $property?->owner_phone) }}"
+                   placeholder="Ex: +244 923 000 000"
+                   class="{{ $inputClass }}">
+        </div>
+
+        <div>
+            <label class="{{ $labelClass }}">WhatsApp</label>
+            <input type="text" name="owner_whatsapp" value="{{ old('owner_whatsapp', $property?->owner_whatsapp) }}"
+                   placeholder="Ex: +244 923 000 000"
+                   class="{{ $inputClass }}">
+        </div>
+
+        <div>
+            <label class="{{ $labelClass }}">E-mail</label>
+            <input type="email" name="owner_email" value="{{ old('owner_email', $property?->owner_email) }}"
+                   placeholder="Ex: proprietario@email.com"
+                   class="{{ $inputClass }}">
+        </div>
+
+        <div class="col-span-1 md:col-span-2 lg:col-span-2">
+            <label class="{{ $labelClass }}">Website / Link</label>
+            <input type="text" name="owner_website" value="{{ old('owner_website', $property?->owner_website) }}"
+                   placeholder="Ex: https://www.proprietario.com"
                    class="{{ $inputClass }}">
         </div>
     </div>
@@ -331,6 +528,15 @@
 
 @push('scripts')
 <script>
+function formatPriceInput(input) {
+    let clean = input.value.replace(/\D/g, '');
+    if (!clean) {
+        input.value = '';
+        return;
+    }
+    input.value = new Intl.NumberFormat('de-DE').format(clean);
+}
+
 function propertyForm() {
     return {}
 }

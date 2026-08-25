@@ -106,13 +106,17 @@
             ])
 
             @include('admin.content.partials.section-card', [
-                'title'   => 'CTA Banner Final',
+                'title'   => 'Banner de Destaque / CTA Final',
                 'icon'    => 'fa-bullhorn',
                 'section' => 'cta',
                 'fields'  => [
-                    ['key' => 'title',       'label' => 'Título Principal', 'type' => 'textarea'],
-                    ['key' => 'subtitle',    'label' => 'Subtítulo',        'type' => 'textarea'],
-                    ['key' => 'button_text', 'label' => 'Texto do Botão',   'type' => 'text'],
+                    ['key' => 'title',         'label' => 'Título Principal do Banner', 'type' => 'textarea', 'hint' => 'Texto principal destacado em grande'],
+                    ['key' => 'subtitle',      'label' => 'Subtítulo / Descrição',       'type' => 'textarea', 'hint' => 'Texto complementar explicativo'],
+                    ['key' => 'button_text',   'label' => 'Texto do Botão',             'type' => 'text',     'hint' => 'Ex: Ver Imóveis, Contacte-nos, Falar no WhatsApp'],
+                    ['key' => 'button_url',    'label' => 'Link do Botão (Interno ou Externo)', 'type' => 'text', 'hint' => 'Ex: /imoveis, /contacto ou https://wa.me/244923000000'],
+                    ['key' => 'button_target', 'label' => 'Destino do Link',            'type' => 'select',   'options' => ['_self' => 'Mesma Janela (Padrão)', '_blank' => 'Nova Aba / Janela']],
+                    ['key' => 'image',         'label' => 'Imagem de Fundo do Banner (Opcional)', 'type' => 'image', 'hint' => 'Se definida, sobrepõe a cor com efeito escurecido elegante'],
+                    ['key' => 'bg_color',      'label' => 'Cor de Fundo do Banner',      'type' => 'color',    'hint' => 'Cor de fundo caso não use imagem ou como base (padrão: Laranja #F97316)'],
                 ],
             ])
 

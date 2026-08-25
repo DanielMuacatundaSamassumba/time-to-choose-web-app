@@ -47,9 +47,12 @@ class PageSectionSeeder extends Seeder
                     'button_text' => 'Ver Mais',
                 ],
                 'cta' => [
-                    'title'       => 'Encontre o imóvel ideal para si',
-                    'subtitle'    => 'Descubra oportunidades exclusivas de compra, venda e arrendamento em Luanda e nas principais cidades de Angola.',
-                    'button_text' => 'Ver Imóveis',
+                    'title'         => 'Encontre o imóvel ideal para si',
+                    'subtitle'      => 'Descubra oportunidades exclusivas de compra, venda e arrendamento em Luanda e nas principais cidades de Angola.',
+                    'button_text'   => 'Ver Imóveis',
+                    'button_url'    => '/imoveis',
+                    'button_target' => '_self',
+                    'bg_color'      => '#F97316',
                 ],
             ],
 

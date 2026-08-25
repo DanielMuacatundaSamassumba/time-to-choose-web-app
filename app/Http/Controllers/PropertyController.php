@@ -55,7 +55,29 @@ class PropertyController extends Controller
         }
 
         if ($request->filled('property_type')) {
-            $query->where('property_type', $request->input('property_type'));
+            $pt = strtolower($request->input('property_type'));
+            $query->where(function ($q) use ($pt) {
+                if (in_array($pt, ['espaco-comercial', 'espacos-comerciais', 'espaços_comerciais', 'espacos-comercias'])) {
+                    $q->where('property_type', 'like', '%comercia%')
+                      ->orWhere('property_type', 'espaco-comercial');
+                } elseif (in_array($pt, ['escritorio', 'escritório', 'escritorios'])) {
+                    $q->where('property_type', 'like', '%escrit%');
+                } elseif (in_array($pt, ['terreno', 'terrenos'])) {
+                    $q->where('property_type', 'like', '%terren%');
+                } elseif (in_array($pt, ['armazem', 'armazens', 'armazém'])) {
+                    $q->where('property_type', 'like', '%armaz%');
+                } elseif (in_array($pt, ['loja', 'lojas'])) {
+                    $q->where('property_type', 'like', '%loja%');
+                } elseif (in_array($pt, ['vivenda', 'vivendas'])) {
+                    $q->where('property_type', 'like', '%vivend%');
+                } elseif (in_array($pt, ['apartamento', 'apartamentos'])) {
+                    $q->where('property_type', 'like', '%apart%');
+                } elseif (in_array($pt, ['empreendimento', 'empreendimentos'])) {
+                    $q->where('property_type', 'like', '%empreend%');
+                } else {
+                    $q->where('property_type', $pt);
+                }
+            });
         }
 
         if ($request->filled('country')) {
@@ -68,23 +90,49 @@ class PropertyController extends Controller
 
         // ── Typology filter — context-aware ───────────────────────
         if ($request->filled('typology')) {
-            $typology = $request->input('typology');
-            $propType = strtolower($request->input('property_type', ''));
-            $isAreaBased = in_array($propType, ['terreno', 'escritório', 'escritorio', 'loja']);
+            $typology = strtolower(trim((string) $request->input('typology')));
+            $propType = strtolower(trim((string) $request->input('property_type')));
 
-            if ($isAreaBased) {
-                $areaVal = preg_replace('/\D/', '', $typology);
-                if (is_numeric($areaVal)) {
-                    $query->whereRaw("CAST(area AS INTEGER) <= ?", [(int) $areaVal]);
-                }
+            // Classificação de Terrenos: Urbanos, Rústicos, Industriais, Projecto Aprovado
+            if (in_array($typology, ['urbanos', 'rusticos', 'industriais', 'projecto-aprovado', 'urbano', 'rustico', 'industrial', 'projecto_aprovado'])) {
+                $termMap = [
+                    'urbanos'           => 'urban',
+                    'rusticos'          => 'rústic',
+                    'industriais'       => 'industri',
+                    'projecto-aprovado' => 'projecto aprovado',
+                ];
+                $searchRoot = $termMap[$typology] ?? $typology;
+                $query->where(function ($q) use ($searchRoot, $typology) {
+                    $q->where('title', 'like', "%{$searchRoot}%")
+                      ->orWhere('description', 'like', "%{$searchRoot}%")
+                      ->orWhere('amenities', 'like', "%{$searchRoot}%")
+                      ->orWhere('title', 'like', "%{$typology}%")
+                      ->orWhere('description', 'like', "%{$typology}%");
+                });
             } else {
-                if (str_ends_with($typology, '+')) {
-                    $num = (int) rtrim($typology, '+');
-                    $query->where('bedrooms', '>=', $num);
+                $isAreaBased = in_array($propType, [
+                    'terreno', 'terrenos',
+                    'escritório', 'escritorio', 'escritorios',
+                    'loja', 'lojas',
+                    'armazem', 'armazens', 'armazém',
+                    'espaco-comercial', 'espacos-comerciais', 'espaços_comerciais', 'espacos-comercias',
+                    'empreendimento', 'empreendimentos'
+                ]);
+
+                if ($isAreaBased) {
+                    $areaVal = preg_replace('/\D/', '', $typology);
+                    if (is_numeric($areaVal)) {
+                        $query->whereRaw("CAST(area AS INTEGER) <= ?", [(int) $areaVal]);
+                    }
                 } else {
-                    $num = preg_replace('/\D/', '', $typology);
-                    if (is_numeric($num)) {
-                        $query->where('bedrooms', (int) $num);
+                    if (str_ends_with($typology, '+')) {
+                        $num = (int) rtrim($typology, '+');
+                        $query->where('bedrooms', '>=', $num);
+                    } else {
+                        $num = preg_replace('/\D/', '', $typology);
+                        if (is_numeric($num)) {
+                            $query->where('bedrooms', (int) $num);
+                        }
                     }
                 }
             }
@@ -144,7 +192,7 @@ class PropertyController extends Controller
                     'type' => $p->type,
                     'category' => $p->category,
                     'property_type' => $p->property_type,
-                    'property_type_label' => ucfirst($p->property_type),
+                    'property_type_label' => $p->property_type_label,
                     'price' => $p->price,
                     'price_period' => $p->price_period,
                     'city' => $p->city,
@@ -154,6 +202,8 @@ class PropertyController extends Controller
                     'garages' => (int) $p->garages,
                     'area' => $p->area,
                     'image_url' => $p->image_url,
+                    'business_label' => $p->business_badge['label'],
+                    'business_badge' => $p->business_badge,
                     'url' => route('properties.show', $p),
                 ]),
                 'hasMore' => $properties->hasMorePages(),
