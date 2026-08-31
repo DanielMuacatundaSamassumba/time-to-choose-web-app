@@ -307,28 +307,28 @@
                             <h3 class="text-xl font-bold leading-tight">{{ $imovel->title }}</h3>
                             <p class="text-[#999] mt-3">{{ $imovel->location }}</p>
                             <div class="py-5 mt-5">
-                                <div class="grid grid-cols-2 gap-4">
+                                <div class="grid grid-cols-2 gap-4  border-t border-b">
                                     @if($imovel->bedrooms > 0)
-                                        <div class="flex items-center gap-2">
-                                            <span class="material-symbols-outlined text-zinc-500 "  translate="no">domain</span>
+                                        <div class="flex items-center gap-2 mt-4 mb-4">
+                                            <span class="material-symbols-outlined text-[#F97316] text-xl "  translate="no">domain</span>
                                             <span>{{ $imovel->bedrooms }} Quarto{{ $imovel->bedrooms > 1 ? 's' : '' }}</span>
                                         </div>
                                     @endif
                                     @if($imovel->bathrooms > 0)
-                                        <div class="flex items-center gap-2">
-                                            <span class="material-symbols-outlined text-zinc-500"  translate="no">shower</span>
+                                        <div class="flex items-center gap-2  mt-4 mb-4">
+                                            <span class="material-symbols-outlined text-[#F97316] text-xl"  translate="no">shower</span>
                                             <span>{{ $imovel->bathrooms }} WC</span>
                                         </div>
                                     @endif
                                     @if($imovel->garages > 0)
-                                        <div class="flex items-center gap-2">
-                                            <span class="material-symbols-outlined text-zinc-500"  translate="no">directions_car</span>
+                                        <div class="flex items-center gap-2  mt-4 mb-4">
+                                            <span class="material-symbols-outlined text-[#F97316] text-xl"  translate="no">directions_car</span>
                                             <span>{{ $imovel->garages }} Garagem{{ $imovel->garages > 1 ? 's' : '' }}</span>
                                         </div>
                                     @endif
                                     @if($imovel->area)
-                                        <div class="flex items-center gap-2">
-                                            <span class="material-symbols-outlined text-zinc-500"  translate="no">square_foot</span>
+                                        <div class="flex items-center gap-2  mt-4 mb-4">
+                                            <span class="material-symbols-outlined text-[#F97316] text-xl"  translate="no">square_foot</span>
                                             <span>{{ $imovel->area }}</span>
                                         </div>
                                     @endif

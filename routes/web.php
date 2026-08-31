@@ -99,21 +99,42 @@ Route::middleware(\App\Http\Middleware\AdminMiddleware::class)->prefix('admin')-
     Route::put('/utilizadores/{user}',            [UserController::class, 'update'])->name('users.update');
     Route::delete('/utilizadores/{user}',         [UserController::class, 'destroy'])->name('users.destroy');
 
-    // Localizacoes (Paises e Cidades)
-    Route::get('/localizacoes',                      [LocationController::class, 'index'])->name('locations.index');
-    Route::post('/localizacoes/paises',              [LocationController::class, 'storeCountry'])->name('locations.countries.store');
-    Route::put('/localizacoes/paises/{country}',     [LocationController::class, 'updateCountry'])->name('locations.countries.update');
-    Route::delete('/localizacoes/paises/{country}',  [LocationController::class, 'destroyCountry'])->name('locations.countries.destroy');
-    Route::post('/localizacoes/cidades',             [LocationController::class, 'storeCity'])->name('locations.cities.store');
-    Route::put('/localizacoes/cidades/{city}',       [LocationController::class, 'updateCity'])->name('locations.cities.update');
-    Route::delete('/localizacoes/cidades/{city}',    [LocationController::class, 'destroyCity'])->name('locations.cities.destroy');
+// Localizações (Países e Cidades)
+Route::get('/localizacoes', [LocationController::class, 'index'])
+    ->name('locations.index');
 
-    // Tipos de Imoveis (CMS)
-    Route::get('/tipos-de-imoveis',                    [PropertyTypeController::class, 'index'])->name('property-types.index');
-    Route::post('/tipos-de-imoveis',                   [PropertyTypeController::class, 'store'])->name('property-types.store');
-    Route::put('/tipos-de-imoveis/{propertyType}',     [PropertyTypeController::class, 'update'])->name('property-types.update');
-    Route::delete('/tipos-de-imoveis/{propertyType}',  [PropertyTypeController::class, 'destroy'])->name('property-types.destroy');
+Route::post('/localizacoes/paises', [LocationController::class, 'storeCountry'])
+    ->name('locations.countries.store');
 
+Route::put('/localizacoes/paises/{country}', [LocationController::class, 'updateCountry'])
+    ->name('locations.countries.update');
+
+Route::delete('/localizacoes/paises/{country}', [LocationController::class, 'destroyCountry'])
+    ->name('locations.countries.destroy');
+
+Route::post('/localizacoes/cidades', [LocationController::class, 'storeCity'])
+    ->name('locations.cities.store');
+
+Route::put('/localizacoes/cidades/{city}', [LocationController::class, 'updateCity'])
+    ->name('locations.cities.update');
+
+Route::delete('/localizacoes/cidades/{city}', [LocationController::class, 'destroyCity'])
+    ->name('locations.cities.destroy');
+
+
+    // Tipos de Imóvel
+    Route::get('/tipos-imovel', [PropertyTypeController::class, 'index'])
+        ->name('property-types.index');
+
+    Route::post('/tipos-imovel', [PropertyTypeController::class, 'store'])
+        ->name('property-types.store');
+
+    Route::put('/tipos-imovel/{propertyType}', [PropertyTypeController::class, 'update'])
+        ->name('property-types.update');
+
+    Route::delete('/tipos-imovel/{propertyType}', [PropertyTypeController::class, 'destroy'])
+        ->name('property-types.destroy');
+        
     // Media / Biblioteca de Imagens
     Route::get('/media',    [MediaController::class, 'index'])->name('media.index');
     Route::delete('/media', [MediaController::class, 'destroy'])->name('media.destroy');

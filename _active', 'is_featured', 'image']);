@@ -1,0 +1,49 @@
+[90m= [39m[34;4mApp\Models\Property[39;24m {#8186
+    [34mid[39m: [35m22[39m,
+    [34mtitle[39m: [32m"[39m[32mZimbo Tower - apartamento T4[39m[32m"[39m,
+    [34mslug[39m: [32m"[39m[32mzimbo-tower-apartamento-t4[39m[32m"[39m,
+    [34mdescription[39m: <<<[32mEOS[39m
+      [32mO Zimbo Tower é um empreendimento de uso misto (residencial e comercial) situado no Maculusso.  Tem uma localização absolutamente estratégica, em pleno “coração” do centro da cidade, pelo que dispõe de todo o tipo de comércio e serviços nas suas redondezas.  Uma obra da Mota-Engil, uma das construtoras portuguesas com maior prestígio, que conta já com mais de 70 anos de experiência em Angola.  [39m\r
+      \r
+      [32mDetalhes do imóvel: [39m\r
+      [32m- 4 Quartos (sendo 2 suíte)  [39m\r
+      [32m- 1 Sala com dois ambientes [39m\r
+      [32m- 1 Cozinha equipada [39m\r
+      [32m-  1 Despensa  [39m\r
+      [32m- 1 Lavandaria [39m\r
+      [32m-  2 Wc's de apoio [39m\r
+      [32m-  Roupeiros embutidos nos quartos  [39m\r
+      [32m- Vidros duplos  [39m\r
+      [32m- Estacionamento privativo na garagem[39m
+      [32mEOS[39m,
+    [34mprice[39m: [32m"[39m[32m30.500 USD[39m[32m"[39m,
+    [34mprice_period[39m: [32m"[39m[32m/ semana[39m[32m"[39m,
+    [34mtype[39m: [32m"[39m[32marrendamento[39m[32m"[39m,
+    [34mcategory[39m: [32m"[39m[32marrendamento-longa-duracao[39m[32m"[39m,
+    [34mproperty_type[39m: [32m"[39m[32mapartamento[39m[32m"[39m,
+    [34mland_type[39m: [36mnull[39m,
+    [34mcountry[39m: [32m"[39m[32mAngola[39m[32m"[39m,
+    [34mcity[39m: [32m"[39m[32mLuanda[39m[32m"[39m,
+    [34mlocation[39m: [32m"[39m[32mMaculusso[39m[32m"[39m,
+    [34mbedrooms[39m: [35m4[39m,
+    [34mbathrooms[39m: [35m0[39m,
+    [34mgarages[39m: [35m0[39m,
+    [34marea[39m: [36mnull[39m,
+    [34mimage[39m: [32m"[39m[32mproperties/nLAOPRLXesXJc0TySjX8YFB8IaJc74pIa873miHL.jpg[39m[32m"[39m,
+    [34mgallery[39m: [32m"[39m[32m[[39m\"[32mproperties[39m\\[32m/zaXNUlV5ZLzPQaakNFrWc7c7rJvfc6zmdSI5lzrj.jpg[39m\"[32m,[39m\"[32mproperties[39m\\[32m/MSXxGIJaib48zhnvybeNAR9RiEDpns3avjghw2y8.jpg[39m\"[32m,[39m\"[32mproperties[39m\\[32m/6A8RaxGyBTEvKm7bMXBqcUUmypbtUObXJqVxE57b.jpg[39m\"[32m,[39m\"[32mproperties[39m\\[32m/8FNhn0FiUcgvOrJ2Ot7lBQhPCB0DH0Mjj1EdlSDE.jpg[39m\"[32m,[39m\"[32mproperties[39m\\[32m/O3MQazQHtjPhyhfNqnQ4NCzY9N3TC4hhWh0LtUH5.jpg[39m\"[32m,[39m\"[32mproperties[39m\\[32m/AZcpJDvIH4PXdP0zaWMBDKNj4zv2tQtO9ch8clz6.jpg[39m\"[32m,[39m\"[32mproperties[39m\\[32m/TuROfgRBFJiogsEDvPCzfUdGgwMWXL3WlWVyYrWS.jpg[39m\"[32m,[39m\"[32mproperties[39m\\[32m/qXfSzrsvbVVn8ZZzPxlK3mTHU7QkmfyIRVb0H3zb.jpg[39m\"[32m,[39m\"[32mproperties[39m\\[32m/u9YRrvfB1FZ5UffK1YwlRcnD5Wr7xQXLtmTDfYeJ.jpg[39m\"[32m,[39m\"[32mproperties[39m\\[32m/ZG7kSmIwM2FOOgmL0qN1x6BmI4q6Ng1keFHkRJoE.jpg[39m\"[32m,[39m\"[32mproperties[39m\\[32m/y8Rb36hRsndCGQKfL5uyal5NejIq4Tcc0hDTekie.jpg[39m\"[32m][39m[32m"[39m,
+    [34mamenities[39m: [32m"[39m[32m[[39m\"[32mGaragem com 4 pisos subterr[39m\\[32mu00e2neos[39m\"[32m,[39m\"\\[32mu00c1rea de lazer com piscina[39m\"[32m,[39m\"[32mGerador[39m\"[32m,[39m\"[32mReservat[39m\\[32mu00f3rio com eletrobomba[39m\"[32m,[39m\"[32mSeguran[39m\\[32mu00e7a 24 horas[39m\\[32m/dia[39m\"[32m][39m[32m"[39m,
+    [34mis_featured[39m: [35m0[39m,
+    [34mis_active[39m: [35m1[39m,
+    [34mstatus[39m: [32m"[39m[32marrendado[39m[32m"[39m,
+    [34mcreated_at[39m: [32m"[39m[32m2026-08-25 11:19:16[39m[32m"[39m,
+    [34mupdated_at[39m: [32m"[39m[32m2026-08-25 17:33:38[39m[32m"[39m,
+    [34mvideo_url[39m: [32m"[39m[32mhttps://www.youtube.com/watch?v=YZFcNorpSPc[39m[32m"[39m,
+    [34mtour_3d_url[39m: [36mnull[39m,
+    #[33mowner_name[39m: [32m"[39m[32mDr. António Manuel[39m[32m"[39m,
+    #[33mowner_phone[39m: [32m"[39m[32m+244 923 111 222[39m[32m"[39m,
+    #[33mowner_whatsapp[39m: [32m"[39m[32m+244 923 111 222[39m[32m"[39m,
+    #[33mowner_email[39m: [32m"[39m[32mantonio@email.com[39m[32m"[39m,
+    #[33mowner_website[39m: [32m"[39m[32mhttps://antonio.ao[39m[32m"[39m,
+    [34mlatitude[39m: [32m"[39m[32m-8.807965703357295[39m[32m"[39m,
+    [34mlongitude[39m: [32m"[39m[32m13.243059095215688[39m[32m"[39m,
+  }
