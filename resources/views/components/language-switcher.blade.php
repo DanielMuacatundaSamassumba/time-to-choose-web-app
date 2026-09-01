@@ -27,7 +27,7 @@
 }">
     {{-- Trigger button --}}
     <button @click="open = !open" type="button"
-        class="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold uppercase transition border shadow-sm {{ $transparent ? 'border-white/30 text-white hover:bg-white/20' : 'border-gray-200 text-gray-700 bg-white hover:bg-gray-50 hover:border-gray-300' }}">
+        class="flex items-center gap-2 px-3 py-1.5 rounded-sm text-xs font-bold uppercase transition border shadow-sm {{ $transparent ? 'border-white/30 text-white hover:bg-white/20' : 'border-gray-200 text-gray-700 bg-white hover:bg-gray-50 hover:border-gray-300' }}">
         <span class="flex items-center gap-1.5">
             <template x-if="currentLang === 'pt'">
                 <span class="flex items-center gap-1.5"><span class="text-sm">🇵🇹</span> PT</span>
@@ -53,7 +53,7 @@
         x-transition:leave="transition ease-in duration-100"
         x-transition:leave-start="opacity-100 scale-100"
         x-transition:leave-end="opacity-0 scale-95"
-        class="absolute right-0 {{ $dropUp ? 'bottom-full mb-2' : 'top-full mt-2' }} w-44 bg-white rounded-2xl shadow-2xl border border-gray-100 py-2 z-[99999] text-gray-800 text-xs font-semibold overflow-hidden">
+        class="absolute right-0 {{ $dropUp ? 'bottom-full mb-2' : 'top-full mt-2' }} w-44 bg-white rounded-sm shadow-2xl border border-gray-100 py-2 z-[99999] text-gray-800 text-xs font-semibold overflow-hidden">
         
         <p class="px-4 py-1 text-[10px] font-bold uppercase tracking-wider text-gray-400 border-b border-gray-100 mb-1">
             Idioma / Language
