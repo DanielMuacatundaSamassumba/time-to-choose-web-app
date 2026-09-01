@@ -21,32 +21,32 @@ Route::get('/', function () {
         ->take(6)->get();
     $sections = PageSection::getForPage('home');
     return view('index', compact('featured', 'sections'));
-});
+})->name('home');
 
 Route::get('/sobre-nos', function () {
     $sections = PageSection::getForPage('about');
     return view('pages.about-us', compact('sections'));
-});
+})->name('about');
 
 Route::get('/avaliacao-de-imoveis', function () {
     $sections = PageSection::getForPage('valuation');
     return view('pages.imovel-avaliation', compact('sections'));
-});
+})->name('imovel-avaliation');
 
 Route::get('/investidores', function () {
     $sections = PageSection::getForPage('investors');
     return view('pages.investers', compact('sections'));
-});
+})->name('investers');
 
 Route::get('/gestao-de-propriedades', function () {
     $sections = PageSection::getForPage('management');
     return view('pages.maneger-property', compact('sections'));
-});
+})->name('manager-property');
 
 Route::get('/propriedades-e-parceiros', function () {
     $sections = PageSection::getForPage('partners');
     return view('pages.property-and-partners', compact('sections'));
-});
+})->name('property-and-partners');
 
 // Properties (public, dynamic)
 Route::get('/imoveis', [PropertyController::class, 'index'])->name('properties.index');
