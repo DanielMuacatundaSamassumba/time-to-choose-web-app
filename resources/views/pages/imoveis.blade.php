@@ -423,14 +423,14 @@
 
                             {{-- Badge negócio --}}
                             <span
-                                class="absolute top-3 left-3 text-[11px] font-bold px-3 py-1.5 rounded-lg uppercase tracking-wide shadow"
+                                class="absolute top-3 left-3 text-[11px] font-bold px-3 py-1.5 rounded-sm uppercase tracking-wide shadow"
                                 :style="'background: ' + (p.business_badge ? p.business_badge.bg : '#F97316') + '; color: ' + (p.business_badge ? p.business_badge.color : '#fff') + ';'">
                                 <span x-text="p.business_label || p.type"></span>
                             </span>
 
                             {{-- Badge tipologia --}}
                             <span
-                                class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-gray-800 text-xs font-bold px-3 py-1.5 rounded-lg shadow"
+                                class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-gray-800 text-xs font-bold px-3 py-1.5 rounded-sm shadow"
                                 x-text="getBadge(p)">
                             </span>
 

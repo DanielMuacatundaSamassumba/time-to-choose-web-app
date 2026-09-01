@@ -76,7 +76,7 @@
                         style="background-color: {{ $property->business_badge['bg'] }}; color: {{ $property->business_badge['color'] }}">
                         {{ $property->business_badge['label'] }}
                     </span>
-                    <span class="px-3 py-1 rounded-full text-xs font-semibold {{ $property->status_badge['class'] }}">
+                    <span class="px-3 py-1 rounded-sm text-xs font-semibold {{ $property->status_badge['class'] }}">
                         {{ $property->status_badge['label'] }}
                     </span>
                 </div>
