@@ -69,7 +69,7 @@
                         <i class="fa-solid fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-sm"></i>
                         <input type="email" name="email" value="{{ old('email') }}" required
                                placeholder="admin@timetochoose.ao"
-                               class="w-full bg-white/5 border border-white/10 text-white placeholder-gray-600 rounded-xl pl-11 pr-4 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#F97316] focus:border-transparent transition">
+                               class="w-full bg-white/5 border border-white/10 text-white placeholder-gray-600 rounded-sm pl-11 pr-4 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#F97316] focus:border-transparent transition">
                     </div>
                 </div>
 
@@ -79,12 +79,12 @@
                         <i class="fa-solid fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-sm"></i>
                         <input type="password" name="password" required
                                placeholder="••••••••"
-                               class="w-full bg-white/5 border border-white/10 text-white placeholder-gray-600 rounded-xl pl-11 pr-4 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#F97316] focus:border-transparent transition">
+                               class="w-full bg-white/5 border border-white/10 text-white placeholder-gray-600 rounded-sm pl-11 pr-4 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#F97316] focus:border-transparent transition">
                     </div>
                 </div>
 
                 <div class="flex items-center gap-2">
-                    <input type="checkbox" name="remember" id="remember" class="w-4 h-4 rounded accent-[#F97316]">
+                    <input type="checkbox" name="remember" id="remember" class="w-4 h-4 rounded-sm accent-[#F97316]">
                     <label for="remember" class="text-gray-400 text-sm">Lembrar-me</label>
                 </div>
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\PropertyType;
+use App\Models\LandType;
 use App\Models\Property;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -21,12 +22,23 @@ class PropertyTypeController extends Controller
                 return $type;
             });
 
+        $landTypes = LandType::orderBy('order')
+            ->orderBy('name')
+            ->get()
+            ->map(function ($lt) {
+                $lt->properties_count = Property::where('land_type', $lt->slug)
+                    ->orWhere('land_type', $lt->name)
+                    ->count();
+                return $lt;
+            });
+
         $stats = [
-            'total_types'  => $types->count(),
-            'active_types' => $types->where('is_active', true)->count(),
+            'total_types'      => $types->count(),
+            'active_types'     => $types->where('is_active', true)->count(),
+            'total_land_types' => $landTypes->count(),
         ];
 
-        return view('admin.property_types.index', compact('types', 'stats'));
+        return view('admin.property_types.index', compact('types', 'landTypes', 'stats'));
     }
 
     public function store(Request $request)

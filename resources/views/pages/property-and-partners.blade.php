@@ -21,7 +21,7 @@
                     {{ $sections['hero']['subtitle'] ?? 'Na Time To Choose, valorizamos relações sólidas e duradouras com proprietários e parceiros, baseadas em transparência, confiança e resultados. Trabalhamos lado a lado com cada cliente para transformar imóveis em activos rentáveis, assegurando uma gestão profissional e uma ocupação eficiente.' }}
                 </p>
                 <div class="flex flex-wrap gap-4 mt-4">
-                    <button class="bg-[#F97316] text-white px-8 py-4 rounded-lg font-bold hover:bg-[#F97316]/90 transition cursor-pointer"
+                    <button class="bg-[#F97316] text-white px-8 py-4 rounded-sm font-bold hover:bg-[#F97316]/90 transition cursor-pointer"
                     onclick="window.location.href='mailto:info@timetochoose.ao'"
                     >
                         {{ $sections['hero']['button_text'] ?? 'Agendar Reunião' }}
@@ -51,23 +51,25 @@
     <section class="py-20 bg-white">
         <div class="max-w-7xl mx-auto px-6 md:px-12 w-full">
             <div class="text-center mb-12 reveal">
-                <h2 class="font-bold text-4xl text-gray-900 mb-4">{{ $sections['value']['title'] ?? 'A Nossa Proposta de Valor' }}</h2>
-                <p class="text-lg text-gray-500 max-w-2xl mx-auto">
+                <h2 class="font-bold text-4xl text-gray-900 mb-4 text-start">{{ $sections['value']['title'] ?? 'A Nossa Proposta de Valor' }}</h2>
+               <div class=" flex  justify-start">
+                  <p class="text-lg text-gray-500 ">
                     {{ $sections['value']['subtitle'] ?? 'Três pilares fundamentais para garantir o sucesso do seu investimento imobiliário.' }}
                 </p>
+               </div>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="bg-gray-50 p-8 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center text-center gap-4 reveal">
+                <div class="bg-gray-50 p-8 rounded-sm shadow-sm border border-gray-100 flex flex-col items-center text-center gap-4 reveal">
                    <img src="{{ asset('assets/seguranca.png') }}" alt="security-icon" class="w-12">
                 <h3 class="text-xl font-bold text-gray-900">Segurança</h3>
                     <p class="text-sm text-gray-500 leading-relaxed">Foco total no pagamento pontual e seguro das rendas, mitigando riscos para o proprietário.</p>
                 </div>
-                <div class="bg-gray-50 p-8 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center text-center gap-4 reveal" style="transition-delay: .15s">
+                <div class="bg-gray-50 p-8 rounded-sm shadow-sm border border-gray-100 flex flex-col items-center text-center gap-4 reveal" style="transition-delay: .15s">
                    <img src="{{ asset('assets/Rentabilidade.png') }}" alt="security-icon" class="w-12">
                     <h3 class="text-xl font-bold text-gray-900">Rentabilidade</h3>
                     <p class="text-sm text-gray-500 leading-relaxed">Maximizamos o retorno do seu investimento através de uma gestão eficiente e ocupação otimizada.</p>
                 </div>
-                <div class="bg-gray-50 p-8 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center text-center gap-4 reveal" style="transition-delay: .3s">
+                <div class="bg-gray-50 p-8 rounded-sm shadow-sm border border-gray-100 flex flex-col items-center text-center gap-4 reveal" style="transition-delay: .3s">
                    <img src="{{ asset('assets/zero-gestao.png') }}" alt="security-icon" class="w-12">
                     <h3 class="text-xl font-bold text-gray-900">Zero Gestão</h3>
                     <p class="text-sm text-gray-500 leading-relaxed">Deixe tudo connosco. Tratamos de toda a burocracia, manutenção e relação com os inquilinos.</p>
@@ -79,15 +81,17 @@
     <!-- Modelos de Parceria Section -->
     <section class="py-20 bg-gray-50">
         <div class="max-w-7xl mx-auto px-6 md:px-12 w-full">
-            <div class="text-center mb-12 reveal">
+            <div class=" mb-12 reveal">
                 <h2 class="font-bold text-4xl text-gray-900 mb-4">{{ $sections['models']['title'] ?? 'Modelos de Parceria' }}</h2>
-                <p class="text-lg text-gray-500 max-w-2xl mx-auto">
+                  <div class=" ">
+                     <p class="text-lg text-gray-500 max-w-2xl">
                     {{ $sections['models']['subtitle'] ?? 'Soluções adaptadas aos seus objetivos de investimento.' }}
                 </p>
+                  </div>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <!-- Modelo 1 -->
-                <div class="group relative h-[450px] overflow-hidden rounded-2xl cursor-pointer shadow-md hover:-translate-y-2 hover:shadow-2xl transition duration-500">
+                <div class="group relative h-[450px] overflow-hidden rounded-sm cursor-pointer shadow-md hover:-translate-y-2 hover:shadow-2xl transition duration-500">
                     <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-110"
                         style="background-image: url('{{ asset('assets/1.jpeg') }}');"></div>
                     <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/55 to-black/20 group-hover:from-black/90 group-hover:via-black/70 transition duration-500"></div>
@@ -99,7 +103,7 @@
                 </div>
 
                 <!-- Modelo 2 -->
-                <div class="group relative h-[450px] overflow-hidden rounded-2xl cursor-pointer shadow-md hover:-translate-y-2 hover:shadow-2xl transition duration-500" style="transition-delay: .1s">
+                <div class="group relative h-[450px] overflow-hidden rounded-sm cursor-pointer shadow-md hover:-translate-y-2 hover:shadow-2xl transition duration-500" style="transition-delay: .1s">
                     <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-110"
                         style="background-image: url('{{ asset('assets/2.jpeg') }}');"></div>
                     <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/55 to-black/20 group-hover:from-black/90 group-hover:via-black/70 transition duration-500"></div>
@@ -111,7 +115,7 @@
                 </div>
 
                 <!-- Modelo 3 -->
-                <div class="group relative h-[450px] overflow-hidden rounded-2xl cursor-pointer shadow-md hover:-translate-y-2 hover:shadow-2xl transition duration-500" style="transition-delay: .2s">
+                <div class="group relative h-[450px] overflow-hidden rounded-sm cursor-pointer shadow-md hover:-translate-y-2 hover:shadow-2xl transition duration-500" style="transition-delay: .2s">
                     <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-110"
                         style="background-image: url('{{ asset('assets/3.jpeg') }}');"></div>
                     <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/55 to-black/20 group-hover:from-black/90 group-hover:via-black/70 transition duration-500"></div>
@@ -128,9 +132,9 @@
     <!-- Como Funciona Section -->
     <section class="py-20 bg-white">
         <div class="max-w-7xl mx-auto px-6 md:px-12 w-full">
-            <div class="text-center mb-16">
+            <div class=" mb-16">
                 <h2 class="font-bold text-4xl text-gray-900 mb-4">{{ $sections['howworks']['title'] ?? 'Como Funciona' }}</h2>
-                <p class="text-lg text-gray-500 max-w-2xl mx-auto">
+                <p class="text-lg text-gray-500 max-w-2xl">
                     {{ $sections['howworks']['subtitle'] ?? 'Um processo simples e transparente em 4 passos.' }}
                 </p>
             </div>
@@ -141,7 +145,7 @@
                     ['num' => '3', 'title' => 'Preparação', 'desc' => 'Preparamos o imóvel, desde pequenas reparações à implementação do Full-Pack se necessário.'],
                     ['num' => '4', 'title' => 'Gestão', 'desc' => 'Iniciamos a operação, tratando de tudo enquanto recebe os seus rendimentos.']
                 ] as $step)
-                <div class="flex flex-col items-center text-center bg-gray-50 p-6 rounded-2xl hover:-translate-y-2 hover:shadow-lg transition duration-300 cursor-pointer">
+                <div class="flex flex-col items-center text-center bg-gray-50 p-6 rounded-sm hover:-translate-y-2 hover:shadow-lg transition duration-300 cursor-pointer">
                     <div class="w-16 h-16 rounded-full bg-[#F97316] text-white flex items-center justify-center text-2xl mb-6 shadow-md">
                         {{ $step['num'] }}
                     </div>
@@ -161,7 +165,7 @@
 
         <!-- Conteúdo -->
         <div class="relative z-10 max-w-7xl mx-auto px-6">
-            <div class="max-w-2xl backdrop-blur-md bg-white/10 border border-white/10 rounded-3xl p-10 shadow-2xl">
+            <div class="max-w-2xl backdrop-blur-md bg-white/10 border border-white/10 rounded-sm p-10 shadow-2xl">
                 <h2 class="text-3xl md:text-4xl font-bold leading-tight text-white mb-6">
                     {{ $sections['fullpack']['title'] ?? 'Benefícios que transformam o seu imóvel numa experiência premium.' }}
                 </h2>

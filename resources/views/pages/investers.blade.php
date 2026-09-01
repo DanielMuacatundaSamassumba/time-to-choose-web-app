@@ -91,9 +91,9 @@
                 </p>
                 <div class="hero-buttons flex flex-wrap gap-4">
                     <button onclick="window.location.href='mailto:info@timetochoose.com'"
-                        class="bg-[#F97316] hover:bg-[#F97316]/90 text-white px-8 py-4 font-semibold rounded-lg transition-all duration-300 hover:scale-105 flex items-center gap-2">
+                        class="bg-[#F97316] hover:bg-[#F97316]/90 text-white px-8 py-4 font-semibold rounded-sm transition-all duration-300 hover:scale-105 flex items-center gap-2">
                         {{ $sections['hero']['button_text'] ?? 'Falar com um Consultor' }}
-                        <span class="material-symbols-outlined">arrow_forward</span>
+                        <!-- <span class="material-symbols-outlined">arrow_forward</span> -->
                     </button>
                 </div>
             </div>
@@ -130,7 +130,7 @@
                     </div>
                 </div>
                 <div class="lg:w-1/2 reveal">
-                    <div class="relative h-[500px] w-full rounded-2xl overflow-hidden shadow-xl image-hover">
+                    <div class="relative h-[500px] w-full rounded-sm overflow-hidden shadow-xl image-hover">
                         @php
                             $opImg = $sections['opportunity']['image'] ?? null;
                             $opSrc = $opImg
@@ -147,10 +147,10 @@
     <!-- Services Section -->
     <section class="py-24 bg-white">
         <div class="max-w-7xl mx-auto px-6 md:px-12">
-            <div class="text-center mb-16 reveal">
+            <div class=" mb-16 reveal">
                 <h2 class="text-4xl font-bold mb-4 text-gray-900">
                     {{ $sections['services']['title'] ?? 'Serviços 360º para Investidores' }}</h2>
-                <p class="text-gray-500 max-w-2xl mx-auto">
+                <p class="text-gray-500 max-w-2xl ">
                     {{ $sections['services']['subtitle'] ?? 'Um ecossistema completo para gerir o seu património sem preocupações operacionais.' }}
                 </p>
             </div>
@@ -163,7 +163,7 @@
         ['icon' => 'Rendimento.png', 'title' => 'Simulação de Rendimento', 'desc' => 'Modelagem de yields líquidas considerando impostos, manutenção e gestão.'],
     ] as $srv)
 
-        <div class="glass-card p-8 cursor-pointer rounded-2xl group hover:translate-x-2 transition duration-300">
+        <div class="glass-card p-8 cursor-pointer rounded-sm group hover:translate-x-2 transition duration-300">
 
             <img
                 src="{{ asset('assets/' . $srv['icon']) }}"
@@ -189,14 +189,14 @@
     <!-- Investment Models -->
     <section class="py-24 bg-gray-50">
         <div class="max-w-7xl mx-auto px-6 md:px-12">
-            <div class="mb-12 text-center">
+            <div class="mb-12">
                 <h2 class="font-bold text-4xl mb-4 text-gray-900">Modelos de Investimento</h2>
                 <p class="text-gray-500">Escolha a estratégia que melhor se adapta ao seu perfil de risco.</p>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <!-- Modelo 1 -->
-                <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-200/50 flex flex-col justify-between">
+                <div class="bg-white p-8 rounded-sm shadow-sm border border-gray-200/50 flex flex-col justify-between">
                     <div>
                         <span
                             class="text-[#F97316] text-xs font-bold uppercase tracking-wider mb-4 block">Capitalização</span>
@@ -220,12 +220,12 @@
                         </ul>
                     </div>
                     <button
-                        class="w-full border-2 border-gray-200 text-gray-800 py-3 rounded-lg font-semibold hover:bg-[#F97316] hover:text-white hover:border-[#F97316] transition duration-300">Saber
+                        class="w-full border-2 border-gray-200 text-gray-800 py-3 rounded-sm font-semibold hover:bg-[#F97316] hover:text-white hover:border-[#F97316] transition duration-300">Saber
                         mais</button>
                 </div>
 
                 <!-- Modelo 2 -->
-                <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-200/50 flex flex-col justify-between">
+                <div class="bg-white p-8 rounded-sm shadow-sm border border-gray-200/50 flex flex-col justify-between">
                     <div>
                         <span
                             class="text-[#F97316] text-xs font-bold uppercase tracking-wider mb-4 block">Cash-Flow</span>
@@ -248,12 +248,12 @@
                         </ul>
                     </div>
                     <button
-                        class="w-full border-2 border-gray-200 text-gray-800 py-3 rounded-lg font-semibold hover:bg-[#F97316] hover:text-white hover:border-[#F97316] transition duration-300">Saber
+                        class="w-full border-2 border-gray-200 text-gray-800 py-3 rounded-sm font-semibold hover:bg-[#F97316] hover:text-white hover:border-[#F97316] transition duration-300">Saber
                         mais</button>
                 </div>
 
                 <!-- Modelo 3 -->
-                <div class="bg-[#F97316] p-8 rounded-2xl shadow-xl flex flex-col justify-between text-white">
+                <div class="bg-[#F97316] p-8 rounded-sm shadow-xl flex flex-col justify-between text-white">
                     <div>
                         <span class="text-white/80 text-xs font-bold uppercase tracking-wider mb-4 block">Full
                             Service</span>
@@ -276,7 +276,7 @@
                         </ul>
                     </div>
                     <button
-                        class="w-full bg-white text-[#F97316] py-3 rounded-lg font-semibold hover:bg-[#F97316]/10 transition duration-300">Solicitar
+                        class="w-full bg-white text-[#F97316] py-3 rounded-sm font-semibold hover:bg-[#F97316]/10 transition duration-300">Solicitar
                         Proposta</button>
                 </div>
             </div>
@@ -294,8 +294,8 @@
                         {{ $sections['performance']['subtitle'] ?? 'Utilize o nosso simulador para projetar os retornos baseados em dados reais do mercado de Luanda (Talatona, Marginal e Kilamba).' }}
                     </p>
                     <div class="space-y-4">
-                        <div class="flex items-center gap-4 p-4 rounded-xl bg-gray-50 border border-gray-200">
-                            <div class="bg-[#F97316]/10 p-2.5 rounded-lg text-[#F97316]">
+                        <div class="flex items-center gap-4 p-4 rounded-sm bg-gray-50 border border-gray-200">
+                            <div class="bg-[#F97316]/10 p-2.5 rounded-sm text-[#F97316]">
                                 <span class="material-symbols-outlined text-2xl" translate="no">trending_up</span>
                             </div>
                             <div>
@@ -304,8 +304,8 @@
                                     {{ $sections['performance']['roi'] ?? '15% - 22% p.a.' }}</div>
                             </div>
                         </div>
-                        <div class="flex items-center gap-4 p-4 rounded-xl bg-gray-50 border border-gray-200">
-                            <div class="bg-[#F97316]/10 p-2.5 rounded-lg text-[#F97316]">
+                        <div class="flex items-center gap-4 p-4 rounded-sm bg-gray-50 border border-gray-200">
+                            <div class="bg-[#F97316]/10 p-2.5 rounded-sm text-[#F97316]">
                                 <span class="material-symbols-outlined text-2xl" translate="no">payments</span>
                             </div>
                             <div>
@@ -318,7 +318,7 @@
                 </div>
 
                 <div
-                    class="col-span-12 lg:col-span-8 bg-gray-50 p-8 md:p-10 rounded-2xl shadow-sm border border-gray-200/50">
+                    class="col-span-12 lg:col-span-8 bg-gray-50 p-8 md:p-10 rounded-sm shadow-sm border border-gray-200/50">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
                         <div class="space-y-6">
                             <div>
@@ -334,7 +334,7 @@
                             </div>
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">Tipo de Ativo</label>
-                                <select class="w-full p-3 rounded-lg border border-gray-200 bg-white">
+                                <select class="w-full p-3 rounded-sm border border-gray-200 bg-white">
                                     <option>Apartamento Premium (T2/T3)</option>
                                     <option>Escritório Corporate</option>
                                     <option>Complexo Residencial</option>
@@ -342,7 +342,7 @@
                             </div>
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">Zona Geográfica</label>
-                                <select class="w-full p-3 rounded-lg border border-gray-200 bg-white">
+                                <select class="w-full p-3 rounded-sm border border-gray-200 bg-white">
                                     <option>Talatona</option>
                                     <option>Ilha de Luanda</option>
                                     <option>Mutamba / Baixa</option>
@@ -354,7 +354,7 @@
                         </div>
 
                         <div
-                            class="bg-white p-6 rounded-xl border border-dashed border-gray-200 flex flex-col justify-between">
+                            class="bg-white p-6 rounded-sm border border-dashed border-gray-200 flex flex-col justify-between">
                             <div>
                                 <h4 class="text-xs text-gray-400 font-semibold uppercase mb-4">Projeção de Rendimento
                                     Mensal</h4>

@@ -1,6 +1,6 @@
 @php
     $isEdit = isset($property) && $property !== null;
-    $inputClass = 'w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition';
+    $inputClass = 'w-full border border-gray-200 rounded-sm   outline-none px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition';
     $labelClass = 'block text-sm font-semibold text-admin-text mb-1.5';
     $errorClass = 'text-red-500 text-xs mt-1';
 @endphp
@@ -200,18 +200,21 @@
 
                 {{-- Select de Cidades vinculadas ao país --}}
                 <div x-show="!customCity && availableCities.length > 0">
-                    <select name="city" x-model="selectedCity" :disabled="customCity" class="{{ $inputClass }}" required>
-                        <template x-for="cityName in availableCities" :key="cityName">
-                            <option :value="cityName" :selected="selectedCity === cityName" x-text="cityName"></option>
-                        </template>
+                    <select name="city" x-model="selectedCity" :disabled="customCity || availableCities.length === 0" :required="!customCity && availableCities.length > 0" class="{{ $inputClass }}">
+                        <option value="" disabled>— Selecionar Cidade —</option>
+                        @foreach($cityMap as $countryName => $cList)
+                            @foreach($cList as $cName)
+                                <option value="{{ $cName }}" x-show="selectedCountry === '{{ addslashes($countryName) }}'">{{ $cName }}</option>
+                            @endforeach
+                        @endforeach
                     </select>
                 </div>
 
                 {{-- Input texto quando não há cidades ou para cidade personalizada --}}
                 <div x-show="customCity || availableCities.length === 0" x-cloak>
-                    <input type="text" name="city" x-model="selectedCity" :disabled="!customCity && availableCities.length > 0"
+                    <input type="text" name="city" x-model="selectedCity" :disabled="!customCity && availableCities.length > 0" :required="customCity || availableCities.length === 0"
                            placeholder="Digite o nome da cidade..."
-                           class="{{ $inputClass }}" required>
+                           class="{{ $inputClass }}">
                 </div>
             </div>
         </div>
@@ -226,9 +229,9 @@
             </select>
         </div>
         <div>
-            <label class="{{ $labelClass }}">Área</label>
+            <label class="{{ $labelClass }}">Área / Dimensão</label>
             <input type="text" name="area" value="{{ old('area', $property?->area) }}"
-                   placeholder="Ex: 145 m²"
+                   placeholder="Ex: 10 ha ou 145 m²"
                    class="{{ $inputClass }}">
         </div>
     </div>

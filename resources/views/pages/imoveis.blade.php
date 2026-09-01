@@ -6,15 +6,15 @@
     BARRA DE PESQUISA & FILTROS
     ============================================= --}}
     <div class="px-3 flex justify-center mt-12">
-        <div class="w-full max-w-7xl bg-[#F97316] rounded-2xl p-6 shadow-2xl" x-data="{
-                open: {{ request()->anyFilled(['typology', 'country', 'city']) ? 'true' : 'false' }},
+        <div class="w-full max-w-7xl bg-[#F97316] rounded-sm p-6 shadow-2xl" x-data="{
+                open: {{ (request()->anyFilled(['typology', 'land_type', 'country', 'city']) || request('property_type') === 'terreno') ? 'true' : 'false' }},
 
                 country: '{{ request('country', '') }}',
                 city: '{{ request('city', '') }}',
                 propertyType: '{{ request('property_type', '') }}',
                 typology: '{{ request('typology', '') }}',
+                landType: '{{ request('land_type', '') }}',
 
-                /* ── País → Cidades (Dinâmico do Banco de Dados / CMS) ── */
                 cityMap: {{ json_encode(\App\Models\Country::getCityMap()) }},
                 get cities() {
                     return this.country ? (this.cityMap[this.country] ?? []) : [];
@@ -22,8 +22,13 @@
                 onCountryChange() {
                     this.city = '';
                 },
+                onPropertyTypeChange(val) {
+                    this.propertyType = val;
+                    if (val === 'terreno' || val.includes('terren')) {
+                        this.open = true;
+                    }
+                },
 
-                /* ── Tipo de Imóvel → Tipologia (T para apartamento, V para vivenda, outros sem T/V) ── */
                 get isApartment() {
                     return this.propertyType === 'apartamento' || this.propertyType.includes('apart') || this.propertyType.includes('moradia') || this.propertyType === 'casa';
                 },
@@ -48,11 +53,6 @@
                 },
                 get typologyNumbers() {
                     return [0,1,2,3,4,5];
-                },
-
-                /* Reset city when country changes */
-                onCountryChange() {
-                    this.city = '';
                 }
              }">
 
@@ -64,10 +64,10 @@
                     {{-- Pesquisa --}}
                     <input type="text" name="search" value="{{ request('search') }}"
                         placeholder="Pesquisar título, zona, cidade..."
-                        class="h-14 rounded-xl px-5 outline-none text-sm text-gray-800 placeholder-gray-400 col-span-1 sm:col-span-2 lg:col-span-1">
+                        class="h-14 rounded-sm px-5 outline-none text-sm text-gray-800 placeholder-gray-400 col-span-1 sm:col-span-2 lg:col-span-1">
 
                     {{-- Tipo de Negócio / Categoria --}}
-                    <select name="category" class="h-14 rounded-xl px-5 outline-none text-sm text-gray-600 cursor-pointer">
+                    <select name="category" class="h-14 rounded-sm px-5 outline-none text-sm text-gray-600 cursor-pointer">
                         <option value="">Tipo de Negócio</option>
                         <option value="venda" @selected(request('category') === 'venda')>Venda</option>
                         <option value="arrendamento-longa-duracao" @selected(request('category') === 'arrendamento-longa-duracao')>
@@ -79,8 +79,8 @@
                     </select>
 
                     {{-- Tipo de Imóvel --}}
-                    <select name="property_type" x-model="propertyType"
-                        class="h-14 rounded-xl px-5 outline-none text-sm text-gray-600 cursor-pointer">
+                    <select name="property_type" x-model="propertyType" @change="onPropertyTypeChange($event.target.value)"
+                        class="h-14 rounded-sm px-5 outline-none text-sm text-gray-600 cursor-pointer">
                         <option value="">Tipo de Imóvel</option>
                         @foreach(\App\Models\Property::propertyTypes() as $val => $label)
                             <option value="{{ $val }}" @selected(request('property_type') === $val)>{{ $label }}</option>
@@ -90,7 +90,7 @@
                     {{-- Botão Filtros + Pesquisar (Linha 1) --}}
                     <div class="flex items-center gap-3">
                         <button type="button" @click="open = !open"
-                            class="flex items-center justify-center gap-2 text-white border border-white/60 rounded-xl px-4 h-14 hover:bg-white/10 transition shrink-0"
+                            class="flex items-center justify-center gap-2 text-white border border-white/60 rounded-sm px-4 h-14 hover:bg-white/10 transition shrink-0"
                             :class="open ? 'bg-white/15 border-white' : ''"
                             title="Filtros avançados">
                             <span class="material-symbols-outlined text-[22px] transition-transform duration-300" 
@@ -98,7 +98,7 @@
                         </button>
                         <button type="submit"
                             :class="open ? 'hidden lg:flex' : 'flex'"
-                            class="flex-1 h-14 rounded-xl bg-white text-[#F97316]/90 uppercase tracking-widest text-sm font-bold items-center justify-center transition duration-300">
+                            class="flex-1 h-14 rounded-sm bg-white text-[#F97316]/90 uppercase tracking-widest text-sm font-bold items-center justify-center transition duration-300">
                             Pesquisar
                         </button>
                     </div>
@@ -114,7 +114,7 @@
                             <label
                                 class="block text-white/80 text-xs font-semibold uppercase tracking-wider mb-2">País</label>
                             <select name="country" x-model="country" @change="onCountryChange()"
-                                class="w-full h-14 rounded-xl px-4 text-sm text-gray-600 outline-none cursor-pointer">
+                                class="w-full h-14 rounded-sm px-4 text-sm text-gray-600 outline-none cursor-pointer">
                                 <option value="">Todos os Países</option>
                                 <template x-for="(cities, c) in cityMap" :key="c">
                                     <option :value="c" :selected="country === c" x-text="c"></option>
@@ -127,7 +127,7 @@
                             <label
                                 class="block text-white/80 text-xs font-semibold uppercase tracking-wider mb-2">Cidade</label>
                             <select name="city" x-model="city"
-                                class="w-full h-14 rounded-xl px-4 text-sm text-gray-600 outline-none cursor-pointer">
+                                class="w-full h-14 rounded-sm px-4 text-sm text-gray-600 outline-none cursor-pointer">
                                 <option value="" x-text="country ? 'Todas as Cidades de ' + country : 'Todas as Cidades'"></option>
                                 <template x-if="country">
                                     {{-- Com país selecionado: mostra cidades do Alpine cityMap --}}
@@ -153,7 +153,7 @@
                             {{-- Apartamento / Vivenda / Moradia → T0..T6+ ou V1..V6+ --}}
                             <template x-if="showTypology">
                                 <select name="typology" x-model="typology"
-                                    class="w-full h-14 rounded-xl px-4 text-sm text-gray-600 outline-none cursor-pointer">
+                                    class="w-full h-14 rounded-sm px-4 text-sm text-gray-600 outline-none cursor-pointer">
                                     <option value="" x-text="'Todas as Tipologias'"></option>
                                     <template x-for="n in typologyNumbers" :key="n">
                                         <option :value="n" :selected="typology == n" x-text="typologyPrefix + n">
@@ -164,22 +164,34 @@
                                 </select>
                             </template>
 
-                            {{-- Terreno → Classificação: Urbanos, Rústicos, Industriais, Projecto Aprovado --}}
+                            {{-- Terreno → Classificação: Urbanos, Rústicos, Industriais, Projetos Aprovados + Área --}}
                             <template x-if="isTerrain">
-                                <select name="typology" x-model="typology"
-                                    class="w-full h-14 rounded-xl px-4 text-sm text-gray-600 outline-none cursor-pointer">
-                                    <option value="">Todas as Classificações</option>
-                                    <option value="urbanos" :selected="typology === 'urbanos'">Urbanos</option>
-                                    <option value="rusticos" :selected="typology === 'rusticos'">Rústicos</option>
-                                    <option value="industriais" :selected="typology === 'industriais'">Industriais</option>
-                                    <option value="projecto-aprovado" :selected="typology === 'projecto-aprovado'">Projecto Aprovado</option>
-                                </select>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    <select name="land_type" x-model="landType"
+                                        class="w-full h-14 rounded-sm px-4 text-sm text-gray-600 outline-none cursor-pointer">
+                                        <option value="">Todas as Classificações</option>
+                                        <option value="urbanos" :selected="landType === 'urbanos' || typology === 'urbanos'">Urbanos</option>
+                                        <option value="rusticos" :selected="landType === 'rusticos' || typology === 'rusticos'">Rústicos</option>
+                                        <option value="industriais" :selected="landType === 'industriais' || typology === 'industriais'">Industriais</option>
+                                        <option value="projecto-aprovado" :selected="landType === 'projecto-aprovado' || typology === 'projecto-aprovado'">Projetos Aprovados</option>
+                                    </select>
+                                    <select name="area"
+                                        class="w-full h-14 rounded-sm px-4 text-sm text-gray-600 outline-none cursor-pointer">
+                                        <option value="">Área / Dimensão (ha)</option>
+                                        <option value="1" @selected(request('area') === '1')>Até 1 ha</option>
+                                        <option value="5" @selected(request('area') === '5')>Até 5 ha</option>
+                                        <option value="10" @selected(request('area') === '10')>Até 10 ha</option>
+                                        <option value="50" @selected(request('area') === '50')>Até 50 ha</option>
+                                        <option value="100" @selected(request('area') === '100')>Até 100 ha</option>
+                                        <option value="500" @selected(request('area') === '500')>Mais de 100 ha</option>
+                                    </select>
+                                </div>
                             </template>
 
                             {{-- Escritório / Loja → sem tipologia (área livre) --}}
                             <template x-if="isCommercial">
                                 <select name="typology" x-model="typology"
-                                    class="w-full h-14 rounded-xl px-4 text-sm text-gray-600 outline-none cursor-pointer">
+                                    class="w-full h-14 rounded-sm px-4 text-sm text-gray-600 outline-none cursor-pointer">
                                     <option value="">Qualquer Dimensão</option>
                                     <option value="50" :selected="typology === '50'">Até 50 m²</option>
                                     <option value="100" :selected="typology === '100'">Até 100 m²</option>
@@ -194,7 +206,7 @@
                         <div class="flex flex-col gap-3 justify-end">
                             {{-- Limpar filtros --}}
                             <a href="{{ route('properties.index') }}"
-                                class="w-full h-14 rounded-xl border border-white text-white text-sm font-semibold
+                                class="w-full h-14 rounded-sm border border-white text-white text-sm font-semibold
                                       hover:bg-white hover:text-[#F97316] transition flex items-center justify-center gap-2">
                                 <span class="material-symbols-outlined text-[18px]" translate="no">filter_alt_off</span>
                                 Limpar Filtros
@@ -202,7 +214,7 @@
 
                             {{-- Pesquisar (No mobile é o último elemento do formulário) --}}
                             <button type="submit"
-                                class="lg:hidden w-full h-14 rounded-xl bg-white text-[#F97316] shadow-md uppercase tracking-widest text-sm font-bold flex items-center justify-center transition">
+                                class="lg:hidden w-full h-14 rounded-sm bg-white text-[#F97316] shadow-md uppercase tracking-widest text-sm font-bold flex items-center justify-center transition">
                                 Pesquisar
                             </button>
                         </div>
@@ -234,7 +246,7 @@
 
                 @if(request()->filled($param))
                     <a href="{{ request()->fullUrlWithoutQuery([$param]) }}"
-                        class="inline-flex items-center gap-1.5 bg-[#F97316]/10 text-[#F97316]/80 text-xs font-semibold px-3 py-1.5 rounded-full hover:bg-[#F97316]/20 transition">
+                        class="inline-flex items-center gap-1.5 bg-[#F97316]/10 text-[#F97316]/80 text-xs font-semibold px-3 py-1.5 rounded-sm hover:bg-[#F97316]/20 transition">
 
                         {{ $label }}:
                         {{ ucfirst(str_replace('-', ' ', request($param))) }}
@@ -282,7 +294,7 @@
                         <input type="hidden" name="{{ $k }}" value="{{ $v }}">
                     @endforeach
                     <select name="sort" onchange="document.getElementById('sort-form').submit()"
-                        class="h-12 rounded-xl border border-gray-200 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#F97316] cursor-pointer">
+                        class="h-12 rounded-sm border border-gray-200 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#F97316] cursor-pointer">
                         <option value="recentes" @selected(request('sort', 'recentes') === 'recentes')>Mais recentes
                         </option>
                         <option value="preco_baixo" @selected(request('sort') === 'preco_baixo')>Menor preço</option>
@@ -301,7 +313,7 @@
 
                     <article
                     onclick="window.location.href='{{ route('properties.show', $property) }}'"
-                        class="bg-white cursor-pointer rounded-2xl overflow-hidden border border-gray-100 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col group">
+                        class="bg-white cursor-pointer rounded-sm overflow-hidden border border-gray-100 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col group">
 
                         {{-- Imagem --}}
                         <div class="relative overflow-hidden h-[240px] shrink-0">
@@ -310,7 +322,7 @@
 
                             {{-- Badge negócio --}}
                             <span
-                                class="absolute top-3 left-3 text-[11px] font-bold px-3 py-1.5 rounded-lg uppercase tracking-wide shadow"
+                                class="absolute top-3 left-3 text-[11px] font-bold px-3 py-1.5 rounded-sm uppercase tracking-wide shadow"
                                 style="background:{{ $property->business_badge['bg'] }};
                                                      color:{{ $property->business_badge['color'] }}">
                                 {{ $property->business_badge['label'] }}
@@ -318,7 +330,7 @@
 
                             {{-- Badge tipologia --}}
                             <span
-                                class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-gray-800 text-xs font-bold px-3 py-1.5 rounded-lg shadow">
+                                class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-gray-800 text-xs font-bold px-3 py-1.5 rounded-sm shadow">
                                 {{ $badge }}
                             </span>
 
@@ -379,7 +391,7 @@
                                     @endif
                                 </div>
                                 <a href="{{ route('properties.show', $property) }}"
-                                    class="bg-[#F97316] text-white text-xs font-bold px-5 py-2.5 rounded-xl uppercase tracking-wider hover:bg-[#F97316]/90 transition whitespace-nowrap">
+                                    class="bg-[#F97316] text-white text-xs font-bold px-5 py-2.5 rounded-sm uppercase tracking-wider hover:bg-[#F97316]/90 transition whitespace-nowrap">
                                     Ver Detalhes
                                 </a>
                             </div>
@@ -392,7 +404,7 @@
                         <p class="text-xl font-semibold text-gray-400">Nenhum imóvel encontrado.</p>
                         <p class="text-sm text-gray-400 mt-1">Tente remover ou alterar os filtros seleccionados.</p>
                         <a href="{{ route('properties.index') }}"
-                            class="mt-8 inline-flex items-center gap-2 bg-[#F97316] text-white px-7 py-3 rounded-xl font-bold hover:bg-[#F97316]/90 transition">
+                            class="mt-8 inline-flex items-center gap-2 bg-[#F97316] text-white px-7 py-3 rounded-sm font-bold hover:bg-[#F97316]/90 transition">
                             <span class="material-symbols-outlined text-[18px]" translate="no">refresh</span>
                             Ver Todos os Imóveis
                         </a>
@@ -402,7 +414,7 @@
                 {{-- Dynamic items loaded via infinite scroll --}}
                 <template x-for="p in extraProperties" :key="p.id">
                     <article
-                        class="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col group">
+                        class="bg-white cursor-pointer rounded-sm overflow-hidden border border-gray-100 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col group">
 
                         {{-- Imagem --}}
                         <div class="relative overflow-hidden h-[240px] shrink-0">
@@ -481,7 +493,7 @@
                                     </template>
                                 </div>
                                 <a :href="p.url"
-                                    class="bg-[#F97316] text-white text-xs font-bold px-5 py-2.5 rounded-xl uppercase tracking-wider hover:bg-[#F97316]/90 transition whitespace-nowrap">
+                                    class="bg-[#F97316] text-white text-xs font-bold px-5 py-2.5 rounded-sm uppercase tracking-wider hover:bg-[#F97316]/90 transition whitespace-nowrap">
                                     Ver Detalhes
                                 </a>
                             </div>
@@ -494,7 +506,7 @@
             <div x-show="isLoading" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-8" x-cloak>
                 <template x-for="i in [1, 2, 3]">
                     <div
-                        class="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-md flex flex-col animate-pulse">
+                        class="bg-white rounded-sm overflow-hidden border border-gray-100 shadow-md flex flex-col animate-pulse">
                         {{-- Image Skeleton --}}
                         <div class="bg-gray-200 h-[240px] w-full relative">
                             <div class="absolute top-3 left-3 bg-gray-300 h-6 w-20 rounded-lg"></div>

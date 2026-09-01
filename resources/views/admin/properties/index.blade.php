@@ -29,6 +29,25 @@
                 @endforeach
             </select>
 
+            {{-- Classificação do Terreno --}}
+            <select name="land_type"
+                    class="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition">
+                <option value="">Classificação Terreno</option>
+                <option value="urbanos" {{ request('land_type') === 'urbanos' ? 'selected' : '' }}>Urbanos</option>
+                <option value="rusticos" {{ request('land_type') === 'rusticos' ? 'selected' : '' }}>Rústicos</option>
+                <option value="industriais" {{ request('land_type') === 'industriais' ? 'selected' : '' }}>Industriais</option>
+                <option value="projecto-aprovado" {{ request('land_type') === 'projecto-aprovado' ? 'selected' : '' }}>Projectos Aprovados</option>
+            </select>
+
+            {{-- País --}}
+            <select name="country"
+                    class="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition">
+                <option value="">Todos os Países</option>
+                @foreach(\App\Models\Property::select('country')->distinct()->orderBy('country')->pluck('country') as $c)
+                    <option value="{{ $c }}" {{ request('country') === $c ? 'selected' : '' }}>{{ $c }}</option>
+                @endforeach
+            </select>
+
             <select name="status"
                     class="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition">
                 <option value="">Todos os estados</option>
@@ -44,7 +63,7 @@
                 Filtrar
             </button>
 
-            @if(request()->hasAny(['search', 'filter_category', 'property_type', 'status']))
+            @if(request()->hasAny(['search', 'filter_category', 'property_type', 'land_type', 'country', 'status']))
             <a href="{{ route('admin.properties.index') }}" class="text-gray-400 hover:text-gray-600 text-sm px-3 py-2.5">
                 <i class="fa-solid fa-xmark mr-1"></i>Limpar
             </a>
@@ -150,7 +169,12 @@
      
                             <p class="text-[11px] text-admin-muted mt-1"> 
                                 {{ $property->property_type_label }} 
-                            </p> 
+                            </p>
+                            @if($property->land_type)
+                            <span class="inline-block text-[10px] font-medium px-1.5 py-0.5 mt-0.5 rounded bg-green-50 text-green-700 border border-green-200">
+                                {{ $property->land_type_label ?? ucfirst($property->land_type) }}
+                            </span>
+                            @endif
                         </td>
                         <td class="px-4 py-4">
                             <p class="text-sm font-bold text-brand">{{ $property->price }}</p>

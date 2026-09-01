@@ -85,7 +85,7 @@
                 </p>
                 <div class="hero-buttons flex flex-col sm:flex-row gap-5 mt-4">
                     <button onclick="window.location.href='mailto:info@timetochoose.ao'"
-                        class="bg-[#F97316] text-white font-bold py-4 px-10 rounded-md transition-all hover:scale-[1.02] hover:shadow-xl active:scale-95">
+                        class="bg-[#F97316] text-white font-bold py-4 px-10 rounded-sm transition-all hover:scale-[1.02] hover:shadow-xl active:scale-95">
                         {{ $sections['hero']['button_text'] ?? 'Solicitar Avaliação' }}
                     </button>
                 </div>
@@ -96,7 +96,7 @@
     {{-- O que oferecemos --}}
     <section class="py-32 bg-white px-6 md:px-12">
         <div class="max-w-7xl mx-auto">
-            <div class="mb-20 text-center max-w-3xl mx-auto reveal">
+            <div class="mb-20  max-w-3xl  reveal">
                 <h2 class="font-bold text-4xl mb-6">{{ $sections['methodology']['title'] ?? 'Nossa Metodologia' }}</h2>
                 <p class="text-lg text-gray-500 leading-relaxed">
                     {{ $sections['methodology']['subtitle'] ?? 'Utilizamos um processo estruturado e analítico para garantir que o valor apurado reflete a realidade económica e as particularidades de cada imóvel.' }}
@@ -113,10 +113,10 @@
                         ['icon' => 'Sugestão.png', 'title' => 'Certificação Final', 'desc' => 'Entrega de dossiê completo, com fundamentação técnica e parecer profissional assinado pela nossa gestão.']
                     ] as $item)
 
-                    <div class="group bg-gray-50 p-10 rounded-md border border-gray-200/50 card-hover reveal">
+                    <div class="group bg-gray-50 p-10 rounded-sm border border-gray-200/50 card-hover reveal">
 
                         <div
-                            class="w-14 h-14 p-2 rounded-md bg-[#F97316] shadow-sm flex items-center justify-center mb-8 group-hover:bg-[#F97316] text-white transition-colors">
+                            class="w-14 h-14 p-2 rounded-sm bg-[#F97316] shadow-sm flex items-center justify-center mb-8 group-hover:bg-[#F97316] text-white transition-colors">
 
                             <img src="{{ asset('assets/' . $item['icon']) }}" alt="">
 
@@ -157,9 +157,9 @@
                                 ['title' => 'Decisão de Investimento', 'desc' => 'Analise a viabilidade de compra de novos activos com base em fundamentos sólidos e projecções de valorização.']
                             ] as $obj)
                             <div
-                                class="flex gap-6 p-8 rounded-md bg-white border border-gray-200/50 shadow-sm transition-all hover:border-[#F97316]/30 cursor-pointer">
+                                class="flex gap-6 p-8 rounded-sm bg-white border border-gray-200/50 shadow-sm transition-all hover:border-[#F97316]/30 cursor-pointer">
                                 <div
-                                    class="shrink-0 w-14 h-14 rounded-full bg-[#F97316] text-white flex items-center justify-center">
+                                    class="shrink-0 w-14 h-14 rounded-sm bg-[#F97316] text-white flex items-center justify-center">
                                     <span class="material-symbols-outlined"  translate="no">sell</span>
                                 </div>
                                 <div>
@@ -182,7 +182,7 @@
         ['title' => 'Para Investidores', 'desc' => 'Análise de Yield, TIR e viabilidade económica.', 'icon' => 'investidor.png']
     ] as $mod)
 
-        <div class="group reveal flex items-center justify-between p-8 bg-white rounded-2xl border-l-8 border-[#F97316] shadow-sm hover:translate-x-2 transition duration-300">
+        <div class="group reveal flex items-center justify-between p-8 bg-white rounded-sm border-l-8 border-[#F97316] shadow-sm hover:translate-x-2 transition duration-300">
 
             <div class="max-w-[70%]">
                 <h5 class="text-xl font-bold text-gray-900 mb-1 group-hover:text-[#F97316] transition">

@@ -136,7 +136,7 @@ class DatabaseSeeder extends Seeder
                 'bedrooms'      => 0,
                 'bathrooms'     => 0,
                 'garages'       => 0,
-                'area'          => '800 m²',
+                'area'          => '1,5 ha',
                 'image'         => '3.jpeg',
                 'gallery'       => [],
                 'amenities'     => ['Acesso Asfaltado', 'Furo de Água', 'Vedado'],
@@ -208,5 +208,8 @@ class DatabaseSeeder extends Seeder
             'property_id' => 3,
             'is_read' => false,
         ]);
+
+        $this->call(LandTypeSeeder::class);
+        $this->call(LandClassificationSeeder::class);
     }
 }

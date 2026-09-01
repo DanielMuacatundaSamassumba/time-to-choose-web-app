@@ -134,6 +134,16 @@ Route::delete('/localizacoes/cidades/{city}', [LocationController::class, 'destr
 
     Route::delete('/tipos-imovel/{propertyType}', [PropertyTypeController::class, 'destroy'])
         ->name('property-types.destroy');
+
+    // Classificações de Terreno
+    Route::post('/classificacoes-terreno', [\App\Http\Controllers\LandTypeController::class, 'store'])
+        ->name('land-types.store');
+
+    Route::put('/classificacoes-terreno/{landType}', [\App\Http\Controllers\LandTypeController::class, 'update'])
+        ->name('land-types.update');
+
+    Route::delete('/classificacoes-terreno/{landType}', [\App\Http\Controllers\LandTypeController::class, 'destroy'])
+        ->name('land-types.destroy');
         
     // Media / Biblioteca de Imagens
     Route::get('/media',    [MediaController::class, 'index'])->name('media.index');

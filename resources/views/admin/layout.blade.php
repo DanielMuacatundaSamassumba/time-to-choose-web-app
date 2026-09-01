@@ -116,8 +116,8 @@
         <a href="{{ route('admin.property-types.index') }}"
            class="{{ $linkClass }} {{ request()->routeIs('admin.property-types.*') ? $activeLinkClass : $inactiveLinkClass }}">
             <i class="fa-solid fa-shapes w-5 text-center {{ request()->routeIs('admin.property-types.*') ? 'text-brand' : '' }}"></i>
-            Tipos de Imóvel
-            @php $totalTypes = \App\Models\PropertyType::count(); @endphp
+            Tipos & Classificações
+            @php $totalTypes = \App\Models\PropertyType::count() + \App\Models\LandType::count(); @endphp
             <span class="ml-auto bg-brand/20 text-brand text-[10px] font-bold px-2 py-0.5 rounded-full">{{ $totalTypes }}</span>
         </a>
 

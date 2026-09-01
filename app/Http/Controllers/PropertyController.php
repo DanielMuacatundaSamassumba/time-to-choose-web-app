@@ -88,6 +88,28 @@ class PropertyController extends Controller
             $query->where('city', 'like', '%' . $request->input('city') . '%');
         }
 
+        // ── Direct Land Type filter ──────────────────────────────
+        if ($request->filled('land_type')) {
+            $lt = strtolower(trim((string) $request->input('land_type')));
+            $query->where(function ($q) use ($lt) {
+                $q->where('land_type', $lt)
+                  ->orWhere('land_type', 'like', "%{$lt}%")
+                  ->orWhere('title', 'like', "%{$lt}%")
+                  ->orWhere('description', 'like', "%{$lt}%");
+            });
+        }
+
+        // ── Direct Area filter ────────────────────────────────────
+        if ($request->filled('area')) {
+            $areaVal = preg_replace('/\D/', '', (string) $request->input('area'));
+            if (is_numeric($areaVal) && (int) $areaVal > 0) {
+                $query->where(function ($q) use ($areaVal) {
+                    $q->where('area', 'like', "%{$areaVal}%")
+                      ->orWhereRaw("CAST(REPLACE(REPLACE(REPLACE(area, '.', ''), 'm²', ''), ' ', '') AS UNSIGNED) <= ?", [(int) $areaVal]);
+                });
+            }
+        }
+
         // ── Typology filter — context-aware ───────────────────────
         if ($request->filled('typology')) {
             $typology = strtolower(trim((string) $request->input('typology')));
@@ -103,11 +125,11 @@ class PropertyController extends Controller
                 ];
                 $searchRoot = $termMap[$typology] ?? $typology;
                 $query->where(function ($q) use ($searchRoot, $typology) {
-                    $q->where('title', 'like', "%{$searchRoot}%")
+                    $q->where('land_type', $typology)
+                      ->orWhere('land_type', 'like', "%{$typology}%")
+                      ->orWhere('title', 'like', "%{$searchRoot}%")
                       ->orWhere('description', 'like', "%{$searchRoot}%")
-                      ->orWhere('amenities', 'like', "%{$searchRoot}%")
-                      ->orWhere('title', 'like', "%{$typology}%")
-                      ->orWhere('description', 'like', "%{$typology}%");
+                      ->orWhere('amenities', 'like', "%{$searchRoot}%");
                 });
             } else {
                 $isAreaBased = in_array($propType, [

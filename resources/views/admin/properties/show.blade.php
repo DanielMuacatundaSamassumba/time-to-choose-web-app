@@ -216,6 +216,18 @@
                             <p class="text-[10px] text-gray-400 uppercase font-semibold">Tipologia</p>
                             <p class="text-sm font-bold text-gray-800">{{ $property->typology_display }}</p>
                         </div>
+                        @if(str_contains(strtolower((string) $property->property_type), 'terren'))
+                        <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-200 text-center">
+                            <i class="fa-solid fa-mountain-sun text-emerald-600 mb-1 text-sm"></i>
+                            <p class="text-[10px] text-emerald-500 uppercase font-semibold">Classificação</p>
+                            <p class="text-sm font-bold text-emerald-800">{{ $property->land_type_label ?: '—' }}</p>
+                        </div>
+                        <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-200 text-center col-span-2">
+                            <i class="fa-solid fa-ruler-combined text-emerald-600 mb-1 text-sm"></i>
+                            <p class="text-[10px] text-emerald-500 uppercase font-semibold">Área / Dimensão</p>
+                            <p class="text-sm font-bold text-emerald-800">{{ $property->area ?: 'N/D' }}</p>
+                        </div>
+                        @else
                         <div class="p-3 bg-gray-50 rounded-xl border border-gray-100 text-center">
                             <i class="fa-solid fa-bed text-brand mb-1 text-sm"></i>
                             <p class="text-[10px] text-gray-400 uppercase font-semibold">Quartos</p>
@@ -231,10 +243,67 @@
                             <p class="text-[10px] text-gray-400 uppercase font-semibold">Área</p>
                             <p class="text-sm font-bold text-gray-800">{{ $property->area ?: 'N/D' }}</p>
                         </div>
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
+
+        {{-- ===== TERRENO: Características Específicas ===== --}}
+        @if(str_contains(strtolower((string) $property->property_type), 'terren'))
+        <div class="bg-emerald-50/60 rounded-2xl border border-emerald-200 p-6 shadow-sm print-card">
+            <div class="flex items-center justify-between mb-5">
+                <h3 class="font-bold text-gray-900 text-base flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center">
+                        <i class="fa-solid fa-mountain-sun text-sm"></i>
+                    </div>
+                    Características do Terreno
+                </h3>
+                @if($property->land_type_label)
+                <span class="text-xs font-bold px-3 py-1.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
+                    {{ $property->land_type_label }}
+                </span>
+                @endif
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                {{-- Classificação --}}
+                <div class="bg-white p-4 rounded-xl border border-emerald-200/80 shadow-sm text-center">
+                    <i class="fa-solid fa-layer-group text-emerald-600 text-xl mb-2"></i>
+                    <p class="text-[10px] text-gray-400 uppercase font-semibold mb-1">Classificação</p>
+                    <p class="text-sm font-bold text-gray-900">
+                        {{ $property->land_type_label ?: '— Não definida —' }}
+                    </p>
+                </div>
+                {{-- Área / Dimensão --}}
+                <div class="bg-white p-4 rounded-xl border border-emerald-200/80 shadow-sm text-center">
+                    <i class="fa-solid fa-ruler-combined text-emerald-600 text-xl mb-2"></i>
+                    <p class="text-[10px] text-gray-400 uppercase font-semibold mb-1">Área / Dimensão</p>
+                    <p class="text-sm font-bold text-gray-900">
+                        {{ $property->area ?: '— Não definida —' }}
+                    </p>
+                </div>
+                {{-- Tipo de Imóvel --}}
+                <div class="bg-white p-4 rounded-xl border border-emerald-200/80 shadow-sm text-center">
+                    <i class="fa-solid fa-map text-emerald-600 text-xl mb-2"></i>
+                    <p class="text-[10px] text-gray-400 uppercase font-semibold mb-1">Tipo de Imóvel</p>
+                    <p class="text-sm font-bold text-gray-900">
+                        {{ $property->property_type_label }}
+                    </p>
+                </div>
+            </div>
+            @if($property->land_type)
+            <div class="mt-4 p-3 bg-white border border-emerald-200 rounded-xl text-xs text-gray-600 flex items-start gap-2">
+                <i class="fa-solid fa-circle-info text-emerald-500 mt-0.5 shrink-0"></i>
+                <span>
+                    Este terreno está classificado como
+                    <strong class="text-emerald-700">{{ $property->land_type_label }}</strong>.
+                    @if($property->area) Dimensão total: <strong>{{ $property->area }}</strong>. @endif
+                    A classificação determina a filtragem no site público e os filtros de pesquisa.
+                </span>
+            </div>
+            @endif
+        </div>
+        @endif
 
         {{-- CONFIDENTIAL: Dados do Proprietário --}}
         <div class="bg-amber-50/60 rounded-2xl border border-amber-200 p-6 shadow-sm print-card">

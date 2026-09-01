@@ -15,7 +15,7 @@
                 @php
                     $g = $settings['global'] ?? [];
                     $labelClass = "block text-xs font-semibold text-admin-muted uppercase tracking-wider mb-2";
-                    $inputClass = "w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition";
+                    $inputClass = "w-full border border-gray-200 rounded-sm px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition";
                 @endphp
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">

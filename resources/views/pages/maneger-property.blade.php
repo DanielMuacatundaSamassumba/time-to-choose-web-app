@@ -52,7 +52,7 @@
                     <button
                                         onclick="window.location.href='mailto:info@timetochoose.ao'"
 
-                    class="bg-[#F97316] cursor-pointer text-white px-8 py-3.5 rounded-lg hover:scale-105 hover:bg-[#F97316]/90 transition-all duration-350 font-semibold">
+                    class="bg-[#F97316] cursor-pointer text-white px-8 py-3.5 rounded-sm hover:scale-105 hover:bg-[#F97316]/90 transition-all duration-350 font-semibold">
                         {{ $sections['hero']['button_text'] ?? 'Solicitar Gestão' }}
                     </button>
                 </div>
@@ -63,10 +63,10 @@
     <!-- O Que Fazemos -->
     <section class="py-24 px-6 md:px-12 max-w-7xl mx-auto bg-white">
         <div class="mb-16">
-            <h2 class="reveal text-4xl mb-4 font-bold text-center text-gray-900 animate-fade-in">
+            <h2 class="reveal text-4xl mb-4 font-bold  text-gray-900 animate-fade-in">
                 {{ $sections['services']['title'] ?? 'O Que Fazemos' }}
             </h2>
-            <p class="reveal text-lg text-gray-500 text-center">
+            <p class="reveal text-lg text-gray-500">
                 {{ $sections['services']['subtitle'] ?? 'Gestão integral para maximizar o seu retorno e proteger o seu investimento.' }}
             </p>
         </div>
@@ -79,7 +79,7 @@
                 ['icon' => 'inquilino.png', 'title' => 'Seleção de inquilinos'],
                
             ] as $srv)
-            <div class="flex flex-col gap-4 bg-gray-50 p-8 rounded-2xl border border-gray-100 hover:-translate-y-2 transition duration-300 cursor-pointer">
+            <div class="flex flex-col gap-4 bg-gray-50 p-8 rounded-sm border border-gray-100 hover:-translate-y-2 transition duration-300 cursor-pointer">
        <img src="{{ asset('assets/' . $srv['icon']) }}" alt="" class="w-10">
             <h3 class="text-lg font-bold text-gray-900">{{ $srv['title'] }}</h3>
          <p>Gestão integral para maximizar o seu retorno e proteger o seu investimento.</p>    
@@ -104,7 +104,7 @@
         ['icon' => 'condominio.png', 'title' => 'Condomínios', 'desc' => 'Administração integral para preservar, valorizar e otimizar os imóveis.']
     ] as $target)
 
-        <div class="group backdrop-blur-md bg-white/10 border border-white/10 rounded-3xl p-8 transition-all duration-500 hover:-translate-y-3 hover:bg-white/15 hover:border-[#F97316]/40">
+        <div class="group backdrop-blur-md bg-white/10 border border-white/10 rounded-sm p-8 transition-all duration-500 hover:-translate-y-3 hover:bg-white/15 hover:border-[#F97316]/40">
 
             <div class="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center mb-8 transition-all duration-500 group-hover:bg-[#F97316]">
                 <img
@@ -131,13 +131,13 @@
 
     <!-- Detalhe dos Serviços -->
     <section class="py-24 px-6 md:px-12 max-w-7xl mx-auto bg-white">
-        <h2 class="reveal text-4xl mb-16 text-center font-bold text-gray-900">
+        <h2 class="reveal text-4xl mb-16 font-bold text-gray-900">
             Detalhe dos Serviços
         </h2>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
             <!-- Gestão Financeira -->
-            <div class="group flex flex-col gap-6 bg-gray-50 p-8 rounded-2xl border border-gray-100 transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl">
+            <div class="group flex flex-col gap-6 bg-gray-50 p-8 rounded-sm border border-gray-100 transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl">
                 <div class="w-16 h-16 rounded-full bg-[#F97316] flex items-center justify-center transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6">
                      <img src="{{ asset('assets/Financeira.png') }}" alt="Gestão Financeira" class="w-10">
             </div>
@@ -159,7 +159,7 @@
             </div>
 
             <!-- Gestão Operacional -->
-            <div class="group flex flex-col gap-6 bg-gray-50 p-8 rounded-2xl border border-gray-100 transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl">
+            <div class="group flex flex-col gap-6 bg-gray-50 p-8 rounded-sm border border-gray-100 transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl">
                 <div class="w-16 h-16 rounded-full bg-[#F97316] flex items-center justify-center transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6">
                      <img src="{{ asset('assets/operacao.png') }}" alt="operacao"  class="w-10">
                 </div>
@@ -177,7 +177,7 @@
             </div>
 
             <!-- Gestão Comercial -->
-            <div class="group flex flex-col gap-6 bg-gray-50 p-8 rounded-2xl border border-gray-100 transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl">
+            <div class="group flex flex-col gap-6 bg-gray-50 p-8 rounded-sm border border-gray-100 transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl">
                 <div class="w-16 h-16 rounded-full bg-[#F97316] flex items-center justify-center transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6">
                      <img src="{{ asset('assets/predio-comercial.png') }}" alt="predio-comercial" class="w-10">
                 </div>
@@ -229,7 +229,7 @@
         ['icon' => 'arrendamento_curta.png', 'title' => 'Arrendamento de Curta Duração']
     ] as $item)
 
-        <div class="bg-white rounded-lg p-6 flex items-center gap-4 transition duration-300">
+        <div class="bg-white rounde-sm p-6 flex items-center gap-4 transition duration-300">
 
             <img
                 src="{{ asset('assets/' . $item['icon']) }}"

@@ -35,15 +35,10 @@ class Property extends Model
         return 'slug';
     }
 
-    // ── Classificação de Terrenos ──────────────────────────────────────────
+    // ── Classificação de Terrenos (Centralizado & Extensível via CMS) ───────
     public static function landTypes(): array
     {
-        return [
-            'urbanos'           => 'Urbano',
-            'rusticos'          => 'Rústico',
-            'industriais'       => 'Industrial',
-            'projecto-aprovado' => 'Projecto Aprovado',
-        ];
+        return LandType::typeMap();
     }
 
     public function getLandTypeLabelAttribute(): ?string
@@ -147,6 +142,40 @@ class Property extends Model
 
     public function getBusinessBadgeAttribute(): array
     {
+        $status = strtolower((string) ($this->status ?? 'disponivel'));
+
+        // Se o status for diferente de 'disponivel', exibe o status no badge com destaque
+        if ($status === 'vendido') {
+            return [
+                'label'       => 'Vendido',
+                'short_label' => 'Vendido',
+                'bg'          => '#DC2626',
+                'color'       => '#ffffff',
+                'class'       => 'bg-red-600 text-white',
+            ];
+        }
+
+        if ($status === 'reservado') {
+            return [
+                'label'       => 'Reservado',
+                'short_label' => 'Reservado',
+                'bg'          => '#D97706',
+                'color'       => '#ffffff',
+                'class'       => 'bg-amber-600 text-white',
+            ];
+        }
+
+        if ($status === 'arrendado') {
+            return [
+                'label'       => 'Arrendado',
+                'short_label' => 'Arrendado',
+                'bg'          => '#2563EB',
+                'color'       => '#ffffff',
+                'class'       => 'bg-blue-600 text-white',
+            ];
+        }
+
+        // Quando disponível, exibe o tipo de negócio
         $cat = strtolower((string) ($this->category ?? ''));
         $type = strtolower((string) ($this->type ?? ''));
 

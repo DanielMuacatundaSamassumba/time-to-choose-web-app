@@ -31,29 +31,36 @@
         {{-- SEARCH BAR --}}
         <div class="p-3">
             <div x-data="{
-                    open: false,
+                    open: {{ (request()->anyFilled(['country', 'city', 'typology', 'land_type']) || request('property_type') === 'terreno') ? 'true' : 'false' }},
                     country: '{{ request('country', '') }}',
                     city: '{{ request('city', '') }}',
+                    propertyType: '{{ request('property_type', '') }}',
                     cityMap: {{ json_encode($cityMap) }},
                     get cities() {
                         return this.country ? (this.cityMap[this.country] ?? []) : [];
                     },
                     onCountryChange() {
                         this.city = '';
+                    },
+                    onPropertyTypeChange(val) {
+                        this.propertyType = val;
+                        if (val === 'terreno' || val.includes('terren')) {
+                            this.open = true;
+                        }
                     }
                  }" class="relative -mt-40
                         lg:absolute lg:left-1/2 lg:-translate-x-1/2 lg:bottom-[-40px]
                         w-full max-w-7xl
-                        bg-[#F97316] rounded-2xl shadow-2xl p-6 z-30">
+                        bg-[#F97316] rounded-sm shadow-2xl p-6 z-30">
 
                 <form action="{{ route('properties.index') }}" method="GET">
                     {{-- ROW 1 --}}
                     <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
                         <input type="text" name="search" placeholder="Pesquisar cidade, título ou zona..."
-                            class="h-14 rounded-xl px-5 outline-none text-sm text-gray-800 placeholder-gray-400">
+                            class="h-14 rounded-sm px-5 outline-none text-sm text-gray-800 placeholder-gray-400">
 
                         <select name="category"
-                            class="h-14 rounded-xl px-5 outline-none text-sm text-gray-500 cursor-pointer">
+                            class="h-14 rounded-sm px-5 outline-none text-sm text-gray-500 cursor-pointer">
                             <option value="">Tipo de Negócio</option>
                             <option value="venda">Venda</option>
                             <option value="arrendamento-longa-duracao">Arrendamento de Longa Duração</option>
@@ -61,8 +68,8 @@
                             <option value="transpasse">Transpasse</option>
                         </select>
 
-                        <select name="property_type" id="hp_property_type"
-                            class="h-14 rounded-xl px-5 outline-none text-sm text-gray-500 cursor-pointer">
+                        <select name="property_type" id="hp_property_type" @change="onPropertyTypeChange($event.target.value)"
+                            class="h-14 rounded-sm px-5 outline-none text-sm text-gray-500 cursor-pointer">
                             <option value="">Tipo de Imóvel</option>
                             @foreach(\App\Models\Property::propertyTypes() as $val => $label)
                                 <option value="{{ $val }}" @selected(request('property_type') === $val)>{{ $label }}</option>
@@ -71,14 +78,14 @@
 
                         <div class="flex items-center gap-3">
                             <button type="button" @click="open=!open"
-                                class="flex items-center gap-2 text-white border border-white/70 rounded-xl px-4 py-3 hover:bg-white/10 transition shrink-0"
+                                class="flex items-center gap-2 text-white border border-white/70 rounded-sm px-4 py-3 hover:bg-white/10 transition shrink-0"
                                 :class="open ? 'bg-white/15 border-white' : ''">
                                 <span class="material-symbols-outlined transition duration-300"  translate="no"
                                     :class="open ? 'rotate-180' : ''">tune</span>
                             </button>
                             <button type="submit"
                                 :class="open ? 'hidden lg:flex' : 'flex'"
-                                class="flex-1 h-14 rounded-xl bg-white text-[#F97316]/90 uppercase tracking-wider text-sm font-bold items-center justify-center transition duration-300">
+                                class="flex-1 h-14 rounded-sm bg-white text-[#F97316]/90 uppercase tracking-wider text-sm font-bold items-center justify-center transition duration-300">
                                 Pesquisar
                             </button>
                         </div>
@@ -90,7 +97,7 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
 
                             <select name="country" x-model="country" @change="onCountryChange()"
-                                class="h-14 rounded-xl px-5 text-sm text-gray-500 outline-none cursor-pointer">
+                                class="h-14 rounded-sm px-5 text-sm text-gray-500 outline-none cursor-pointer">
                                 <option value="">Todos os Países</option>
                                 <template x-for="(citiesList, c) in cityMap" :key="c">
                                     <option :value="c" :selected="country === c" x-text="c"></option>
@@ -98,7 +105,7 @@
                             </select>
 
                             <select name="city" x-model="city"
-                                class="h-14 rounded-xl px-5 text-sm text-gray-500 outline-none cursor-pointer">
+                                class="h-14 rounded-sm px-5 text-sm text-gray-500 outline-none cursor-pointer">
                                 <option value="" x-text="country ? 'Todas as Cidades de ' + country : 'Todas as Cidades'"></option>
                                 <template x-if="country">
                                     <template x-for="cityName in cities" :key="cityName">
@@ -140,7 +147,7 @@
                                 }">
                                 <template x-if="isResidential">
                                     <select name="typology"
-                                        class="h-14 rounded-xl px-5 text-sm text-gray-500 outline-none w-full cursor-pointer">
+                                        class="h-14 rounded-sm px-5 text-sm text-gray-500 outline-none w-full cursor-pointer">
                                         <option value="" x-text="isVivenda ? 'Tipologia (V1, V2...)' : 'Tipologia (T1, T2...)'"></option>
                                         <template x-for="n in [0,1,2,3,4,5]" :key="n">
                                             <option :value="n" x-text="prefix + n"></option>
@@ -150,32 +157,44 @@
                                 </template>
 
                                 <template x-if="isTerrain">
-                                    <select name="typology"
-                                        class="h-14 rounded-xl px-5 text-sm text-gray-500 outline-none w-full cursor-pointer">
-                                        <option value="">Classificação do Terreno</option>
-                                        <option value="urbanos" {{ request('typology') === 'urbanos' ? 'selected' : '' }}>Urbanos</option>
-                                        <option value="rusticos" {{ request('typology') === 'rusticos' ? 'selected' : '' }}>Rústicos</option>
-                                        <option value="industriais" {{ request('typology') === 'industriais' ? 'selected' : '' }}>Industriais</option>
-                                        <option value="projecto-aprovado" {{ request('typology') === 'projecto-aprovado' ? 'selected' : '' }}>Projecto Aprovado</option>
-                                    </select>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                        <select name="land_type"
+                                            class="h-14 rounded-sm px-5 text-sm text-gray-500 outline-none w-full cursor-pointer">
+                                            <option value="">Classificação </option>
+                                            <option value="urbanos" {{ (request('land_type') === 'urbanos' || request('typology') === 'urbanos') ? 'selected' : '' }}>Urbanos</option>
+                                            <option value="rusticos" {{ (request('land_type') === 'rusticos' || request('typology') === 'rusticos') ? 'selected' : '' }}>Rústicos</option>
+                                            <option value="industriais" {{ (request('land_type') === 'industriais' || request('typology') === 'industriais') ? 'selected' : '' }}>Industriais</option>
+                                            <option value="projecto-aprovado" {{ (request('land_type') === 'projecto-aprovado' || request('typology') === 'projecto-aprovado') ? 'selected' : '' }}>Projectos Aprovados</option>
+                                        </select>
+                                        <select name="area"
+                                            class="h-14 rounded-sm px-5 text-sm text-gray-500 outline-none w-full cursor-pointer">
+                                            <option value="">Área / Dimensão (ha)</option>
+                                            <option value="1" {{ request('area') === '1' ? 'selected' : '' }}>Até 1 ha</option>
+                                            <option value="5" {{ request('area') === '5' ? 'selected' : '' }}>Até 5 ha</option>
+                                            <option value="10" {{ request('area') === '10' ? 'selected' : '' }}>Até 10 ha</option>
+                                            <option value="50" {{ request('area') === '50' ? 'selected' : '' }}>Até 50 ha</option>
+                                            <option value="100" {{ request('area') === '100' ? 'selected' : '' }}>Até 100 ha</option>
+                                            <option value="500" {{ request('area') === '500' ? 'selected' : '' }}>Mais de 100 ha</option>
+                                        </select>
+                                    </div>
                                 </template>
 
                                 <template x-if="!isResidential && !isTerrain">
-                                    <div class="h-14 rounded-xl px-4 bg-white/10 border border-white/20 flex items-center justify-center text-white/80 text-xs font-medium text-center">
+                                    <div class="h-14 rounded-sm px-4 bg-white/10 border border-white/20 flex items-center justify-center text-white/80 text-xs font-medium text-center">
                                         Tipologia não aplicável
                                     </div>
                                 </template>
                             </div>
 
                             <div class="flex flex-col gap-3 justify-end">
-                                <button type="button" @click="country = ''; city = ''; $el.closest('form').reset()" class="h-14 px-6 rounded-xl border border-white text-white text-sm font-semibold
+                                <button type="button" @click="country = ''; city = ''; $el.closest('form').reset()" class="h-14 px-6 rounded-sm border border-white text-white text-sm font-semibold
                                                hover:bg-white hover:text-[#F97316] transition w-full">
                                     Limpar Filtros
                                 </button>
 
                                 {{-- Pesquisar (No mobile é o último elemento) --}}
                                 <button type="submit"
-                                    class="lg:hidden w-full h-14 rounded-xl bg-white text-[#F97316] shadow-md uppercase tracking-widest text-sm font-bold flex items-center justify-center transition">
+                                    class="lg:hidden w-full h-14 rounded-sm bg-white text-[#F97316] shadow-md uppercase tracking-widest text-sm font-bold flex items-center justify-center transition">
                                     Pesquisar
                                 </button>
                             </div>
@@ -239,7 +258,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-center justify-center w-full">
                 @foreach($categories as $cat)
                     @php $count = ($cat['query'])(); @endphp
-                    <a href="{{ url('/imoveis') . '?' . $cat['filter'] }}" class="category-card bg-white rounded-[24px] border border-[#DADADA]
+                    <a href="{{ url('/imoveis') . '?' . $cat['filter'] }}" class="category-card bg-white rounded-sm border border-[#DADADA]
                               h-[190px] p-3 flex flex-col items-center justify-center
                               shadow-[0_8px_0_#F97316] hover:-translate-y-2 transition-all duration-300">
                         <div class="w-20 h-20 rounded-full bg-[#FAD38D] flex items-center justify-center mb-5">
@@ -273,90 +292,287 @@
                     </h2>
                 </div>
                 <a href="{{ url('/imoveis') }}"
-                    class="bg-[#F97316] text-center hover:bg-[#F97316]/80 px-6 text-sm py-3 w-[160px] rounded-md transition duration-300 text-white">
+                    class="bg-[#F97316] text-center hover:bg-[#F97316]/80 px-6 text-sm py-3 w-[160px] rounded-sm transition duration-300 text-white">
                     {{ $sections['featured']['button_text'] ?? 'Ver Mais' }}
                 </a>
             </div>
 
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <?php  $count=0 ?>
-                @forelse($featured as $imovel)
-                 <?php $count++; ?>
-                   @if ($count != 3)
-                   <article
-                        class="property-card cursor-pointer bg-white rounded-[20px] overflow-hidden border border-[#E5E5E5] shadow-lg"
-                        onclick="window.location.href='{{ route('properties.show', $imovel) }}'"
-                        >
-                        <div class="relative">
-                            @if($imovel->image && file_exists(public_path('assets/' . $imovel->image)))
-                                <img src="{{ asset('assets/' . $imovel->image) }}" alt="{{ $imovel->title }}"
-                                    class="w-full h-[260px] object-cover">
-                            @elseif($imovel->image && str_starts_with($imovel->image, 'properties/'))
-                                <img src="{{ Storage::url($imovel->image) }}" alt="{{ $imovel->title }}"
-                                    class="w-full h-[260px] object-cover">
-                            @else
-                                <img src="{{ asset('assets/1.jpeg') }}" alt="{{ $imovel->title }}"
-                                    class="w-full h-[260px] object-cover">
-                            @endif
-                            <span class="absolute top-4 left-4 text-xs font-bold px-3 py-2 rounded-lg shadow-sm"
-                                style="background-color: {{ $imovel->business_badge['bg'] }}; color: {{ $imovel->business_badge['color'] }}">
-                                {{ mb_strtoupper($imovel->business_badge['label']) }}
-                            </span>
-                        </div>
-                        <div class="p-6">
-                            <h3 class="text-xl font-bold leading-tight">{{ $imovel->title }}</h3>
-                            <p class="text-[#999] mt-3">{{ $imovel->location }}</p>
-                            <div class="py-5 mt-5">
-                                <div class="grid grid-cols-2 gap-4  border-t border-b">
-                                    @if($imovel->bedrooms > 0)
-                                        <div class="flex items-center gap-2 mt-4 mb-4">
-                                            <span class="material-symbols-outlined text-[#F97316] text-xl "  translate="no">domain</span>
-                                            <span>{{ $imovel->bedrooms }} Quarto{{ $imovel->bedrooms > 1 ? 's' : '' }}</span>
-                                        </div>
-                                    @endif
-                                    @if($imovel->bathrooms > 0)
-                                        <div class="flex items-center gap-2  mt-4 mb-4">
-                                            <span class="material-symbols-outlined text-[#F97316] text-xl"  translate="no">shower</span>
-                                            <span>{{ $imovel->bathrooms }} WC</span>
-                                        </div>
-                                    @endif
-                                    @if($imovel->garages > 0)
-                                        <div class="flex items-center gap-2  mt-4 mb-4">
-                                            <span class="material-symbols-outlined text-[#F97316] text-xl"  translate="no">directions_car</span>
-                                            <span>{{ $imovel->garages }} Garagem{{ $imovel->garages > 1 ? 's' : '' }}</span>
-                                        </div>
-                                    @endif
-                                    @if($imovel->area)
-                                        <div class="flex items-center gap-2  mt-4 mb-4">
-                                            <span class="material-symbols-outlined text-[#F97316] text-xl"  translate="no">square_foot</span>
-                                            <span>{{ $imovel->area }}</span>
-                                        </div>
-                                    @endif
-                                </div>
-                            </div>
-                            <div class="flex items-center justify-between mt-6 gap-2">
-                                <div>
-                                    <h4 class="text-[#F97316] text-lg font-bold leading-tight">{{ $imovel->price }}</h4>
-                                    @if($imovel->price_period)
-                                        <span class="text-xs text-gray-500 font-normal">{{ $imovel->price_period }}</span>
-                                    @endif
-                                </div>
-                                <a href="{{ route('properties.show', $imovel) }}" class="bg-[#F97316] text-center text-white text-[12px] px-6 py-3 rounded-md
-                                          uppercase tracking-wider font-semibold hover:bg-[#e65100] transition w-[160px]">
-                                    Ver Detalhes
-                                </a>
-                            </div>
-                        </div>
-                    </article>
-                   @endif
-                    
-                @empty
-                    <div class="col-span-3 text-center py-16 text-gray-400">
-                        <p>Nenhum imóvel em destaque de momento.</p>
-                    </div>
-                @endforelse
+       <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
 
-            </div>
+    @php $count = 0 @endphp
+
+    @forelse($featured as $imovel)
+
+        @php
+            $count++;
+            $badge = $imovel->typology_display ?? $imovel->property_type_label ?? '';
+        @endphp
+
+        @if ($count != 3)
+
+            <article
+                onclick="window.location.href='{{ route('properties.show', $imovel) }}'"
+                class="bg-white cursor-pointer rounded-sm overflow-hidden border border-gray-100 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col group">
+
+                {{-- Imagem --}}
+                <div class="relative overflow-hidden h-[240px] shrink-0">
+
+                    @if($imovel->image && file_exists(public_path('assets/' . $imovel->image)))
+
+                        <img
+                            src="{{ asset('assets/' . $imovel->image) }}"
+                            alt="{{ $imovel->title }}"
+                            class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+
+                    @elseif($imovel->image && str_starts_with($imovel->image, 'properties/'))
+
+                        <img
+                            src="{{ Storage::url($imovel->image) }}"
+                            alt="{{ $imovel->title }}"
+                            class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+
+                    @else
+
+                        <img
+                            src="{{ asset('assets/1.jpeg') }}"
+                            alt="{{ $imovel->title }}"
+                            class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+
+                    @endif
+
+
+                    {{-- Badge negócio --}}
+                    <span
+                        class="absolute top-3 left-3 text-[11px] font-bold px-3 py-1.5 rounded-sm uppercase tracking-wide shadow"
+                        style="background: {{ $imovel->business_badge['bg'] }};
+                               color: {{ $imovel->business_badge['color'] }}">
+
+                        {{ $imovel->business_badge['label'] }}
+
+                    </span>
+
+
+                    {{-- Badge tipologia --}}
+                    <span
+                        class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-gray-800 text-xs font-bold px-3 py-1.5 rounded-sm shadow">
+
+                        {{ $badge }}
+
+                    </span>
+
+
+                    {{-- País + Cidade --}}
+                    <div
+                        class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/65 to-transparent px-4 py-3">
+
+                        <p class="text-white/90 text-xs flex items-center gap-1">
+
+                            <span
+                                class="material-symbols-outlined text-[14px]"
+                                translate="no">
+                                location_on
+                            </span>
+
+                            {{ $imovel->city ?? $imovel->location }}
+                            @if($imovel->country)
+                                , {{ $imovel->country }}
+                            @endif
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                {{-- Conteúdo --}}
+                <div class="p-5 flex flex-col flex-1">
+
+                    {{-- Título --}}
+                    <h2
+                        class="text-base font-bold text-gray-900 leading-snug group-hover:text-[#F97316] transition line-clamp-2">
+
+                        {{ $imovel->title }}
+
+                    </h2>
+
+
+                    {{-- Tipo de imóvel --}}
+                    <p class="text-gray-400 text-xs mt-1">
+
+                        {{ $imovel->property_type_label ?? $imovel->property_type }}
+
+                    </p>
+
+
+                    {{-- Atributos --}}
+                    <div
+                        class="mt-4 grid grid-cols-2 gap-x-4 gap-y-2 text-xs text-gray-500 border-t border-b border-gray-100 py-4">
+
+                        {{-- Quartos --}}
+                        @if(
+                            $imovel->bedrooms > 0 &&
+                            !in_array(
+                                strtolower((string) $imovel->property_type),
+                                [
+                                    'terreno',
+                                    'terrenos',
+                                    'loja',
+                                    'lojas',
+                                    'escritório',
+                                    'escritorio',
+                                    'armazem',
+                                    'armazens',
+                                    'espaco-comercial',
+                                    'empreendimento'
+                                ]
+                            )
+                        )
+
+                            <div class="flex items-center gap-1.5">
+
+                                <span
+                                    class="material-symbols-outlined text-[17px] text-[#F97316]"
+                                    translate="no">
+                                    bed
+                                </span>
+
+                                <span>
+                                    {{ $imovel->bedrooms }}
+                                    Quarto{{ $imovel->bedrooms > 1 ? 's' : '' }}
+                                </span>
+
+                            </div>
+
+                        @endif
+
+
+                        {{-- WC --}}
+                        @if($imovel->bathrooms > 0)
+
+                            <div class="flex items-center gap-1.5">
+
+                                <span
+                                    class="material-symbols-outlined text-[17px] text-[#F97316]"
+                                    translate="no">
+                                    shower
+                                </span>
+
+                                <span>
+                                    {{ $imovel->bathrooms }} WC
+                                </span>
+
+                            </div>
+
+                        @endif
+
+
+                        {{-- Garagem --}}
+                        @if($imovel->garages > 0)
+
+                            <div class="flex items-center gap-1.5">
+
+                                <span
+                                    class="material-symbols-outlined text-[17px] text-[#F97316]"
+                                    translate="no">
+                                    directions_car
+                                </span>
+
+                                <span>
+                                    {{ $imovel->garages }}
+                                    Garagem{{ $imovel->garages > 1 ? 's' : '' }}
+                                </span>
+
+                            </div>
+
+                        @endif
+
+
+                        {{-- Área --}}
+                        @if($imovel->area)
+
+                            <div class="flex items-center gap-1.5">
+
+                                <span
+                                    class="material-symbols-outlined text-[17px] text-[#F97316]"
+                                    translate="no">
+                                    square_foot
+                                </span>
+
+                                <span>
+                                    {{ $imovel->area }}
+                                </span>
+
+                            </div>
+
+                        @endif
+
+                    </div>
+
+
+                    {{-- Preço + Botão --}}
+                    <div class="flex items-end justify-between mt-4 gap-2">
+
+                        {{-- Preço --}}
+                        <div>
+
+                            <p
+                                class="text-[#F97316] text-lg font-bold leading-tight">
+
+                                {{ $imovel->price }}
+
+                            </p>
+
+                            @if($imovel->price_period)
+
+                                <p class="text-gray-400 text-xs">
+
+                                    {{ $imovel->price_period }}
+
+                                </p>
+
+                            @endif
+
+                        </div>
+
+
+                        {{-- Botão --}}
+                        <a
+                            href="{{ route('properties.show', $imovel) }}"
+                            onclick="event.stopPropagation()"
+                            class="bg-[#F97316] text-white text-xs font-bold px-5 py-2.5 rounded-sm uppercase tracking-wider hover:bg-[#F97316]/90 transition whitespace-nowrap">
+
+                            Ver Detalhes
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+        @endif
+
+    @empty
+
+        <div class="col-span-3 text-center py-24">
+
+            <span
+                class="material-symbols-outlined text-7xl text-gray-200 mb-4 block"
+                translate="no">
+                search_off
+            </span>
+
+            <p class="text-xl font-semibold text-gray-400">
+                Nenhum imóvel em destaque.
+            </p>
+
+        </div>
+
+    @endforelse
+
+</div>
         </div>
     </section>
 
@@ -428,7 +644,7 @@
                 </h2>
             </div>
             <a href="{{ url('/imoveis') }}"
-                class="bg-[#F97316] text-center hover:bg-[#F97316]/80 px-6 text-sm py-3 w-[160px] rounded-md transition duration-300 text-white">
+                class="bg-[#F97316] text-center hover:bg-[#F97316]/80 px-6 text-sm py-3 w-[160px] rounded-sm transition duration-300 text-white">
                 {{ $sections['international']['button_text'] ?? 'Ver Mais' }}
             </a>
         </div>
@@ -447,7 +663,7 @@
                     @foreach($sliderProps as $slide)
                         <div class="swiper-slide">
                             <a href="{{ route('properties.show', $slide) }}"
-                                class="group relative h-[560px] rounded-[30px] overflow-hidden block shadow-lg">
+                                class="group relative h-[560px] rounded-sm overflow-hidden block shadow-lg">
                                 @if($slide->image && file_exists(public_path('assets/' . $slide->image)))
                                     <img src="{{ asset('assets/' . $slide->image) }}" alt="{{ $slide->title }}"
                                         class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
@@ -462,7 +678,7 @@
                                 </div>
                                 <div class="absolute bottom-0 left-0 right-0 p-8 z-10">
                                     <span
-                                        class="text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider mb-3 inline-block shadow-sm"
+                                        class="text-xs font-bold px-3 py-1.5 rounded-sm uppercase tracking-wider mb-3 inline-block shadow-sm"
                                         style="background-color: {{ $slide->business_badge['bg'] }}; color: {{ $slide->business_badge['color'] }}">
                                         {{ $slide->business_badge['label'] }}
                                     </span>
@@ -515,12 +731,12 @@
 
     <section class="bg-[#F7F7F7] pt-20 pb-0 mb-10">
         <div class="w-full max-w-7xl mx-auto px-4 lg:px-6">
-            <div class="relative rounded-[32px] py-20 px-8 lg:px-20 text-center overflow-hidden shadow-sm transition-all"
+            <div class="relative rounded-sm py-20 px-8 lg:px-20 text-center overflow-hidden shadow-sm transition-all"
                  style="background-color: {{ $ctaBgColor }}; @if($ctaImageUrl) background-image: url('{{ $ctaImageUrl }}'); background-size: cover; background-position: center; @endif">
 
                 @if($ctaImageUrl)
                     {{-- Overlay escurecido para legibilidade com imagem de fundo --}}
-                    <div class="absolute inset-0 bg-black/45 backdrop-blur-[1px] rounded-[32px]"></div>
+                    <div class="absolute inset-0 bg-black/45 backdrop-blur-[1px] rounded-sm"></div>
                 @endif
 
                 <div class="relative z-10">
@@ -537,7 +753,7 @@
                         <a href="{{ $ctaBtnUrl }}"
                            target="{{ $ctaBtnTarget }}"
                            @if($ctaBtnTarget === '_blank') rel="noopener noreferrer" @endif
-                           class="inline-flex items-center px-8 py-4 bg-white text-[#F97316] rounded-xl font-bold uppercase tracking-wider hover:scale-105 shadow-md transition">
+                           class="inline-flex items-center px-8 py-4 bg-white text-[#F97316] rounded-sm font-bold uppercase tracking-wider hover:scale-105 shadow-md transition">
                             {{ $ctaBtnText }}
                         </a>
                     </div>

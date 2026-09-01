@@ -33,8 +33,15 @@ class AdminDashboardController extends Controller
         $query = Property::query();
 
         if ($request->filled('search')) {
-            $query->where('title', 'like', '%' . $request->search . '%')
-                  ->orWhere('location', 'like', '%' . $request->search . '%');
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('location', 'like', "%{$search}%")
+                  ->orWhere('city', 'like', "%{$search}%")
+                  ->orWhere('country', 'like', "%{$search}%")
+                  ->orWhere('owner_name', 'like', "%{$search}%")
+                  ->orWhere('owner_phone', 'like', "%{$search}%");
+            });
         }
 
         // Unified filter — mirrors the menu and public page selects
@@ -42,7 +49,7 @@ class AdminDashboardController extends Controller
             $fc = $request->input('filter_category');
             if ($fc === 'venda') {
                 $query->where('type', 'venda');
-            } elseif (in_array($fc, ['arrendamento-longa-duracao', 'arrendamento-curta-duracao'])) {
+            } elseif (in_array($fc, ['arrendamento-longa-duracao', 'arrendamento-curta-duracao', 'transpasse'])) {
                 $query->where('category', $fc);
             }
         }
@@ -50,6 +57,22 @@ class AdminDashboardController extends Controller
         if ($request->filled('property_type')) {
             $pt = strtolower($request->input('property_type'));
             $query->where('property_type', 'like', '%' . $pt . '%');
+        }
+
+        if ($request->filled('land_type')) {
+            $lt = strtolower($request->input('land_type'));
+            $query->where(function ($q) use ($lt) {
+                $q->where('land_type', $lt)
+                  ->orWhere('land_type', 'like', "%{$lt}%");
+            });
+        }
+
+        if ($request->filled('country')) {
+            $query->where('country', $request->input('country'));
+        }
+
+        if ($request->filled('city')) {
+            $query->where('city', 'like', '%' . $request->input('city') . '%');
         }
 
         if ($request->filled('status')) {
@@ -67,6 +90,12 @@ class AdminDashboardController extends Controller
 
     public function propertiesStore(Request $request)
     {
+        $request->merge([
+            'bedrooms'  => $request->input('bedrooms') ?: 0,
+            'bathrooms' => $request->input('bathrooms') ?: 0,
+            'garages'   => $request->input('garages') ?: 0,
+        ]);
+
         $request->validate([
             'title'             => 'required|string|max:255',
             'description'       => 'nullable|string',
@@ -112,7 +141,7 @@ class AdminDashboardController extends Controller
         $data['type']        = $type;
         $data['category']    = $category;
         $data['is_featured'] = $request->boolean('is_featured');
-        $data['is_active']   = $request->boolean('is_active');
+        $data['is_active']   = $request->has('is_active') ? $request->boolean('is_active') : true;
 
         // Process price amount + currency (format with dots from 1.000)
         $currency = $request->input('price_currency', 'Kz');
