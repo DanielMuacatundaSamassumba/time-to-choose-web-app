@@ -322,28 +322,28 @@
                                 <div class="grid grid-cols-2 gap-3 text-xs text-gray-500">
                                     @if($item->bedrooms > 0)
                                         <div class="flex items-center gap-1.5">
-                                            <span class="material-symbols-outlined text-zinc-500 text-[18px]"
+                                            <span class="material-symbols-outlined text-[#f97316] text-[18px]"
                                                 translate="no">domain</span>
                                             <span>{{ $item->bedrooms }} Quartos</span>
                                         </div>
                                     @endif
                                     @if($item->bathrooms > 0)
                                         <div class="flex items-center gap-1.5">
-                                            <span class="material-symbols-outlined text-zinc-500 text-[18px]"
+                                            <span class="material-symbols-outlined text-[#f97316] text-[18px]"
                                                 translate="no">shower</span>
                                             <span>{{ $item->bathrooms }} WC</span>
                                         </div>
                                     @endif
                                     @if($item->garages > 0)
                                         <div class="flex items-center gap-1.5">
-                                            <span class="material-symbols-outlined text-zinc-500 text-[18px] "
+                                            <span class="material-symbols-outlined text-[#f97316] text-[18px] "
                                                 translate="no">directions_car</span>
                                             <span>{{ $item->garages }} Garagem</span>
                                         </div>
                                     @endif
                                     @if($item->area)
                                         <div class="flex items-center gap-1.5">
-                                            <span class="material-symbols-outlined text-zinc-500 text-[18px]"
+                                            <span class="material-symbols-outlined text-[#f97316] text-[18px]"
                                                 translate="no">square_foot</span>
                                             <span>{{ $item->area }}</span>
                                         </div>
