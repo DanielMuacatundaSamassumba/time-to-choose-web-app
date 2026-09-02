@@ -55,7 +55,7 @@
             </div>
 
             @if($errors->any())
-            <div class="mb-6 bg-red-500/10 border border-red-500/30 text-red-400 px-4 py-3 rounded-xl flex items-center gap-3">
+            <div class="mb-6 bg-red-500/10 border border-red-500/30 text-red-400 px-4 py-3 rounded-sm flex items-center gap-3">
                 <i class="fa-solid fa-triangle-exclamation"></i>
                 {{ $errors->first('email') }}
             </div>
@@ -89,7 +89,7 @@
                 </div>
 
                 <button type="submit"
-                        class="w-full gradient-brand text-white font-bold py-4 rounded-xl text-sm hover:opacity-90 transition flex items-center justify-center gap-2">
+                        class="w-full gradient-brand text-white font-bold py-4 rounded-sm text-sm hover:opacity-90 transition flex items-center justify-center gap-2">
                     <i class="fa-solid fa-right-to-bracket"></i>
                     Entrar no Painel
                 </button>

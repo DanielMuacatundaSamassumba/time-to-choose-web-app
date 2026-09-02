@@ -7,11 +7,11 @@
       $fields  — array of field definitions
         Each: ['key' => '...', 'label' => '...', 'type' => 'text|textarea|image', 'hint' => '...']
 --}}
-<div class="section-card bg-white border border-admin-border rounded-2xl mb-5 overflow-hidden">
+<div class="section-card bg-white border border-admin-border rounded-sm mb-5 overflow-hidden">
 
     {{-- Card Header --}}
     <div class="flex items-center gap-3 px-6 py-4 border-b border-admin-border bg-gray-50/50">
-        <div class="w-8 h-8 rounded-lg bg-brand/10 flex items-center justify-center flex-shrink-0">
+        <div class="w-8 h-8 rounded-sm bg-brand/10 flex items-center justify-center flex-shrink-0">
             <i class="fa-solid {{ $icon }} text-brand text-sm"></i>
         </div>
         <h3 class="font-bold text-admin-text text-sm">{{ $title }}</h3>
@@ -58,7 +58,7 @@
                     }
                     $previewId = 'preview_' . $section . '_' . $field['key'];
                 @endphp
-                <div class="border border-dashed border-gray-200 rounded-2xl overflow-hidden bg-gray-50/50 hover:border-brand/50 transition-colors duration-200"
+                <div class="border border-dashed border-gray-200 rounded-sm overflow-hidden bg-gray-50/50 hover:border-brand/50 transition-colors duration-200"
                      x-data="{ dragging: false }"
                      @dragover.prevent="dragging = true"
                      @dragleave="dragging = false"
@@ -78,7 +78,7 @@
                         </div>
                         @else
                         <div id="{{ $previewId }}" class="w-full h-44 flex flex-col items-center justify-center gap-3 text-admin-muted">
-                            <div class="w-14 h-14 rounded-2xl bg-gray-100 flex items-center justify-center">
+                            <div class="w-14 h-14 rounded-sm bg-gray-100 flex items-center justify-center">
                                 <i class="fa-solid fa-image text-2xl text-gray-300"></i>
                             </div>
                             <p class="text-xs">Sem imagem definida</p>
@@ -90,7 +90,7 @@
                     <div class="p-4 border-t border-gray-100">
                         <label for="{{ $imgInputName }}_input"
                                class="flex items-center gap-3 cursor-pointer group/upload">
-                            <div class="w-9 h-9 rounded-xl bg-brand/10 group-hover/upload:bg-brand flex items-center justify-center flex-shrink-0 transition-colors">
+                            <div class="w-9 h-9 rounded-sm bg-brand/10 group-hover/upload:bg-brand flex items-center justify-center flex-shrink-0 transition-colors">
                                 <i class="fa-solid fa-upload text-brand group-hover/upload:text-white text-sm transition-colors"></i>
                             </div>
                             <div class="flex-1 min-w-0">
@@ -120,13 +120,13 @@
                 <textarea
                     id="field_{{ $section }}_{{ $field['key'] }}"
                     name="{{ $inputName }}"
-                    class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-admin-text focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/10 transition"
+                    class="w-full border border-gray-200 rounded-sm px-4 py-3 text-sm text-admin-text focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/10 transition"
                     rows="3">{{ $currentVal }}</textarea>
             @elseif($fieldType === 'select')
                 <select
                     id="field_{{ $section }}_{{ $field['key'] }}"
                     name="{{ $inputName }}"
-                    class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-admin-text focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/10 transition">
+                    class="w-full border border-gray-200 rounded-sm px-4 py-3 text-sm text-admin-text focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/10 transition">
                     @foreach($field['options'] ?? [] as $optVal => $optLabel)
                         <option value="{{ $optVal }}" {{ (string)$currentVal === (string)$optVal ? 'selected' : '' }}>{{ $optLabel }}</option>
                     @endforeach
@@ -138,12 +138,12 @@
                         id="field_{{ $section }}_{{ $field['key'] }}"
                         name="{{ $inputName }}"
                         value="{{ $currentVal ?: '#F97316' }}"
-                        class="w-12 h-11 border border-gray-200 rounded-xl p-1 cursor-pointer bg-white">
+                        class="w-12 h-11 border border-gray-200 rounded-sm p-1 cursor-pointer bg-white">
                     <input
                         type="text"
                         value="{{ $currentVal ?: '#F97316' }}"
                         oninput="document.getElementById('field_{{ $section }}_{{ $field['key'] }}').value = this.value"
-                        class="flex-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-mono text-admin-text focus:outline-none focus:border-brand">
+                        class="flex-1 border border-gray-200 rounded-sm px-4 py-2.5 text-sm font-mono text-admin-text focus:outline-none focus:border-brand">
                 </div>
             @else
                 <input
@@ -151,7 +151,7 @@
                     id="field_{{ $section }}_{{ $field['key'] }}"
                     name="{{ $inputName }}"
                     value="{{ $currentVal }}"
-                    class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-admin-text focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/10 transition">
+                    class="w-full border border-gray-200 rounded-sm px-4 py-3 text-sm text-admin-text focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/10 transition">
             @endif
 
             @if($hint && !$isImage)

@@ -1,4 +1,4 @@
-@php
+﻿@php
     $isEdit = isset($property) && $property !== null;
     $inputClass = 'w-full border border-gray-200 rounded-sm   outline-none px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition';
     $labelClass = 'block text-sm font-semibold text-admin-text mb-1.5';
@@ -6,7 +6,7 @@
 @endphp
 
 @if($errors->any())
-<div class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl flex items-start gap-3 mb-4">
+<div class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-sm flex items-start gap-3 mb-4">
     <i class="fa-solid fa-triangle-exclamation mt-0.5"></i>
     <ul class="text-sm space-y-1">
         @foreach($errors->all() as $error)
@@ -17,7 +17,7 @@
 @endif
 
 <!-- Basic Info -->
-<div class="bg-white rounded-2xl border border-admin-border p-6">
+<div class="bg-white rounded-sm border border-admin-border p-6">
     <h3 class="font-bold text-admin-text mb-5 flex items-center gap-2">
         <i class="fa-solid fa-info-circle text-brand"></i>
         Informações Básicas
@@ -42,7 +42,7 @@
 </div>
 
 <!-- Pricing & Classification -->
-<div class="bg-white rounded-2xl border border-admin-border p-6">
+<div class="bg-white rounded-sm border border-admin-border p-6">
     <h3 class="font-bold text-admin-text mb-5 flex items-center gap-2">
         <i class="fa-solid fa-tags text-brand"></i>
         Classificação e Preço
@@ -247,7 +247,7 @@
          }"
          x-show="pt.includes('terren')"
          x-cloak
-         class="mt-5 bg-orange-50/70 border border-orange-200 rounded-2xl p-5 transition">
+         class="mt-5 bg-orange-50/70 border border-orange-200 rounded-sm p-5 transition">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
             <div class="md:col-span-2">
                 <label class="block text-sm font-bold text-gray-900 mb-1 flex items-center gap-2">
@@ -272,7 +272,7 @@
 </div>
 
 <!-- Details -->
-<div class="bg-white rounded-2xl border border-admin-border p-6">
+<div class="bg-white rounded-sm border border-admin-border p-6">
     <h3 class="font-bold text-admin-text mb-5 flex items-center gap-2">
         <i class="fa-solid fa-list-check text-brand"></i>
         Detalhes
@@ -320,7 +320,7 @@
     </div>
     <!-- Toggles -->
     <div class="grid grid-cols-2 gap-4 mt-5">
-        <label class="flex items-center gap-3 p-4 border border-gray-200 rounded-xl cursor-pointer hover:border-brand transition">
+        <label class="flex items-center gap-3 p-4 border border-gray-200 rounded-sm cursor-pointer hover:border-brand transition">
             <input type="checkbox" name="is_featured" value="1" class="accent-brand w-4 h-4"
                    {{ old('is_featured', $property?->is_featured ?? false) ? 'checked' : '' }}>
             <div>
@@ -329,7 +329,7 @@
             </div>
             <i class="fa-solid fa-star text-yellow-400 ml-auto"></i>
         </label>
-        <label class="flex items-center gap-3 p-4 border border-gray-200 rounded-xl cursor-pointer hover:border-brand transition">
+        <label class="flex items-center gap-3 p-4 border border-gray-200 rounded-sm cursor-pointer hover:border-brand transition">
             <input type="checkbox" name="is_active" value="1" class="accent-brand w-4 h-4"
                    {{ old('is_active', $property ? (bool)$property->is_active : true) ? 'checked' : '' }}>
             <div>
@@ -342,7 +342,7 @@
 </div>
 
 <!-- Media & Advanced Location -->
-<div class="bg-white rounded-2xl border border-admin-border p-6">
+<div class="bg-white rounded-sm border border-admin-border p-6">
     <h3 class="font-bold text-admin-text mb-5 flex items-center gap-2">
         <i class="fa-solid fa-map-location-dot text-brand"></i>
         Media e Localização Avançada
@@ -376,7 +376,7 @@
 </div>
 
 <!-- Dados do Proprietário (Confidencial / Uso Interno) -->
-<div class="bg-white rounded-2xl border border-admin-border p-6">
+<div class="bg-white rounded-sm border border-admin-border p-6">
     <div class="flex items-center justify-between mb-2">
         <h3 class="font-bold text-admin-text flex items-center gap-2">
             <i class="fa-solid fa-user-shield text-brand"></i>
@@ -427,7 +427,7 @@
 </div>
 
 <!-- Images -->
-<div class="bg-white rounded-2xl border border-admin-border p-6">
+<div class="bg-white rounded-sm border border-admin-border p-6">
     <h3 class="font-bold text-admin-text mb-5 flex items-center gap-2">
         <i class="fa-solid fa-images text-brand"></i>
         Imagens
@@ -439,14 +439,14 @@
         <div class="mb-3">
             <p class="text-xs text-admin-muted mb-2">Imagem actual:</p>
             @if(file_exists(public_path('assets/' . $property->image)))
-                <img src="{{ asset('assets/' . $property->image) }}" class="w-32 h-24 object-cover rounded-xl border">
+                <img src="{{ asset('assets/' . $property->image) }}" class="w-32 h-24 object-cover rounded-sm border">
             @elseif(str_starts_with($property->image, 'properties/'))
-                <img src="{{ Storage::url($property->image) }}" class="w-32 h-24 object-cover rounded-xl border">
+                <img src="{{ Storage::url($property->image) }}" class="w-32 h-24 object-cover rounded-sm border">
             @endif
         </div>
         @endif
         <div x-data="{ preview: null, sizeError: '' }"
-             class="border-2 border-dashed border-gray-200 rounded-xl p-6 text-center hover:border-brand transition cursor-pointer"
+             class="border-2 border-dashed border-gray-200 rounded-sm p-6 text-center hover:border-brand transition cursor-pointer"
              @click="$refs.imgInput.click()">
             <template x-if="!preview && !sizeError">
                 <div>
@@ -462,7 +462,7 @@
                 </div>
             </template>
             <template x-if="preview && !sizeError">
-                <img :src="preview" class="w-full max-h-48 object-cover rounded-xl">
+                <img :src="preview" class="w-full max-h-48 object-cover rounded-sm">
             </template>
             <input type="file" name="image" accept="image/*" x-ref="imgInput" class="hidden"
                    @change="
@@ -485,7 +485,7 @@
         <p class="text-xs text-admin-muted mb-2">Imagens actuais — marca o ícone para remover ao guardar:</p>
         <div class="flex flex-wrap gap-3 mb-4">
             @foreach($property->gallery as $img)
-            <label class="relative w-20 h-16 rounded-lg overflow-hidden bg-gray-100 block cursor-pointer group">
+            <label class="relative w-20 h-16 rounded-sm overflow-hidden bg-gray-100 block cursor-pointer group">
                 @if(str_starts_with($img, 'properties/'))
                     <img src="{{ Storage::url($img) }}" class="w-full h-full object-cover peer-checked:opacity-40">
                 @else
@@ -504,7 +504,7 @@
         @endif
         <div x-data="{ galleryError: '' }">
             <input type="file" name="gallery[]" accept="image/*" multiple
-                   class="block w-full text-sm text-admin-muted file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-brand/10 file:text-brand file:text-sm file:font-medium hover:file:bg-brand/20 transition"
+                   class="block w-full text-sm text-admin-muted file:mr-4 file:py-2 file:px-4 file:rounded-sm file:border-0 file:bg-brand/10 file:text-brand file:text-sm file:font-medium hover:file:bg-brand/20 transition"
                    @change="
                        galleryError = '';
                        let totalMB = 0;

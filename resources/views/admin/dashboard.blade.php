@@ -3,9 +3,9 @@
     <!-- Stats Grid -->
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <!-- Total Imóveis -->
-        <div class="bg-white rounded-2xl p-6 border border-admin-border hover:shadow-md transition">
+        <div class="bg-white rounded-sm p-6 border border-admin-border hover:shadow-md transition">
             <div class="flex items-start justify-between mb-4">
-                <div class="w-11 h-11 rounded-xl bg-brand/10 flex items-center justify-center">
+                <div class="w-11 h-11 rounded-sm bg-brand/10 flex items-center justify-center">
                     <i class="fa-solid fa-building text-brand text-lg"></i>
                 </div>
                 <span class="text-xs text-green-600 bg-green-50 px-2 py-1 rounded-full font-medium">Total</span>
@@ -15,9 +15,9 @@
         </div>
 
         <!-- Ativos -->
-        <div class="bg-white rounded-2xl p-6 border border-admin-border hover:shadow-md transition">
+        <div class="bg-white rounded-sm p-6 border border-admin-border hover:shadow-md transition">
             <div class="flex items-start justify-between mb-4">
-                <div class="w-11 h-11 rounded-xl bg-green-50 flex items-center justify-center">
+                <div class="w-11 h-11 rounded-sm bg-green-50 flex items-center justify-center">
                     <i class="fa-solid fa-circle-check text-green-500 text-lg"></i>
                 </div>
                 <span class="text-xs text-green-600 bg-green-50 px-2 py-1 rounded-full font-medium">Ativos</span>
@@ -27,9 +27,9 @@
         </div>
 
         <!-- Em Destaque -->
-        <div class="bg-white rounded-2xl p-6 border border-admin-border hover:shadow-md transition">
+        <div class="bg-white rounded-sm p-6 border border-admin-border hover:shadow-md transition">
             <div class="flex items-start justify-between mb-4">
-                <div class="w-11 h-11 rounded-xl bg-yellow-50 flex items-center justify-center">
+                <div class="w-11 h-11 rounded-sm bg-yellow-50 flex items-center justify-center">
                     <i class="fa-solid fa-star text-yellow-500 text-lg"></i>
                 </div>
                 <span class="text-xs text-yellow-600 bg-yellow-50 px-2 py-1 rounded-full font-medium">Destaque</span>
@@ -39,9 +39,9 @@
         </div>
 
         <!-- Novas Mensagens -->
-        <div class="bg-white rounded-2xl p-6 border border-admin-border hover:shadow-md transition">
+        <div class="bg-white rounded-sm p-6 border border-admin-border hover:shadow-md transition">
             <div class="flex items-start justify-between mb-4">
-                <div class="w-11 h-11 rounded-xl bg-red-50 flex items-center justify-center">
+                <div class="w-11 h-11 rounded-sm bg-red-50 flex items-center justify-center">
                     <i class="fa-solid fa-envelope text-red-400 text-lg"></i>
                 </div>
                 <span class="text-xs text-red-600 bg-red-50 px-2 py-1 rounded-full font-medium">Não lidas</span>
@@ -55,7 +55,7 @@
     <div class="grid lg:grid-cols-3 gap-6">
 
         <!-- Recent Properties -->
-        <div class="lg:col-span-2 bg-white rounded-2xl border border-admin-border">
+        <div class="lg:col-span-2 bg-white rounded-sm border border-admin-border">
             <div class="flex items-center justify-between px-6 py-5 border-b border-admin-border">
                 <h2 class="font-bold text-admin-text">Imóveis Recentes</h2>
                 <a href="{{ route('admin.properties.index') }}" class="text-brand text-sm font-medium hover:underline">
@@ -66,7 +66,7 @@
                 @forelse($recentProperties as $property)
                 <div class="flex items-center gap-4 px-6 py-4 hover:bg-gray-50 transition">
                     <!-- Thumbnail -->
-                    <div class="w-14 h-14 rounded-xl overflow-hidden flex-shrink-0 bg-gray-100">
+                    <div class="w-14 h-14 rounded-sm overflow-hidden flex-shrink-0 bg-gray-100">
                         @if($property->image && file_exists(public_path('assets/' . $property->image)))
                             <img src="{{ asset('assets/' . $property->image) }}" alt="{{ $property->title }}" class="w-full h-full object-cover">
                         @elseif($property->image && Str::startsWith($property->image, 'properties/'))
@@ -91,7 +91,7 @@
                     </div>
                     <div class="flex gap-1">
                         <a href="{{ route('admin.properties.edit', $property) }}"
-                           class="p-2 text-gray-400 hover:text-brand hover:bg-brand/10 rounded-lg transition">
+                           class="p-2 text-gray-400 hover:text-brand hover:bg-brand/10 rounded-sm transition">
                             <i class="fa-solid fa-pen text-xs"></i>
                         </a>
                     </div>
@@ -109,7 +109,7 @@
         </div>
 
         <!-- Recent Messages -->
-        <div class="bg-white rounded-2xl border border-admin-border">
+        <div class="bg-white rounded-sm border border-admin-border">
             <div class="flex items-center justify-between px-6 py-5 border-b border-admin-border">
                 <h2 class="font-bold text-admin-text">Mensagens Recentes</h2>
                 <a href="{{ route('admin.messages.index') }}" class="text-brand text-sm font-medium hover:underline">
@@ -151,8 +151,8 @@
     <!-- Quick Actions -->
     <div class="mt-6 grid grid-cols-2 lg:grid-cols-4 gap-4">
         <a href="{{ route('admin.properties.create') }}"
-           class="group bg-white border border-admin-border hover:border-brand hover:bg-brand/5 rounded-2xl p-5 flex items-center gap-4 transition">
-            <div class="w-10 h-10 rounded-xl bg-brand group-hover:bg-brand text-white flex items-center justify-center transition">
+           class="group bg-white border border-admin-border hover:border-brand hover:bg-brand/5 rounded-sm p-5 flex items-center gap-4 transition">
+            <div class="w-10 h-10 rounded-sm bg-brand group-hover:bg-brand text-white flex items-center justify-center transition">
                 <i class="fa-solid fa-plus text-sm"></i>
             </div>
             <div>
@@ -161,8 +161,8 @@
             </div>
         </a>
         <a href="{{ route('admin.messages.index') }}"
-           class="group bg-white border border-admin-border hover:border-brand hover:bg-brand/5 rounded-2xl p-5 flex items-center gap-4 transition">
-            <div class="w-10 h-10 rounded-xl bg-gray-100 group-hover:bg-brand text-gray-500 group-hover:text-white flex items-center justify-center transition">
+           class="group bg-white border border-admin-border hover:border-brand hover:bg-brand/5 rounded-sm p-5 flex items-center gap-4 transition">
+            <div class="w-10 h-10 rounded-sm bg-gray-100 group-hover:bg-brand text-gray-500 group-hover:text-white flex items-center justify-center transition">
                 <i class="fa-solid fa-inbox text-sm"></i>
             </div>
             <div>
@@ -171,8 +171,8 @@
             </div>
         </a>
         <a href="{{ url('/imoveis') }}" target="_blank"
-           class="group bg-white border border-admin-border hover:border-brand hover:bg-brand/5 rounded-2xl p-5 flex items-center gap-4 transition">
-            <div class="w-10 h-10 rounded-xl bg-gray-100 group-hover:bg-brand text-gray-500 group-hover:text-white flex items-center justify-center transition">
+           class="group bg-white border border-admin-border hover:border-brand hover:bg-brand/5 rounded-sm p-5 flex items-center gap-4 transition">
+            <div class="w-10 h-10 rounded-sm bg-gray-100 group-hover:bg-brand text-gray-500 group-hover:text-white flex items-center justify-center transition">
                 <i class="fa-solid fa-eye text-sm"></i>
             </div>
             <div>
@@ -181,8 +181,8 @@
             </div>
         </a>
         <a href="{{ url('/') }}" target="_blank"
-           class="group bg-white border border-admin-border hover:border-brand hover:bg-brand/5 rounded-2xl p-5 flex items-center gap-4 transition">
-            <div class="w-10 h-10 rounded-xl bg-gray-100 group-hover:bg-brand text-gray-500 group-hover:text-white flex items-center justify-center transition">
+           class="group bg-white border border-admin-border hover:border-brand hover:bg-brand/5 rounded-sm p-5 flex items-center gap-4 transition">
+            <div class="w-10 h-10 rounded-sm bg-gray-100 group-hover:bg-brand text-gray-500 group-hover:text-white flex items-center justify-center transition">
                 <i class="fa-solid fa-house text-sm"></i>
             </div>
             <div>

@@ -1,6 +1,6 @@
 <x-admin.layout title="Mensagens" breadcrumb="Caixa de entrada de clientes">
 
-    <div class="bg-white rounded-2xl border border-admin-border overflow-hidden">
+    <div class="bg-white rounded-sm border border-admin-border overflow-hidden">
         <div class="flex items-center justify-between px-6 py-5 border-b border-admin-border">
             <div>
                 <h2 class="font-bold text-admin-text">Caixa de Entrada</h2>
@@ -43,7 +43,7 @@
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit"
-                                        class="opacity-0 group-hover:opacity-100 p-1.5 text-gray-300 hover:text-red-400 hover:bg-red-50 rounded-lg transition">
+                                        class="opacity-0 group-hover:opacity-100 p-1.5 text-gray-300 hover:text-red-400 hover:bg-red-50 rounded-sm transition">
                                     <i class="fa-solid fa-trash text-xs"></i>
                                 </button>
                             </form>
@@ -53,7 +53,7 @@
                     <p class="text-sm text-admin-muted mt-2 leading-relaxed">{{ $msg->message }}</p>
 
                     @if($msg->property)
-                    <div class="mt-3 inline-flex items-center gap-2 bg-brand/10 text-brand text-xs font-medium px-3 py-1.5 rounded-lg">
+                    <div class="mt-3 inline-flex items-center gap-2 bg-brand/10 text-brand text-xs font-medium px-3 py-1.5 rounded-sm">
                         <i class="fa-solid fa-building text-[10px]"></i>
                         Imóvel: {{ $msg->property->title }}
                         <a href="{{ route('admin.properties.edit', $msg->property) }}" class="underline hover:no-underline">Editar</a>

@@ -70,7 +70,7 @@
         <p class="text-[10px] font-semibold text-gray-600 uppercase tracking-widest px-4 mb-3">Principal</p>
 
         @php
-            $linkClass = "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium border border-transparent transition-all duration-200 ";
+            $linkClass = "flex items-center gap-3 px-4 py-3 rounded-sm text-sm font-medium border border-transparent transition-all duration-200 ";
             $activeLinkClass = "text-white bg-brand/20 border-brand/30 ";
             $inactiveLinkClass = "text-gray-400 hover:text-white hover:bg-white/10 ";
         @endphp
@@ -156,7 +156,7 @@
 
     <!-- User -->
     <div class="px-3 py-4 border-t border-white/10">
-        <div class="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5">
+        <div class="flex items-center gap-3 px-4 py-3 rounded-sm bg-white/5">
             <div class="w-8 h-8 rounded-full bg-brand flex items-center justify-center text-white text-xs font-bold">
                 {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
             </div>
@@ -196,7 +196,7 @@
             </a>
             @endif
             <a href="{{ route('admin.properties.create') }}"
-               class="bg-brand hover:bg-brand-dark text-white text-sm font-semibold px-4 py-2 rounded-xl flex items-center gap-2 transition">
+               class="bg-brand hover:bg-brand-dark text-white text-sm font-semibold px-4 py-2 rounded-sm flex items-center gap-2 transition">
                 <i class="fa-solid fa-plus"></i>
                 Novo Imóvel
             </a>
@@ -207,7 +207,7 @@
     <main class="flex-1 p-6">
         @if(session('success'))
         <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4000)"
-             class="mb-6 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl flex items-center gap-3">
+             class="mb-6 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-sm flex items-center gap-3">
             <i class="fa-solid fa-circle-check"></i>
             {{ session('success') }}
             <button @click="show = false" class="ml-auto text-green-500 hover:text-green-700">

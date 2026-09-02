@@ -15,8 +15,8 @@
         {{-- Top Stats & Action --}}
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div class="grid grid-cols-2 gap-4">
-                <div class="bg-white rounded-2xl border border-admin-border p-4 flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-orange-50 text-[#F97316] flex items-center justify-center">
+                <div class="bg-white rounded-sm border border-admin-border p-4 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-sm bg-orange-50 text-[#F97316] flex items-center justify-center">
                         <i class="fa-solid fa-earth-africa text-lg"></i>
                     </div>
                     <div>
@@ -24,8 +24,8 @@
                         <p class="text-xl font-bold text-admin-text">{{ $stats['total_countries'] }}</p>
                     </div>
                 </div>
-                <div class="bg-white rounded-2xl border border-admin-border p-4 flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                <div class="bg-white rounded-sm border border-admin-border p-4 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-sm bg-blue-50 text-blue-600 flex items-center justify-center">
                         <i class="fa-solid fa-city text-lg"></i>
                     </div>
                     <div>
@@ -37,7 +37,7 @@
 
             <div class="flex items-center gap-3">
                 <button @click="showCountryModal = true"
-                        class="bg-brand hover:bg-brand-dark text-white font-semibold text-sm px-5 py-3 rounded-xl flex items-center gap-2 shadow-sm transition">
+                        class="bg-brand hover:bg-brand-dark text-white font-semibold text-sm px-5 py-3 rounded-sm flex items-center gap-2 shadow-sm transition">
                     <i class="fa-solid fa-plus"></i>
                     Adicionar País
                 </button>
@@ -46,14 +46,14 @@
 
         {{-- Feedback Messages --}}
         @if(session('success'))
-            <div class="bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-3 rounded-xl flex items-center gap-2">
+            <div class="bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-3 rounded-sm flex items-center gap-2">
                 <i class="fa-solid fa-circle-check text-emerald-500"></i>
                 <span>{{ session('success') }}</span>
             </div>
         @endif
 
         @if(session('error'))
-            <div class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl flex items-center gap-2">
+            <div class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-sm flex items-center gap-2">
                 <i class="fa-solid fa-triangle-exclamation text-red-500"></i>
                 <span>{{ session('error') }}</span>
             </div>
@@ -62,11 +62,11 @@
         {{-- Countries & Cities Grid --}}
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @forelse($countries as $country)
-            <div class="bg-white rounded-2xl border border-admin-border overflow-hidden shadow-sm flex flex-col justify-between">
+            <div class="bg-white rounded-sm border border-admin-border overflow-hidden shadow-sm flex flex-col justify-between">
                 {{-- Header --}}
                 <div class="p-5 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
                     <div class="flex items-center gap-2.5">
-                        <div class="w-8 h-8 rounded-lg bg-orange-100/80 text-[#F97316] font-bold text-xs flex items-center justify-center">
+                        <div class="w-8 h-8 rounded-sm bg-orange-100/80 text-[#F97316] font-bold text-xs flex items-center justify-center">
                             {{ $country->code ?: substr($country->name, 0, 2) }}
                         </div>
                         <div>
@@ -78,7 +78,7 @@
                     <div class="flex items-center gap-1">
                         <button @click="openCityModal('{{ $country->id }}', '{{ $country->name }}')"
                                 title="Adicionar cidade a {{ $country->name }}"
-                                class="p-2 text-[#F97316] hover:bg-orange-50 rounded-lg transition">
+                                class="p-2 text-[#F97316] hover:bg-orange-50 rounded-sm transition">
                             <i class="fa-solid fa-plus text-xs"></i>
                         </button>
                         <form action="{{ route('admin.locations.countries.destroy', $country) }}" method="POST"
@@ -86,7 +86,7 @@
                             @csrf
                             @method('DELETE')
                             <button type="submit" title="Remover País"
-                                    class="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition">
+                                    class="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-sm transition">
                                 <i class="fa-solid fa-trash-can text-xs"></i>
                             </button>
                         </form>
@@ -132,7 +132,7 @@
                 </div>
             </div>
             @empty
-            <div class="col-span-full py-16 text-center bg-white rounded-2xl border border-admin-border text-gray-400">
+            <div class="col-span-full py-16 text-center bg-white rounded-sm border border-admin-border text-gray-400">
                 <i class="fa-solid fa-earth-africa text-4xl mb-3 text-gray-300"></i>
                 <p>Nenhum país cadastrado de momento.</p>
             </div>
@@ -142,7 +142,7 @@
         {{-- MODAL: Adicionar País --}}
         <div x-show="showCountryModal" x-cloak
              class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-            <div @click.away="showCountryModal = false" class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
+            <div @click.away="showCountryModal = false" class="bg-white rounded-sm max-w-md w-full p-6 shadow-2xl space-y-4">
                 <div class="flex items-center justify-between border-b border-gray-100 pb-3">
                     <h3 class="font-bold text-gray-900 text-lg">Adicionar Novo País</h3>
                     <button @click="showCountryModal = false" class="text-gray-400 hover:text-gray-600">
@@ -155,21 +155,21 @@
                     <div>
                         <label class="block text-xs font-semibold text-gray-600 uppercase mb-1.5">Nome do País <span class="text-red-500">*</span></label>
                         <input type="text" name="name" required placeholder="Ex: Namíbia, Emirados Árabes Unidos..."
-                               class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand">
+                               class="w-full border border-gray-200 rounded-sm px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-gray-600 uppercase mb-1.5">Código (Sigla ISO)</label>
                         <input type="text" name="code" placeholder="Ex: AO, PT, NA, AE" maxlength="10"
-                               class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand uppercase">
+                               class="w-full border border-gray-200 rounded-sm px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand uppercase">
                     </div>
 
                     <div class="flex items-center justify-end gap-3 pt-3">
                         <button type="button" @click="showCountryModal = false"
-                                class="px-4 py-2.5 rounded-xl border border-gray-200 text-sm font-semibold text-gray-600 hover:bg-gray-50">
+                                class="px-4 py-2.5 rounded-sm border border-gray-200 text-sm font-semibold text-gray-600 hover:bg-gray-50">
                             Cancelar
                         </button>
                         <button type="submit"
-                                class="px-6 py-2.5 rounded-xl bg-brand hover:bg-brand-dark text-white text-sm font-semibold shadow transition">
+                                class="px-6 py-2.5 rounded-sm bg-brand hover:bg-brand-dark text-white text-sm font-semibold shadow transition">
                             Gravar País
                         </button>
                     </div>
@@ -180,7 +180,7 @@
         {{-- MODAL: Adicionar Cidade --}}
         <div x-show="showCityModal" x-cloak
              class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-            <div @click.away="showCityModal = false" class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
+            <div @click.away="showCityModal = false" class="bg-white rounded-sm max-w-md w-full p-6 shadow-2xl space-y-4">
                 <div class="flex items-center justify-between border-b border-gray-100 pb-3">
                     <h3 class="font-bold text-gray-900 text-lg">
                         Adicionar Cidade a <span class="text-[#F97316]" x-text="selectedCountryName"></span>
@@ -197,16 +197,16 @@
                     <div>
                         <label class="block text-xs font-semibold text-gray-600 uppercase mb-1.5">Nome da Cidade <span class="text-red-500">*</span></label>
                         <input type="text" name="name" required placeholder="Ex: Benguela, Lubango, Porto..."
-                               class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand">
+                               class="w-full border border-gray-200 rounded-sm px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand">
                     </div>
 
                     <div class="flex items-center justify-end gap-3 pt-3">
                         <button type="button" @click="showCityModal = false"
-                                class="px-4 py-2.5 rounded-xl border border-gray-200 text-sm font-semibold text-gray-600 hover:bg-gray-50">
+                                class="px-4 py-2.5 rounded-sm border border-gray-200 text-sm font-semibold text-gray-600 hover:bg-gray-50">
                             Cancelar
                         </button>
                         <button type="submit"
-                                class="px-6 py-2.5 rounded-xl bg-brand hover:bg-brand-dark text-white text-sm font-semibold shadow transition">
+                                class="px-6 py-2.5 rounded-sm bg-brand hover:bg-brand-dark text-white text-sm font-semibold shadow transition">
                             Gravar Cidade
                         </button>
                     </div>

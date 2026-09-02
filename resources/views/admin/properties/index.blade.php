@@ -1,19 +1,19 @@
 <x-admin.layout title="Imóveis" breadcrumb="Gerir todas as propriedades">
 
     <!-- Filters & Actions bar -->
-    <div class="bg-white rounded-2xl border border-admin-border p-5 mb-6">
+    <div class="bg-white rounded-sm border border-admin-border p-5 mb-6">
         <form action="{{ route('admin.properties.index') }}" method="GET"
               class="flex flex-wrap items-center gap-3">
             <div class="relative flex-1 min-w-[180px]">
                 <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
                 <input type="text" name="search" value="{{ request('search') }}"
                        placeholder="Pesquisar por título ou localização..."
-                       class="w-full border border-gray-200 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition">
+                       class="w-full border border-gray-200 rounded-sm pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition">
             </div>
 
             {{-- Filtro unificado: igual ao menu e à página pública --}}
             <select name="filter_category"
-                    class="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition">
+                    class="border border-gray-200 rounded-sm px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition">
                 <option value="">Tipo de Negócio</option>
                 <option value="venda"                      {{ request('filter_category') === 'venda'                      ? 'selected' : '' }}>️ Venda</option>
                 <option value="arrendamento-longa-duracao" {{ request('filter_category') === 'arrendamento-longa-duracao' ? 'selected' : '' }}> Arrendamento de Longa Duração</option>
@@ -22,7 +22,7 @@
             </select>
 
             <select name="property_type"
-                    class="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition">
+                    class="border border-gray-200 rounded-sm px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition">
                 <option value="">Todos os Tipos de Imóvel</option>
                 @foreach(\App\Models\Property::propertyTypes() as $val => $label)
                     <option value="{{ $val }}" {{ request('property_type') === $val ? 'selected' : '' }}>{{ $label }}</option>
@@ -31,7 +31,7 @@
 
             {{-- Classificação do Terreno --}}
             <select name="land_type"
-                    class="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition">
+                    class="border border-gray-200 rounded-sm px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition">
                 <option value="">Classificação Terreno</option>
                 <option value="urbanos" {{ request('land_type') === 'urbanos' ? 'selected' : '' }}>Urbanos</option>
                 <option value="rusticos" {{ request('land_type') === 'rusticos' ? 'selected' : '' }}>Rústicos</option>
@@ -41,7 +41,7 @@
 
             {{-- País --}}
             <select name="country"
-                    class="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition">
+                    class="border border-gray-200 rounded-sm px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition">
                 <option value="">Todos os Países</option>
                 @foreach(\App\Models\Property::select('country')->distinct()->orderBy('country')->pluck('country') as $c)
                     <option value="{{ $c }}" {{ request('country') === $c ? 'selected' : '' }}>{{ $c }}</option>
@@ -49,7 +49,7 @@
             </select>
 
             <select name="status"
-                    class="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition">
+                    class="border border-gray-200 rounded-sm px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition">
                 <option value="">Todos os estados</option>
                 <option value="disponivel" {{ request('status') === 'disponivel' ? 'selected' : '' }}>Disponível</option>
                 <option value="reservado" {{ request('status') === 'reservado' ? 'selected' : '' }}>Reservado</option>
@@ -58,7 +58,7 @@
             </select>
 
             <button type="submit"
-                    class="bg-brand hover:bg-brand-dark text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition flex items-center gap-2">
+                    class="bg-brand hover:bg-brand-dark text-white text-sm font-semibold px-5 py-2.5 rounded-sm transition flex items-center gap-2">
                 <i class="fa-solid fa-filter"></i>
                 Filtrar
             </button>
@@ -72,14 +72,14 @@
     </div>
 
     <!-- Table -->
-    <div class="bg-white rounded-2xl border border-admin-border overflow-hidden">
+    <div class="bg-white rounded-sm border border-admin-border overflow-hidden">
         <div class="flex items-center justify-between px-6 py-5 border-b border-admin-border">
             <div>
                 <h2 class="font-bold text-admin-text">Lista de Imóveis</h2>
                 <p class="text-xs text-admin-muted mt-0.5">{{ $properties->total() }} imóveis encontrados</p>
             </div>
             <a href="{{ route('admin.properties.create') }}"
-               class="bg-brand hover:bg-brand-dark text-white text-sm font-semibold px-4 py-2 rounded-xl flex items-center gap-2 transition">
+               class="bg-brand hover:bg-brand-dark text-white text-sm font-semibold px-4 py-2 rounded-sm flex items-center gap-2 transition">
                 <i class="fa-solid fa-plus"></i>
                 Novo Imóvel
             </a>
@@ -104,7 +104,7 @@
                     <tr class="hover:bg-gray-50 transition group">
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-4">
-                                <a href="{{ route('admin.properties.show', $property) }}" class="w-14 h-14 rounded-xl overflow-hidden flex-shrink-0 bg-gray-100 block hover:opacity-90 transition">
+                                <a href="{{ route('admin.properties.show', $property) }}" class="w-14 h-14 rounded-sm overflow-hidden flex-shrink-0 bg-gray-100 block hover:opacity-90 transition">
                                     @if($property->image && file_exists(public_path('assets/' . $property->image)))
                                         <img src="{{ asset('assets/' . $property->image) }}" class="w-full h-full object-cover">
                                     @elseif($property->image && str_starts_with($property->image, 'properties/'))
@@ -212,15 +212,15 @@
                         <td class="px-4 py-4">
                             <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition">
                                 <a href="{{ route('admin.properties.show', $property) }}"
-                                   title="Ver Ficha Técnica" class="p-2 text-gray-400 hover:text-brand hover:bg-brand/10 rounded-lg transition">
+                                   title="Ver Ficha Técnica" class="p-2 text-gray-400 hover:text-brand hover:bg-brand/10 rounded-sm transition">
                                     <i class="fa-solid fa-file-lines text-xs"></i>
                                 </a>
                                 <a href="{{ route('properties.show', $property) }}" target="_blank"
-                                   title="Ver no site público" class="p-2 text-gray-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition">
+                                   title="Ver no site público" class="p-2 text-gray-400 hover:text-blue-500 hover:bg-blue-50 rounded-sm transition">
                                     <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
                                 </a>
                                 <a href="{{ route('admin.properties.edit', $property) }}"
-                                   title="Editar" class="p-2 text-gray-400 hover:text-brand hover:bg-brand/10 rounded-lg transition">
+                                   title="Editar" class="p-2 text-gray-400 hover:text-brand hover:bg-brand/10 rounded-sm transition">
                                     <i class="fa-solid fa-pen text-xs"></i>
                                 </a>
                                 <form action="{{ route('admin.properties.destroy', $property) }}" method="POST"
@@ -228,7 +228,7 @@
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" title="Eliminar"
-                                            class="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition">
+                                            class="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-sm transition">
                                         <i class="fa-solid fa-trash text-xs"></i>
                                     </button>
                                 </form>

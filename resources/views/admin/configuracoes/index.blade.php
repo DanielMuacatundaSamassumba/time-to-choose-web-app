@@ -6,7 +6,7 @@
             @method('PUT')
 
             {{-- 1. Contactos Principais --}}
-            <div class="bg-white rounded-2xl border border-admin-border p-6 mb-6">
+            <div class="bg-white rounded-sm border border-admin-border p-6 mb-6">
                 <h3 class="font-bold text-admin-text mb-5 flex items-center gap-2">
                     <i class="fa-solid fa-address-book text-brand"></i>
                     Contactos Principais do Site
@@ -52,7 +52,7 @@
             </div>
 
             {{-- 2. Redes Sociais --}}
-            <div class="bg-white rounded-2xl border border-admin-border p-6 mb-6">
+            <div class="bg-white rounded-sm border border-admin-border p-6 mb-6">
                 <h3 class="font-bold text-admin-text mb-5 flex items-center gap-2">
                     <i class="fa-solid fa-share-nodes text-brand"></i>
                     Redes Sociais
@@ -82,7 +82,7 @@
             </div>
 
             {{-- 3. Logótipo & SEO Padrão --}}
-            <div class="bg-white rounded-2xl border border-admin-border p-6 mb-6">
+            <div class="bg-white rounded-sm border border-admin-border p-6 mb-6">
                 <h3 class="font-bold text-admin-text mb-5 flex items-center gap-2">
                     <i class="fa-solid fa-sliders text-brand"></i>
                     Logótipo & SEO Padrão
@@ -94,10 +94,10 @@
                         @if(!empty($g['logo']))
                             <div class="mb-3 flex items-center gap-3">
                                 <span class="text-xs text-admin-muted">Atual:</span>
-                                <img src="{{ Storage::url($g['logo']) }}" class="h-10 p-2 bg-slate-900 rounded-lg border">
+                                <img src="{{ Storage::url($g['logo']) }}" class="h-10 p-2 bg-slate-900 rounded-sm border">
                             </div>
                         @endif
-                        <input type="file" name="logo" accept="image/*" class="block w-full text-sm text-admin-muted file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-brand/10 file:text-brand file:text-sm file:font-medium hover:file:bg-brand/20 transition">
+                        <input type="file" name="logo" accept="image/*" class="block w-full text-sm text-admin-muted file:mr-4 file:py-2 file:px-4 file:rounded-sm file:border-0 file:bg-brand/10 file:text-brand file:text-sm file:font-medium hover:file:bg-brand/20 transition">
                     </div>
 
                     <div class="col-span-1 md:col-span-2">
@@ -114,7 +114,7 @@
 
             {{-- Save Button --}}
             <div class="flex justify-end">
-                <button type="submit" class="bg-brand hover:bg-brand-dark text-white font-semibold px-8 py-3 rounded-xl transition flex items-center gap-2 shadow-sm">
+                <button type="submit" class="bg-brand hover:bg-brand-dark text-white font-semibold px-8 py-3 rounded-sm transition flex items-center gap-2 shadow-sm">
                     <i class="fa-solid fa-floppy-disk"></i>
                     Guardar Configurações
                 </button>

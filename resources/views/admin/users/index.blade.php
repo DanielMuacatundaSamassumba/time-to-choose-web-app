@@ -7,22 +7,22 @@
                 <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
                 <input type="text" name="search" value="{{ request('search') }}"
                        placeholder="Pesquisar por nome ou e-mail..."
-                       class="w-full border border-gray-200 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition">
+                       class="w-full border border-gray-200 rounded-sm pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition">
             </div>
-            <button type="submit" class="bg-brand hover:bg-brand-dark text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition">
+            <button type="submit" class="bg-brand hover:bg-brand-dark text-white text-sm font-semibold px-4 py-2.5 rounded-sm transition">
                 Filtrar
             </button>
         </form>
 
         <a href="{{ route('admin.users.create') }}"
-           class="bg-brand hover:bg-brand-dark text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition flex items-center gap-2 shadow-sm">
+           class="bg-brand hover:bg-brand-dark text-white text-sm font-semibold px-5 py-2.5 rounded-sm transition flex items-center gap-2 shadow-sm">
             <i class="fa-solid fa-user-plus text-xs"></i>
             Novo Administrador
         </a>
     </div>
 
     <!-- Table -->
-    <div class="bg-white rounded-2xl border border-admin-border overflow-hidden">
+    <div class="bg-white rounded-sm border border-admin-border overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
@@ -58,7 +58,7 @@
                         <td class="px-6 py-4 text-right">
                             <div class="flex items-center justify-end gap-2">
                                 <a href="{{ route('admin.users.edit', $user) }}"
-                                   class="p-2 text-gray-400 hover:text-brand transition rounded-lg hover:bg-gray-100" title="Editar">
+                                   class="p-2 text-gray-400 hover:text-brand transition rounded-sm hover:bg-gray-100" title="Editar">
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </a>
 
@@ -67,7 +67,7 @@
                                       onsubmit="return confirm('Tem a certeza que deseja eliminar este utilizador?')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="p-2 text-gray-400 hover:text-red-600 transition rounded-lg hover:bg-gray-100" title="Eliminar">
+                                    <button type="submit" class="p-2 text-gray-400 hover:text-red-600 transition rounded-sm hover:bg-gray-100" title="Eliminar">
                                         <i class="fa-solid fa-trash"></i>
                                     </button>
                                 </form>

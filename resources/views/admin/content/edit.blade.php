@@ -427,11 +427,11 @@
             </p>
             <div class="flex items-center gap-3 ml-auto">
                 <a href="{{ route('admin.content.index') }}"
-                   class="px-5 py-2.5 text-sm font-semibold text-admin-muted hover:text-admin-text border border-admin-border rounded-xl transition">
+                   class="px-5 py-2.5 text-sm font-semibold text-admin-muted hover:text-admin-text border border-admin-border rounded-sm transition">
                     Cancelar
                 </a>
                 <button type="submit"
-                        class="bg-brand hover:bg-brand-dark text-white text-sm font-semibold px-6 py-2.5 rounded-xl flex items-center gap-2 transition shadow-sm">
+                        class="bg-brand hover:bg-brand-dark text-white text-sm font-semibold px-6 py-2.5 rounded-sm flex items-center gap-2 transition shadow-sm">
                     <i class="fa-solid fa-floppy-disk"></i>
                     Guardar Alterações
                 </button>

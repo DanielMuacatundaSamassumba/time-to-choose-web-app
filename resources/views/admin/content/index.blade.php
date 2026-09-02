@@ -1,4 +1,4 @@
-﻿<x-admin.layout title="Conteúdo das Páginas" breadcrumb="Gestão de conteúdo e imagens do site">
+<x-admin.layout title="Conteúdo das Páginas" breadcrumb="Gestão de conteúdo e imagens do site">
 
     <x-slot name="styles">
     <style>
@@ -38,7 +38,7 @@
                 Edite textos e imagens de cada página diretamente aqui — as alterações ficam visíveis imediatamente.
             </p>
         </div>
-        <div class="flex items-center gap-2.5 bg-white border border-admin-border rounded-xl px-4 py-2.5 text-sm shadow-sm">
+        <div class="flex items-center gap-2.5 bg-white border border-admin-border rounded-sm px-4 py-2.5 text-sm shadow-sm">
             <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse inline-block"></span>
             <span class="text-admin-text font-semibold">{{ count($pages) }} páginas ativas</span>
         </div>
@@ -48,7 +48,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         @foreach($pages as $pageKey => $page)
         <div onclick="window.location.href='{{ route('admin.content.edit', $pageKey) }}'"
-             class="page-card group bg-white border border-admin-border rounded-2xl flex flex-col overflow-hidden cursor-pointer select-none">
+             class="page-card group bg-white border border-admin-border rounded-sm flex flex-col overflow-hidden cursor-pointer select-none">
 
             {{-- Thumbnail --}}
             <div class="relative h-48 overflow-hidden bg-gray-100 flex-shrink-0">
@@ -75,7 +75,7 @@
                 {{-- Page title overlay --}}
                 <div class="absolute bottom-0 left-0 right-0 p-4">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-brand flex items-center justify-center flex-shrink-0 shadow-md">
+                        <div class="w-10 h-10 rounded-sm bg-brand flex items-center justify-center flex-shrink-0 shadow-md">
                             <i class="fa-solid {{ $page['icon'] }} text-white text-base"></i>
                         </div>
                         <div>
@@ -114,7 +114,7 @@
                             {{ count($page['sections']) + count($page['images'] ?? []) }} campos editáveis
                         </span>
                     </div>
-                    <span class="flex items-center gap-1.5 bg-brand text-white text-xs font-bold px-4 py-2 rounded-xl group-hover:bg-brand-dark transition-colors duration-200 shadow-sm">
+                    <span class="flex items-center gap-1.5 bg-brand text-white text-xs font-bold px-4 py-2 rounded-sm group-hover:bg-brand-dark transition-colors duration-200 shadow-sm">
                         Editar
                         <i class="fa-solid fa-arrow-right text-[10px] group-hover:translate-x-0.5 transition-transform duration-200"></i>
                     </span>
@@ -125,8 +125,8 @@
     </div>
 
     {{-- ── Info Banner ─────────────────────────────────────────────── --}}
-    <div class="mt-8 bg-amber-500/5 border border-amber-500/20 rounded-2xl px-6 py-4 flex items-start gap-4">
-        <div class="w-9 h-9 rounded-xl bg-amber-500/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+    <div class="mt-8 bg-amber-500/5 border border-amber-500/20 rounded-sm px-6 py-4 flex items-start gap-4">
+        <div class="w-9 h-9 rounded-sm bg-amber-500/10 flex items-center justify-center flex-shrink-0 mt-0.5">
             <i class="fa-solid fa-lightbulb text-amber-600 text-sm"></i>
         </div>
         <div>

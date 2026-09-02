@@ -10,7 +10,7 @@
 
             <div class="flex items-center gap-4 pt-4">
                 <button type="submit"
-                        class="bg-brand hover:bg-brand-dark text-white font-bold px-8 py-3 rounded-xl flex items-center gap-2 transition">
+                        class="bg-brand hover:bg-brand-dark text-white font-bold px-8 py-3 rounded-sm flex items-center gap-2 transition">
                     <i class="fa-solid fa-check"></i>
                     Actualizar Imóvel
                 </button>
