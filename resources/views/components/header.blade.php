@@ -287,7 +287,7 @@ MENU MOBILE (slide-in)
         </nav>
         {{-- Rodapé do menu --}}
         <div class="mt-auto p-6 border-t border-gray-100 flex items-center justify-between">
-            <p class="text-xs text-gray-400">+244 923 000 000</p>
+            <p class="text-xs text-gray-400">{{ $globalSettings['phone'] ?? '+244 923 000 000' }}</p>
             <x-language-switcher :dropUp="true" />
         </div>
     </div>
@@ -350,8 +350,8 @@ OVERLAY + ASIDE LATERAL (Desktop)
     <div class="px-8 pb-8">
         <div class="bg-[#F97316]/10 rounded-2xl p-6">
             <p class="text-sm text-gray-500 font-semibold uppercase mb-2">Contactos</p>
-            <p class="text-gray-800 font-medium">+244 923 000 000</p>
-            <p class="text-gray-500 text-sm">info@timetochoose.ao</p>
+            <p class="text-gray-800 font-medium">{{ $globalSettings['phone'] ?? '+244 923 000 000' }}</p>
+        <p class="text-gray-500 text-sm">{{ $globalSettings['email'] ?? 'info@timetochoose.ao' }}</p>
         </div>
     </div>
 </aside>

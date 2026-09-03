@@ -221,13 +221,13 @@
                         @endif
                     </h2>
 
-                    <a href="tel:+244923000000"
+                    <a href="tel:{{ $globalSettings['phone'] ?? '+244923000000' }}"
                         class="w-full bg-[#F97316] text-center text-white py-4 rounded-sm mt-8 font-bold hover:bg-[#F97316]/90 transition flex items-center justify-center gap-2">
                         <span class="material-symbols-outlined" translate="no">call</span>
                         Ligar para o Consultor
                     </a>
 
-                    <a href="https://wa.me/244923000000?text=Olá,%20tenho%20interesse%20no%20imóvel%20{{ urlencode($property->title) }}"
+                    <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $globalSettings['phone'] ?? '244923000000') }}?text=Olá,%20tenho%20interesse%20no%20imóvel%20{{ urlencode($property->title) }}"
                         target="_blank"
                         class="w-full border border-green-200 py-4 rounded-sm mt-3 flex items-center justify-center gap-2 font-semibold text-green-700 hover:bg-green-50 transition">
                         <i class="fa-brands fa-whatsapp text-lg"></i>

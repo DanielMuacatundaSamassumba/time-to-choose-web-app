@@ -149,3 +149,6 @@ Route::delete('/localizacoes/cidades/{city}', [LocationController::class, 'destr
     Route::get('/media',    [MediaController::class, 'index'])->name('media.index');
     Route::delete('/media', [MediaController::class, 'destroy'])->name('media.destroy');
 });
+
+// Dynamic CMS pages (catch‑all for slug stored in `pages` table)
+Route::get('/{slug}', [App\Http\Controllers\PageController::class, 'show'])->name('page.show');

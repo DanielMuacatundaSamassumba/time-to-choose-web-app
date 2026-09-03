@@ -153,37 +153,32 @@ Uso: <x-footer />
 
                         <div>
                             <p class="text-white/90 text-sm font-medium">Endereço</p>
-                            <p class="text-white/50 text-sm">Talatona, Luanda, Angola</p>
+                            <p class="text-white/50 text-sm">{{ $globalSettings['address'] ?? 'Talatona, Luanda, Angola' }}</p>
                         </div>
                     </li>
                     <li class="flex items-start gap-4">
 
                         <div>
                             <p class="text-white/90 text-sm font-medium">Telefone</p>
-                            <a href="tel:+244923000000" class="text-white/50 text-sm hover:text-[#F97316] transition">
-                                +244 923 000 000
-                            </a>
-                        </div>
+                            <a href="tel:{{ $globalSettings['phone'] ?? '+244923000000' }}" class="text-white/50 text-sm hover:text-[#F97316] transition">{{ $globalSettings['phone'] ?? '+244 923 000 000' }}</a>
+                               
                     </li>
                     <li class="flex items-start gap-4">
 
                         <div>
                             <p class="text-white/90 text-sm font-medium">Email</p>
-                            <a href="mailto:info@timetochoose.ao"
-                                class="text-white/50 text-sm hover:text-[#F97316] transition">
-                                info@timetochoose.ao
-                            </a>
+                            <a href="mailto:{{ $globalSettings['email'] ?? 'info@timetochoose.ao' }}" class="text-white/50 text-sm hover:text-[#F97316] transition">{{ $globalSettings['email'] ?? 'info@timetochoose.ao' }}</a>
                         </div>
                     </li>
                     <li class="flex items-start gap-4">
 
-                        <div>
+                        <!-- <div>
                             <p class="text-white/90 text-sm font-medium">Website</p>
                             <a href="https://www.timetochoose.ao"
                                 class="text-white/50 text-sm hover:text-[#F97316] transition">
                                 www.timetochoose.ao
                             </a>
-                        </div>
+                        </div> -->
                     </li>
                 </ul>
             </div>
