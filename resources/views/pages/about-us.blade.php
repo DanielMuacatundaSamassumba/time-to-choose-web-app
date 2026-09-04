@@ -57,7 +57,7 @@
                 </div>
             </div>
             <div class="md:col-span-7 reveal" style="transition-delay: 200ms;">
-                <div class="aspect-[4/5] rounded-2xl overflow-hidden">
+                <div class="aspect-[4/5] rounded-sm overflow-hidden">
                     @php
                         $historyImg = $sections['history']['image'] ?? null;
                         $historyImgSrc = $historyImg
@@ -88,7 +88,7 @@
                     ['icon' => 'verified_user', 'title' => 'Segurança Jurídica',
                      'desc' => 'Operamos com seguros de responsabilidade civil e jurídica, oferecendo aos nossos clientes a tranquilidade necessária para investimentos imobiliários complexos em Angola.'],
                 ] as $card)
-                <div class="bg-white p-10 rounded-2xl shadow-sm reveal h-full flex flex-col">
+                <div class="bg-white p-10 rounded-sm shadow-sm reveal h-full flex flex-col">
                     <span class="material-symbols-outlined text-[#F97316] text-4xl mb-6"  translate="no">{{ $card['icon'] }}</span>
                     <h3 class="text-2xl font-bold text-gray-900 mb-4">{{ $card['title'] }}</h3>
                     <p class="text-gray-600 text-base leading-relaxed flex-grow">{{ $card['desc'] }}</p>
@@ -145,7 +145,7 @@
     ====================================================== --}}
     <section class="bg-[#F7F7F7] py-20">
         <div class="max-w-7xl mx-auto px-6 md:px-12">
-            <div class="bg-[#F97316] rounded-[32px] py-20 px-8 lg:px-20 text-center">
+            <div class="bg-[#F97316] rounded-sm py-20 px-8 lg:px-20 text-center">
                 <h2 class="text-4xl lg:text-5xl font-bold text-white leading-tight">
                     {{ $sections['cta']['title'] ?? 'Pronto para encontrar o seu imóvel ideal?' }}
                 </h2>
@@ -155,7 +155,7 @@
                 <div class="mt-10">
                     <a href="{{ url('/imoveis') }}"
                        class="inline-flex items-center px-8 py-4 bg-white text-[#F97316]
-                              rounded-xl font-bold uppercase tracking-wider hover:scale-105 transition">
+                              rounded-sm font-bold uppercase tracking-wider hover:scale-105 transition">
                         {{ $sections['cta']['button_text'] ?? 'Ver Imóveis' }}
                     </a>
                 </div>
